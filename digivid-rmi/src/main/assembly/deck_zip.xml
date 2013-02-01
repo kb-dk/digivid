@@ -1,0 +1,30 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2" >
+    <id>zip-package</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <baseDirectory>Deck</baseDirectory>
+    <fileSets>
+        <fileSet>
+            <directory>${basedir}/src/main/config/Deck</directory>
+            <outputDirectory>.</outputDirectory>
+            <includes>
+                <include>**</include>
+            </includes>
+            <fileMode>0777</fileMode>
+            <filtered>true</filtered>
+        </fileSet>
+        <fileSet>
+            <directory>${project.build.directory}</directory>
+            <outputDirectory>rmi</outputDirectory>
+            <includes>
+                <include>*.jar</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>rmi</outputDirectory>
+        </dependencySet>
+    </dependencySets>
+</assembly>

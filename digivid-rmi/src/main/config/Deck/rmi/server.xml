@@ -14,8 +14,8 @@
     <entry key="RMI_CLIENT_IP">127.0.0.1</entry>
 
     <!-- this has changed from apache to tomcat -->
-    <entry key="RMI_CLIENT_CONFIGURATION">http://127.0.0.1:8080/digivid/rmi</entry>
-    <entry key="RMI_CLIENT_CLASSES">http://127.0.0.1:8080/digivid/rmi/client.jar</entry>
+    <entry key="RMI_CLIENT_CONFIGURATION">http://127.0.0.1:${tomcatPort}/digivid/rmi</entry>
+    <entry key="RMI_CLIENT_CLASSES">http://127.0.0.1:${tomcatPort}/digivid/rmi/client.jar</entry>
 
     <!-- RMI Classes Server 1-->
     <entry key="RMI_CLASSSERVER_NAME">localhost</entry>

@@ -12,6 +12,8 @@
         <module>digivid-web</module>
         <module>digivid-rmi</module>
     </modules>
-
+    <properties>
+        <tomcatPort>8080</tomcatPort>
+    </properties>
 
 </project>

@@ -2,7 +2,7 @@
 # this requires for execution to be on a Unix box with java J2SE installed
 # one network interface (eth0)
 SERVER_RMI_HOME=${HOME}/Deck/rmi
-CLASSERVER_DEFAULTS="/etc/default/deck.default"
+#CLASSERVER_DEFAULTS="/etc/default/deck.default"
 TIMESTAMP=`date "+%y-%m-%d_%H-%M-%S-%s"`
 IP=`/sbin/ifconfig ${NETINTERFACE} | awk '/inet addr/{print $2}' | cut -d: -f2`
 for IP in $IP ; do 
@@ -14,12 +14,12 @@ for IP in $IP ; do
     fi
 done
 
-echo "-----Start Class Server------"
+echo "-----Starting Class Server------"
 
-if [ -e "${CLASSERVER_DEFAULTS}" ]; then
-	. "${CLASSERVER_DEFAULTS}"
-else echo "No default configuration"
-fi
+#if [ -e "${CLASSERVER_DEFAULTS}" ]; then
+#	. "${CLASSERVER_DEFAULTS}"
+#else echo "No default configuration"
+#fi
 CONF=$SERVER_RMI_HOME/etc/classerver.conf
 
 rmi_configure() {
