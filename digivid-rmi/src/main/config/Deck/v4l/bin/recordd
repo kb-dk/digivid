@@ -1,0 +1,735 @@
+#!/bin/bash
+# Script 	:	tvrecorder.sh
+# Author	:	std$statsbiblioteket.dk
+# Date		:	1-06-05
+# Comments	: 	Tunes and captures Video/Audio from WinTV PVR350 cards
+
+
+
+
+
+# basic configuration 
+RECORDERDECK_HOME="/home/bart/Deck/v4l"
+CONF=$RECORDERDECK_HOME/etc/recorder-IVTV_0.4.conf
+TIME=`date +%H%M%S`
+#DATE=`date +%F"_"%V`
+DATE=`date +%Y%m%d`
+#ENDDATE=${DATE}${TIME}
+WEEK=`date +%V`
+DOY=`date +%j`
+MAXSIZE=70000 #maximal megabytes per channel
+#LIMIT=10 #megabytes file size limitation
+ch=${3} # need .ivtvrc file
+WAIT=1 #seconds
+ELAPSED=0 #start time offset
+FILESIZE=0 #start Filesize
+TIMESTAMP=`date "+%y-%m-%d_%H-%M-%S-%s"`
+
+#-------------------------------------------------------------------------------
+# the functions
+
+tvrec_configure() {
+	CONF_FILE=${1}
+	EXIT_VAL=${2}	
+	if [ -f ${CONF_FILE} ]; then
+		. ${CONF_FILE}
+
+	else
+		echo "unable to find ${CONF_FILE}"
+		exit ${EXIT_VAL}
+	fi
+}
+
+tvrec_configure ${CONF} 7
+
+RECORDLOG="${DEFAULT_CAPTURELOG}_${TIMESTAMP}"
+RECDEBUG="${DEFAULT_CAPDEBUG}"
+RECERROR="${DEFAULT_CAPERROR}"
+touch $RECORDLOG #1>&2
+touch $RECDEBUG #1>&2
+touch $RECERROR #1>&2
+echo "RECORDLOG: $RECORDLOG"
+echo "RECDEBUG: $RECDEBUG"
+echo "RECERROR: $RECERROR"
+
+case $# in
+	0) echo "missing all device parameter" >> $RECERROR
+		sorry
+	;;
+
+	1) if [ -z "${1}" ] ; then
+			echo "Which media do you like to record, want to see listing type y/n ?"
+	   		read choice
+	   		if [ "${choice}" = "y" ]; then
+	   			help_media
+	   		else
+	   			echo "Missing Media Parametr, exiting" >> $RECERROR
+	   			sorry
+	   		fi
+	   		echo "Select media"
+	   		read choice
+        	if [ -n "${choice}" ]; then
+				if ["${choice}" == "tv"] || ["${choice}" == "tape"] || [ "${choice}" = "debug" ] ; then
+	   				media=${choice}
+	   			else
+	   				echo "Media not available" >> $RECERROR
+	   				sorry
+	   			fi
+	   		else
+	   			sorry
+	   		fi
+	   elif [ -n "${1}" ]; then
+	   		if ["${1}" == "tv"] || ["${1}" == "tape"] || [ "${1}" = "debug" ] ; then
+	   			media=${choice}
+	   		else
+	   			echo "Media not available" >> $RECERROR
+	   			sorry
+	   		fi
+	   else
+	   		sorry
+	   fi
+	;;
+
+	2) if [ -z "${2}" ] ; then
+			echo "What is Your user name ?"
+			read choice
+			if [ -n "${choice}"]; then
+				media=${1}; user=${choice}
+			else
+				echo "User name missing, exiting" >> $RECERROR
+				sorry
+			fi
+		elif [ -n "${2}" ]; then
+			media=${1}; user=${2}
+		fi
+	;;
+
+	3) if [ -z "${3}" ] ; then
+			echo "What is your IP (if recording remote otherwise use 127.0.0.1)"
+			read choice
+			if [ -n "${choice}"]; then
+			 	media=${1}; user=${2}; cip=${choice}
+			else
+				echo "User IP missing, exiting" >> $RECERROR
+	   			sorry
+	   		fi
+	   	elif [ -n "${3}" ]; then
+	   		media=${1}; user=${2}; cip=${3}
+		fi
+	;;
+
+	4) if [ -z "${4}" ] ; then
+			echo "From which device do you like to record, want to see listing type y/n ?"
+	   		read choice
+	   		if [ "${choice}" = "y" ]; then
+	   			help_device
+	   		else
+	   			sorry
+	   		fi
+	   		echo "Select device"
+	   		read choice
+        	if [ -n "${choice}" ]; then
+        		# cn = card number needed for stop_record
+				cn=`echo "${choice}" grep -v grep | cat -c 11`
+           		nb=${NUMBDEV}
+	   			if test "${cn}" -le "${nb}" ; then
+	   				media=${1}; user=${2}; cip=${3}; d=${choice}
+	   			else
+	   				echo "Device not available" >> $RECERROR
+	   				sorry
+	   			fi
+	   		else
+	   			echo "Device not available" >> $RECERROR
+	   			sorry
+	   		fi
+	   elif [ -n "${4}" ]; then
+	   		cn=`echo "${4}" grep -v grep | cat -c 11`
+           	nb=${NUMBDEV}
+           	if test "${cn}" -le "${nb}" ; then
+	   					media=${1}; user=${2}; cip=${3}; d=${4}
+	   		else
+	   			echo "Device not available" >> $RECERROR
+	   			sorry
+	   		fi
+	   	else
+	   		echo "Set Device fails" >> $RECERROR
+	   		sorry
+	   	fi
+	;;
+
+	5) if [ -z "${5}" ] ; then
+	   		# this just for debugging purposes
+	   		echo "Which channel do you like to record, want to see listing type y/n ?"
+	   		read choice
+	   		if [ "${choice}" = "y" ]; then
+	   			help_chanlist
+	   		fi
+	   		echo "Select a channel?"
+	   		read choice
+	   		if [ -n "${choice}" ]; then
+	   			media=${1}; user=${2}; cip=${3}; d=${4}; ch=${choice}
+	   		else
+	   		#elif f [ -z ${f} ]; then
+			#	echo "Incorrect Channel ID supplied"
+			echo "ChannelID missing, exiting" >> $RECERROR
+	   			sorry
+	   		fi
+	    elif [ -n ${5} ] ;then
+	   		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}
+	   	else
+	   		echo "Set ChannelID fails" >> $RECERROR
+	   		sorry
+	   	fi
+    ;;
+
+	6) if [ -z "${6}" ] ; then
+	   		echo "Which frame width should be used (Pal-Standard MPEG-1 352, MPEG-2 720 )"
+	   		read choice
+        	if [  -n "${choice}" ]; then
+           		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${choice}
+  	    	else
+  	    		echo "Frame width missing, exiting" >> $RECERROR
+  				sorry
+  			fi
+  	   elif [ -n ${6} ] ;then
+	   		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}
+  	   else
+  	   		echo "Set width fails" >> $RECERROR
+  	   		sorry
+	   fi
+	;;
+
+	7) if [ -z "${7}" ] ; then
+	   		echo "Which frame height should be used (Pal-Standard MPEG-1 288, MPEG-2 576)"
+	   		read choice
+        	if [ -n "${choice}" ]; then
+           		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${choice}
+  			else
+  				echo "Frame height missing, exiting" >> $RECERROR
+  				sorry
+  			fi
+  	   elif [ -n ${7} ] ;then
+	   		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}
+  	   else
+  	   		echo "Set Frame height fails" >> $RECERROR
+  	   		sorry
+	   fi
+	;;
+
+	8) if [ -z "${8}" ]; then
+	   		echo "Which compression format type mpeg1 | mpeg2 ?"
+	   		read choice
+	   		if [ "${choice}" = "mpeg1" ]; then
+	   			media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=mpeg1;
+	   		elif [ "${choice}" = "mpeg2" ]; then
+	   			media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=mpeg2;
+	   		elif [ -z "${choice}" ]; then
+	   			echo "Since you could not make up you mind using default MPEG-1"
+	   			media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=mpeg1;
+	   		fi
+	   elif [ -n "${8}"] ; then
+	    	if [ "${8}" = "1" ]; then
+	   			media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=mpeg1;
+	   		elif [ "${8}" = "2" ]; then
+	   			media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=mpeg2;
+	   		else
+	   			echo "Format not supported" >> $RECERROR
+	   			sorry
+	   		fi
+  	   else
+  	   		echo "Set format fails" >> $RECERROR
+  	   		sorry
+	   fi
+	;; # device_number channel_id and filename are given
+
+	9) if [ -z "${9}" ] ; then
+	   		echo "Which bitrate should be used (Pal MPEG-1 1.150.000, MPEG-2 3.000.000)"
+	   		read choice
+        	if [ -n "${choice}" ]; then
+				media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${choice}
+			else
+				echo "Bitrate missing" >> $RECERROR
+  				sorry
+  			fi
+  	   	elif [ -n ${9} ] ;then
+	   		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}
+  	   	else
+  	   		echo "Bitrate fails" >> $RECERROR
+  	   		sorry
+		fi
+	;;
+
+	10) if [ -z "${10}" ] ; then
+	   		echo "Which peak bitrate should be used (Pal MPEG-1 1.150.000, MPEG-2 6.000.000)"
+	   		read choice
+        	if [ -n "${choice}" ]; then
+				media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${choice}
+			else
+				echo "Peak Bitrate missing" >> $RECERROR
+  				sorry
+  			fi
+  	  	elif [ -n ${10} ] ;then
+  	   			media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}
+  	  	else
+  	  		echo "Set bitrate fails" >> $RECERROR
+  	   		sorry
+		fi
+  	;;
+
+	11) if [ -z "${11}" ] ; then
+	   		echo "Whhere to store recordings (e.g. records)"
+	   		read choice
+        	if [ -n "${choice}" ]; then
+				media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${choice}
+			else
+				echo "Records dir missing" >> $RECERROR
+  				sorry
+  			fi
+  	  	elif [ -n ${11} ] ;then
+  	  		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}
+		else
+			echo "Set storage directory fails" >> $RECERROR
+  	   		sorry
+		fi
+  	;;
+
+	12) if [ -z "${12}" ] ; then
+	   		echo "Which file name should be used (you can use a free string)"
+	   		read choice
+        	if [ -n "${choice}" ]; then
+           		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${choice}
+  			else
+  				echo "Missing file name, exiting"
+  				sorry
+  			fi
+  	  	elif [ -n ${12} ] ;then
+  	  		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}
+  	  	else
+  	  		echo "Set file name fails" >> $RECERROR
+  	   		sorry
+		fi
+	;;
+
+	13) if [ -z "${13}" ] ; then
+	   		echo "What is the serial create (date ""+20%y_%m_%d_%H_%M_%S_%s"")"
+	   		read choice
+        	if [ -n "${choice}" ]; then
+        		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${choice}
+  			else
+  				media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=`date +20%y_%m_%d_%H_%M_%S_%s`
+  			fi
+  		elif [ -n ${13} ] ;then
+  	  		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}
+  	  	else
+  	  		echo "Set date fails" >> $RECERROR
+  	   		sorry
+		fi
+	;;
+
+	14) if [ -z "${14}" ] ; then
+	   		echo "What will be the duration of your recording (format HH:MM:SS)"
+	   		read choice
+        	if [ -n "${choice}" ]; then
+        		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=${choice}
+  			else
+  				echo "Recording without time limit"
+  				media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=0
+  			fi
+
+		elif [ -n ${14} ] ;then
+  	  		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=${14}
+  	  	else
+  	  		echo "Set Maximal recordings file length fails" >> $RECERROR
+  	   		sorry
+		fi
+	;;
+
+	15) if [ -z "${15}" ] ; then
+	   		echo "What will be the file size of your recording (in KB)"
+	   		read choice
+        	if [ -n "${choice}" ]; then
+        		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=${14}; maxsize=${choice}
+  			else
+  				echo "Recording without time limit"
+  				media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=${14}; maxsize=0
+  			fi
+
+		elif [ -n ${15} ] ;then
+  	  		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=${14}; maxsize=${15}
+  	  	else
+  	  		echo "Set Maximal recordings file size fails" >> $RECERROR
+  	   		sorry
+		fi
+	;;
+	
+	16) if [ -z "${16}" ] ; then
+	   		echo "What was the original beginning of the recorded program item (date time)"
+	   		read choice
+        	if [ -n "${choice}" ]; then
+        		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=${14}; maxsize=${choice}; ostart=${choice}
+  			else
+  				echo "Recording original beginning"
+  				media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=${14}; maxsize=0; ostart=o
+  			fi
+
+		elif [ -n ${16} ] ;then
+  	  		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=${14}; maxsize=${15}; ostart=${16}
+  	  	else
+  	  		echo "Set original program beginning fails" >> $RECERROR
+  	   		sorry
+		fi
+	;;
+
+	*) echo -n "Check your Arguments to $0"; >> $RECERROR
+        echo -n "Aborting ...";              >> $RECERROR
+        exit 1
+        ;;
+esac
+
+
+debug () {
+	## debug 
+	echo "Records Directory: $RDIR"          >> $RECDEBUG
+	echo "Record Logging Directory: $LOGREC" >> $RECDEBUG
+	echo "Logging Application: $LOGAPP"      >> $RECDEBUG
+	echo "Capture Control Util: $IVCTL"      >> $RECDEBUG
+	echo "Gen. Capture Device: $DEV${cd}"    >> $RECDEBUG
+	echo "Gen. Tuning Device: $TV_DEVTUNE"   >> $RECDEBUG
+	echo "Tunning Util: $TV_TUNEUTIL"        >> $RECDEBUG
+	echo "Recording date is ${DATE} in the week ${WEEK}, day of year ${DOY}" >> $RECDEBUG
+	echo "Initialize Driver"                 >> $RECDEBUG
+	echo "Driver Version: " ${IVCTL} -V      >> $RECDEBUG
+	
+	#if [ -z ${f} ]; then
+	#	echo "Incorrect Channel ID supplied"
+	#else
+	#	echo "Tune into freqency $f for $fn on Card ${cd}."
+	#fi
+	echo "...done "
+	echo "Commandline Params: "
+	echo " option 1 CAPTURETYPE (-t) ${1}] "  >> $RECDEBUG # TV or TAPE
+	echo " option 2 USER_NAME (-u) ${2}] "    >> $RECDEBUG
+	echo " option 3 CLIENTIP (-c) ${3}] "     >> $RECDEBUG
+	echo " option 4 DEVICEID (-d) ${4}] "     >> $RECDEBUG
+	echo " option 5 CHANNELID (-i) ${5}] "    >> $RECDEBUG
+	echo " option 6 WIDTH (-w) ${6}] "        >> $RECDEBUG
+	echo " option 7 HEIGHT (-g) ${7}] "       >> $RECDEBUG
+	echo " option 8 FORMAT (-a) ${8}] "       >> $RECDEBUG
+	echo " option 9 BITRATE (-b) ${9}] "      >> $RECDEBUG
+	echo " option 10 MAXBITRATE (-m) ${10}] " >> $RECDEBUG
+	echo " option 11 DIRECTORY (-s) ${11}] "  >> $RECDEBUG
+	echo " option 12 FILENAME (-f) ${12}] "   >> $RECDEBUG
+	echo " option 13 FILESERIAL (-z) ${13}] " >> $RECDEBUG
+	echo " option 14 LENGTH (-l) ${14}] "     >> $RECDEBUG
+	echo " option 15 MAXSIZE (-k) ${15}] "    >> $RECDEBUG
+	echo " option 16 OSTART (-o) ${16}] "     >> $RECDEBUG
+	 
+	echo "(1) media: $media | (2) user name: $user | (3) user ip: $cip | (4) device: $d | (5) channelID: $ch | (6) frame width: $width " \
+		 " | (7) frame height: $height | (8) compression: ${fo}| (9) bitrate: $bitrate | (10) peak bitrate: $peakbitrate | (11) storage dir: $store " \
+		 " | (12) free name: ${fn} | (13) fileserial: $fcreate | (14) limit Length: $flength | (15) limit Size: $maxsize | (16) orig beginning: $ostart" 
+	echo "Startup record name: ${RECNAME}" > $RECORDLOG
+	echo "."
+}
+
+cardinput () {
+	## note these seems to change between ivtv driver version 0.4 - 0.7
+	if [ "$media" = "tv" ]; then
+		echo "Select Tuner" >> $RECORDLOG
+		${IVCTL} -d ${d} -p 4
+	elif [ "$media" = "tape" ]; then
+		echo "Select SVideo" >> $RECORDLOG
+		${IVCTL} -d ${d} -p 6
+	fi
+}
+
+comp_mpeg1 () {
+        ## MPEG-1 recording
+        echo "MPEG-1 recording" >> $RECORDLOG
+        echo "Prepare the IVTV driver to let the hardware record a MPEG-1 Program Stream " >> $RECDEBUG
+        ${IVCTL} -d ${d}
+                sleep 1
+        ##${IVCTL} -d ${d} -u 1 -f width=$width,height=$height
+        ${IVCTL} -d ${d} -u 1 -f width=352,height=288
+                sleep 1
+        ##${IVCTL} -d ${d} -c stream_type=0,bitrate_mode=1,bitrate=$bitrate,bitrate_peak=$peakbitrate,audio=0x00e8,framerate=25,dnr_mode=0
+        ${IVCTL} -d ${d} -c stream_type=2,bitrate_mode=1,bitrate=1150000,bitrate_peak=1150000,audio=0xA9,framerate=25,dnr_mode=3,aspect=1
+}
+
+comp_mpeg2 () {
+        ## MPEG-2 recording  (720 x 576)
+        echo "MPEG-2 recording" >> $RECORDLOG
+        echo "Prepare the IVTV driver to let the hardware record a MPEG-2 Program Stream " >> $RECDEBUG
+        ${IVCTL} -d ${d}
+                sleep 1
+        ##${V4LCTL} -d ${d} -u 1 -f width=$width,height=$height
+        ${IVCTL} -d ${d} -u 1 -f width=$width,height=$height
+                sleep 1
+        ##${V4LCTL} -d ${d} -c stream_type=0,audio=0xA9,bitrate_mode=1,bitrate=$bitrate,bitrate_peak=$peakbitrate,framerate=25,dnr_mode=0
+        ##${IVCTL} -d ${d} -c stream_type=0,audio=0xA9,bitrate_mode=1,bitrate=$bitrate,bitrate_peak=$peakbitrate,framerate=25,dnr_mode=0
+        ${IVCTL} -d ${d} -c stream_type=10,audio=0xA9,bitrate_mode=1,bitrate=6500000,bitrate_peak=9600000,framerate=25,dnr_mode=3,aspect=1
+}
+
+
+tune () {
+	## tune the channel we don't use the freq. since to use $HOME/.ivtvrc is the default config
+      echo "Tune the channel we don't use the freq. since to use ${HOME}/.ivtvrc is the default config" >> $RECORDLOG
+      ${TV_TUNEUTIL} --channel ${ch} --input ${d} --freqtable custom --tuner-num 0
+}
+
+log_appl () {
+	## log the ivtv specifical information
+	LOGAPPFILE="${LOGAPP}/${RECNAME}.log"
+	echo "Logging application specifig data to"
+}
+
+log_rec () {
+
+        LOGFILE="${LOGREC}/${RECNAME}.log"
+        #echo -n "Current Frequency: "
+        #${IVCTL} -d ${d} -R >> $LOGFILE
+        #echo -n "Video Input: "
+        #${IVCTL} -d ${d} -P >> $LOGFILE
+        #echo -n "Audio Input: "
+        #${IVCTL} -d ${d} -Q >> $LOGFILE
+        #echo -n "Audio Program: "
+        #${IVCTL} -d ${d} -Z >> $LOGFILE
+        #echo -n "Video Output: "
+        #${IVCTL} -d ${d} -L >> $LOGFILE
+        #echo -n "Current Codec: "
+        #${IVCTL} -d ${d} -C >> $LOGFILE
+        #echo -n "."
+        #echo -n "Video Standard: "
+        #${IVCTL} -d ${d} -U >> $LOGFILE
+        #echo -n "Data Format: "
+        #${IVCTL} -d ${d} -F >> $LOGFILE
+
+         #if [ $fo = "mpeg1" ]; then
+                echo "Record File: ${RECNAME}.mpeg"  >> ${LOGFILE}
+          #  fi
+           # if [ $fo = "mpeg2" ]; then
+            #    echo "Record File: ${RECNAME}.mpeg"  >> ${LOGFILE}
+            #fi
+            #echo -n "Audio Input: "
+            #${IVCTL} -d ${chd} -Q
+            echo "Secondary Audio Program: " `${IVCTL} -d ${d} -Z`  >> ${LOGFILE}
+            echo "Current Codec Params: " `${IVCTL} -d ${d} -C`  >> ${LOGFILE}
+            echo "Current Control Params: " `${IVCTL} -d ${d} -Y`  >> ${LOGFILE}
+            echo "Video Input: "  `${IVCTL} -d ${d} -P` >> ${LOGFILE}
+            echo "Video Output: " `${IVCTL} -d ${d} -L` >> ${LOGFILE}
+            echo "Video Signal: " `${IVCTL} -d ${d} -I` >> ${LOGFILE}
+            echo "Video Standard: " `${IVCTL} -d ${d} -U` >> ${LOGFILE}
+            echo "VBI Mode: " `${IVCTL} -d ${d} -B`  >> ${LOGFILE}
+            echo "VBI Passthrough: " `${IVCTL} -d ${d} -W`  >> ${LOGFILE}
+            echo "VBI Embeded: " `${IVCTL} -d ${d} -X` >> ${LOGFILE}
+            echo "Driver Version: " `${IVCTL} -V`  >> ${LOGFILE}
+
+}
+
+record () {
+				
+	FILE=${RECNAME}.mpeg
+	# select tuner or svideo input
+	cardinput
+		
+	if [ "$fo" = "mpeg1" ]; then 
+			comp_mpeg1; 
+	elif [ "$fo" = "mpeg2"  ]; then 
+			comp_mpeg2;
+	else echo "Don't support this format: "$fo
+	fi	
+        ## Testing
+        #$IVCTL -d $DEV -r $f &
+        	
+    log_rec	
+    ## Check if you have an .ivtvrc channel configuration file 
+    ## in the user's direcory, who starts this script
+        	
+	echo "Change to records directory" >> $RECORDLOG
+	cd ${RDIR}
+		
+	echo "Start recording ${fn} ${fo}... " >> $RECORDLOG
+	echo "The record's name is ${FILE}: "  >> $RECORDLOG
+	echo "Recording now on ${d}: ${FILE}"  >> $RECORDLOG
+	catcommand="cat ${d} > ${FILE}"
+	##$catcommand &
+    cat ${d} > ${FILE} &
+    #Now record for a time equal to flength
+	catpid=$!
+	##catpid=`ps ww -eo pid,args | grep "$catcommand" |cut -c 0-5`
+	echo "Recording on pid: "${catpid}  >> $RECORDLOG
+	sleeptime=2
+    totaltime=$((${flength}/1000))
+    starttime=`date +%s`
+    nowtime=${starttime}
+    runtime=$((${nowtime}-${starttime}))
+	until [ ${runtime} -ge ${totaltime} ] ; do
+	    sleep ${sleeptime}
+	    nowtime=`date +%s`
+	    runtime=$((${nowtime}-${starttime}))
+	    echo "Run for "${runtime}" seconds out of "${totaltime} >> $RECORDLOG
+	done
+    kill -9 ${catpid}
+
+	#timeoffset
+#	s="60"
+#	TIMEOFFSET=$((${st} * ${s})) ;
+#	echo "Timeoffset: ${TIMEOFFSET}"
+#	echo "Accuracy in sec: ${WAIT}"
+#	#ELAPSED="0" # initial zeroing
+	
+#	until [ "${ELAPSED}" -ge "${TIMEOFFSET}" ] ; do
+#		ELAPSED=$((${ELAPSED} + ${WAIT}))
+#		FILESIZESHOW=(`stat -c %s ${FILE}`)
+#		echo "Current value file size: ${FILESIZESHOW} bytes in ${ELAPSED} seconds" #>> $RECDEBUG
+#		ENDDATE=`date +%Y%m%d%H%M%S`  
+#		sleep $WAIT
+#	done
+#	echo "Add End Date"
+	##And rename the file
+
+	# rec_rename
+}
+
+
+help () {
+	echo "Usage: $0 <media tv|tape|fwreload|debug> <capture-device 1|2|3> \
+<channelId type: $0 channelhelp> <name eg. starwars> <compression-format mpeg1| mpeg2> \
+<datalimit(MB)> <timeoffset(Minutes)>"
+}
+
+sorry() {
+	echo "Missing Parameter"
+	help
+	exit 1	   
+}
+
+help_media() {
+	echo "options for media: tv tape"
+}
+
+help_chanlist() {
+	echo "This refers to Your $HOME/.ivtvrc file, please keep in sync!"
+	echo "options for channel ID:
+		SB0-Tape
+		Camera1 	
+		SE9-Kanal5
+		S10-TV2-Norge
+		K5-Infokanalen
+        K6-Sverige1
+        K7-Sverige2
+        K9-DR2
+        K10-TV2-Danmark
+        K11-DR1
+        S13-NDR 
+        S14-TV-Danmark
+        S15-ARD
+        S29-Sat1
+        S30-Ekstrakanal
+      	S31-ZDF
+      	##K21-Kanal5
+        K40-TV2-Charlie
+        K49-Discovery-Channel
+        K50-RTL
+        K52-MTV-Europe
+        K53-Jetix-Hallmark
+        ##K54-Kanal5
+        K55-CNN-Int
+        K56-Viasat-Sport1
+		K57-Eurosport
+        K58-NRK1
+        K59-TheVoice
+        K60-BBC-World
+        K61-BBC-Prime
+        K62-VH1-PrivateBlue
+        K63-DK4
+        K64-CartoonNetwork
+        K65-TurnerClassicalMovies
+       	K66-Discovery-Animal
+        K67-TV2-Zulu
+        K68-National-Geographic-CNBC"
+
+}
+
+#rec_rename() {
+#	find . -name "${RECNAME}*" | sed "s/\(.*\)/mv '${RECNAME}.mpeg' '${RECNAME}_${ostart}_${oend}.mpeg'/" | (sh)
+#	echo "...done"
+#	#find $RECORDLOG -name "${RECNAME}.log" | sed "s/\(.*\)/mv '${RECNAME}.log' '${RECNAME}_${DATE}${TIME}.log'/" | (sh)
+#}
+
+#----------------------------------------------------------------------------
+# main commands
+
+
+# LOGAPPFILE="${LOGAPP}/${DATE}-${TIME}.log"
+
+case ${media} in
+	debug)
+		 if [ -z "IVTVCTL_PATH" ] ; then
+		      echo "Sorry the IVTVCTL_PATH environment variable is not defined exciting ...."
+		      exit 1
+		 fi                                                             
+		 
+		 ## dummy just show the configuration constants
+		 RECNAME=${fcreate}_${user}_${fn}_${ch}
+		 echo "$RECNAME" >> $RECORDLOG
+		 debug ${1} ${2} ${3} ${4} ${5} ${6} ${7} ${8} ${9} ${10} ${11} ${12} ${13} ${14} ${15} ${16};
+		 echo "Filename Recording would be: $RECNAME"
+	;;
+	tape) 	
+		if [ -z "IVTVCTL_PATH" ] ; then
+			echo "Sorry the IVTVCTL_PATH environment variable is not defined exciting ..."
+			exit 1 ;
+		fi
+
+        if [ -n $ostart ] ; then
+         RECNAME=${ostart}_${user}_${fn}_${ch}_${fo}
+        else
+		 RECNAME=${fcreate}_${user}_${fn}_${ch}_${fo}
+        fi
+
+		echo "$RECNAME" >> $RECORDLOG &
+		log_appl
+		sleep 1
+		if [ "$media" = "tape" ] && [ -n "$l" ] ; then
+			echo "record from tape feeding length limit: $l Minutes " >> $RECORDLOG
+			record >> $RECDEBUG &
+		elif [ "$media" = "tape" ] && [ -n "$k" ] ; then
+			echo "record from tape feeding size limit: $k MB" >> $RECORDLOG
+			record >> $RECDEBUG &
+		elif [ "$media" = "tape" ] ; then
+		    echo "pipo"
+			echo "record from tape feeding" >> $RECORDLOG
+			record >> $RECDEBUG &
+		fi			
+		echo -n "Running channel ${ch} - ${fn} ${d}"
+	;;
+    tv) 	
+		if [ -z "IVTVCTL_PATH" ] ; then
+			echo "Sorry the IVTVCTL_PATH environment variable is not defined exciting ..." >> $RECERROR
+			exit 1 ;
+		fi		
+		
+		RECNAME=${fcreate}_${user}_${fn}_${ch}
+		echo "$RECNAME" >> $RECORDLOG &
+		log_appl
+		sleep 1
+		
+		if [ "$media" = "tv" ] && [ -n "$l" ] ; then
+			echo "record from tv feeding " >> $RECORDLOG
+			record >> $RECDEBUG &
+		elif [ "$media" = "tv" ] && [ -n "$k" ] ; then
+			echo "record from tv feeding"  >> $RECORDLOG
+			record >> $RECDEBUG &
+		elif [ "$media" = "tv" ] ; then
+			echo "record from tv feeding"  >> $RECORDLOG
+			record >> $RECDEBUG &
+		fi			
+		echo -n "Running channel ${ch} - ${fn} ${d}"
+	;;
+      
+	*)
+		sorry
+	;;
+esac
+
+exit

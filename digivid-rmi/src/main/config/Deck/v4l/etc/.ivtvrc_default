@@ -1,0 +1,5 @@
+[defaults]
+VideoDevice=/dev/video1
+FrequencyTable=western-cable
+TunerNum=0
+Debug=0

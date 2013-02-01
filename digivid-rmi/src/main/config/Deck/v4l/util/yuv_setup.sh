@@ -1,0 +1,7 @@
+ivtvctl -o reg=0x02000844,val=0x1a860
+ivtvctl -o reg=0x02000848,val=0x20da0
+ivtvctl -o reg=0x0200084c,val=0x1a860
+ivtvctl -o reg=0x02000850,val=0x20da0
+ivtvctl -o reg=0x02000854,val=0x1a860
+ivtvctl -o reg=0x02000858,val=0x20da0
+

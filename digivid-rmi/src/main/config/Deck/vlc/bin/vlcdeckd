@@ -1,0 +1,217 @@
+#!/bin/bash
+#vlc -vvv --color v4l:/dev/video:norm=pal:frequency=543250:size=640x480:channel=0:adev=/dev/dsp:audio=0 --sout '#transcode{vcodec=mp4v,acodec=mpga,vb=3000,ab=256,venc=ffmpeg{keyint=80,hurry-up,vt=800000},deinterlace}:std{access=udp,mux=ts,dst=172.18.252.247}' --ttl 12
+#vlc -vvv --color v4l:/dev/video:norm=pal:frequency=543250:size=640x480:channel=0:adev=/dev/dsp:audio=0 --sout '#transcode{vcodec=mp4v,acodec=mpga,vb=3000,ab=256,venc=ffmpeg{keyint=80,hurry-up,vt=800000},deinterlace}:std{access=udp,mux=ts,dst=172.18.252.247}' --ttl 12
+
+# stream udp to laptop node09 
+#vlc -vvv --color pvr:// :pvr-device="/dev/video0":pvr-norm=pal:size=720x576:frequency=576250:bitrate=3000000:maxbitrate=4000000 --cr-average 1000 \
+# --sout '#transcode{vcodec=mp4v,acodec=mpga,vb=3000,ab=256,venc=ffmpeg{keyint=80,hurry-up,vt=800000},deinterlace}:std{access=udp,dst=172.18.248.255 --ttl 12}' --ttl 12 
+# ivtvctl -d /dev/video0 -p 4 -c stream_type=10,audio=0xA9,bitrate_mode=1,bitrate=3000000,bitrate_peak=4000000,framerate=25,dnr_mode=3
+
+
+
+
+NO_ARGS=0
+ARGS=$*
+
+MODULE_NAME="vlc"
+STREAMDECK_HOME="/home/bart/Deck/$MODULE_NAME"
+CONF=$STREAMDECK_HOME/etc/streamer-IVTV_0.4.conf
+
+if [ $# -eq "$NO_ARGS" ] # Script invoked with no arguments
+then 
+	echo "Usage:" 
+	echo "vlcdeck <streamtype: devUDP> <clientIP IP> <device: 0|1|2> <port: 123|n> <media: tv|tape>" >&2
+	echo "vlcdeck <streamtype: fileUDP> <clientIP> <fileinputname: eg. filename.mpg> -p <port: 123|n> <media: tv|tape>" >&2
+	echo "vlcdeck <streamtype: devHTTP> <serverIP> <device: 0|1|2> <port 8|n> <media: tv|tape>" >&2
+	echo "vlcdeck <streamtype: fileHTTP> <serverIP> <fileinputname: eg. filename.mpg> -p <port: 8|n> <media tv|tape>" >&2
+	echo "vlcdeck <streamtype: devRTP> <serverIP> <clientIP> <device: 0|1|2> <port 123|n> -n <streamname: eg. vhs.sdp> <media: tv|tape>" >&2
+	echo "vlcdeck <streamtype: fileRTP> <serverIP> <clientIP> <fileninputame: eg. filename.mpg> -p <port 8|n> -n <streamname: eg. vhs.sdp> <media: tv|tape>" >&2
+	
+fi 
+
+stream_configure() {
+	CONF_FILE=${1}
+	EXIT_VAL=${2}
+	if [ -f ${CONF_FILE} ]; then
+		. ${CONF_FILE}
+	else
+		echo "unable to find ${CONF_FILE}"
+		exit ${EXIT_VAL}
+	fi
+}
+
+stream_configure ${CONF} 7
+
+stream_devUDP() { 
+	echo "<streamtype devUDP> ${1} <clientIP IP> ${2} <device 0|1|2> ${3} <port 123|n> ${4} <media> ${5}" 
+	clientIP=${2}
+	int=${3}
+	port=${4}
+	media=${5}
+	
+	if  [ -n "${int}" ] && [ -n "$clientIP" ] && [ -n "$port" ] && [ -n "$media" ]; then
+		device=/dev/video$int
+
+		if [ "$media" = "tv" ]; then
+		    echo "Select Tuner"
+		    ${IVCTL} -d $device -p 4
+	    elif [ "$media" = "tape" ]; then
+		    echo "Select SVideo"
+		    ${IVCTL} -d $device -p 6
+	    fi
+
+		##mpeg-2 streaming
+		#vlc -vvv --color pvr:$device:norm=pal:size=720x576:frequency=576250:bitrate=3000000:maxbitrate=4000000 \
+		#--cr-average 1000 --sout udp:$clientIP:$port --ttl 12
+		##mpeg-1 streaming
+		${IVCTL} -c stream_type=0,bitrate_mode=1,bitrate=1150000,bitrate_peak=1150000,audio=0x00e8,framerate=15,dnr_mode=0
+		sleep 1
+		vlc -vvv --color pvr:$device:norm=pal:size=720x576:frequency=576250 --cr-average 1000 --sout udp:$clientIP:$port --ttl 12
+	else echo "missing parameter" 		 
+	fi
+}
+
+# 
+stream_fileUDP() {
+	echo "<streamtype fileUDP> ${1} <clientIP>  ${2} <fileinputname filename.mpg> ${3} <port 123|n> ${4}"
+	clientIP=${2}
+	fileinputname=${3}
+	port=${4}
+
+	${IVCTL} -c stream_type=0,framerate=10,dnr_mode=0
+	if [ -n "$fileinputname" ] && [ -n "$clientIP" ] && [  -n "$port" ]; then 
+		vlc -vvv $fileinputname --sout udp:$clientIP:$port --ttl 12
+	fi 
+}
+
+# on the client(s) run e.g.: vlc http://encoder1.sb.statsbiblioteket.dk:8080
+
+stream_devHTTP() { 
+	echo "<streamtype devHTTP> ${1} <serverIP> ${2} <device 0|1|2> ${3} <port 8|n> ${4} <media> ${5}"
+	serverIP=${2}
+	int=${3}
+	port=${4}
+	media=${5}
+
+	if [ -n "$int" ] && [ -n "$serverIP" ] && [ -n "$port" ] && [ -n "$media" ]; then
+		device=/dev/video$int
+
+		if [ "$media" = "tv" ]; then
+		    echo "Select Tuner"
+		    ${IVCTL} -d $device -p 4
+	    elif [ "$media" = "tape" ]; then
+		    echo "Select SVideo"
+		    ${IVCTL} -d $device -p 6
+	    fi
+
+        sleep 1
+		##mpeg-1 streaming
+		##${IVCTL} -c stream_type=0,bitrate_mode=1,bitrate=1150000,bitrate_peak=1150000,audio=0x00e8,framerate=15,dnr_mode=0
+		${IVCTL} -d $device -u 1 -f width=352,height=288
+		sleep 1
+	    ##${IVCTL} -d $device -c stream_type=2,bitrate_mode=1,bitrate=1150000,bitrate_peak=1150000,audio=0x00e8,framerate=25,dnr_mode=0
+		${IVCTL} -d $device -c stream_type=2,aspect=1,bitrate=1150000,bitrate_peak=1150000,framerate=0,audio=0x00A9
+		sleep 1
+		echo "start streamer..."
+		#vlc -vvv --color pvr:$device:norm=pal:size=352x288:frequency=576250 \
+		#--cr-average 1000 --sout '#standard{access=http,mux=ps,dst='$serverIP':'$port'}'
+		vlc -vvv  --intf dummy pvr:$device  --sout '#standard{access=http,mux=ps,dst='$serverIP':'$port'}'
+	fi 
+}
+
+# on the client(s) run e.g.: vlc http://encoder1.sb.statsbiblioteket.dk:8080
+stream_fileHTTP() {
+	echo "<streamtype fileHTTP> ${1} <serverIP> ${2} <fileinputname> ${3} <port 8|n> ${4}"
+	serverIP=${2}
+	fileinputname=${3}
+	port=${4}
+
+	${IVCTL} -c stream_type=0,framerate=10,dnr_mode=0
+	echo " *******************************replay******************************************* "
+	if [ -n "$fileinputname" ] && [ -n "$serverIP" ] && [ -n "$port" ]; then
+		vlc -vvv --intf dummy $fileinputname --sout '#standard{access=http,mux=ps,dst='$serverIP':'$port'}'
+	fi
+}
+
+# on the client(s) run e.g.: vlc http://encoder1.sb.statsbiblioteket.dk:8080
+stream_devRTP() { 
+	echo "<streamtype devRTP> ${1} <serverIP> ${2} <clientIP> ${3} <device 0|1|2> ${4} <port 123|n> ${5} <streamname> ${6} <media> ${7}"
+	serverIP=${2}
+	clientIP=${3}
+	int=${4}
+	port=${5}
+	streamname=${6}
+	media=${7}
+
+	if [ -n "$int" ] && [ -n "$clientIP" ] && [ -n "$serverIP" ] && [ -n "$port" ] && [ -n "$streamname" ] && [ -n "$media" ]; then
+		device=/dev/video$int
+
+		if [ "$media" = "tv" ]; then
+		    echo "Select Tuner"
+		    ${IVCTL} -d $device -p 4
+	    elif [ "$media" = "tape" ]; then
+		    echo "Select SVideo"
+		    ${IVCTL} -d $device -p 6
+	    fi
+
+		##mpeg-1 streaming
+		${IVCTL} -c stream_type=0,bitrate_mode=1,bitrate=1150000,bitrate_peak=1150000,audio=0x00e8,framerate=15,dnr_mode=0
+		sleep 1
+		vlc -vvv --color pvr:$device:norm=pal:size=720x576:frequency=576250 \
+		--cr-average 1000 --sout --sout '#rtp{dst='$clientIP',port='$port',sdp=rtsp://'$serverIP':'$port'/'$streamname$int'.sdp}' 
+	fi
+}
+
+# on the client(s) run e.g.: vlc rtsp://encoder1.sb.statsbiblioteket.dk:8080/test.sdp
+stream_fileRTP() {
+	echo "<streamtype fileRTP> ${1} <serverIP> ${2} <clientIP> ${3} <filename filename.mpg> ${4} <port 8|n> ${5} <streamname> ${6}"
+	serverIP=${2}
+	clientIP=${3}
+	fileinputname=${4}
+	port=${5}
+	streamname=${6}
+
+	if [ -n "$fileinputname" ] && [ -n "$clientIP" ] && [ -n "$serverIP" ] && [ -n "$port" ] && [ -n "$streamname" ]; then
+		vlc -vvv $fileinputname --sout '#rtp{dst='$clientIP',port='$port',sdp=rtsp://'$serverIP':'$port/$streamname'.sdp}' 
+	fi
+}
+ 
+# Consider our streamtype options
+case "${1}" in
+        devUDP)	
+        echo "Start UDP streaming from device source"
+        echo "Stream to $clientIP:$port"
+        stream_devUDP $*
+    ;;
+        fileUDP)
+        echo "Start UDP streaming from file source"
+        echo "Stream to $clientIP:$port"
+        stream_fileUDP $*
+    ;;
+    	devHTTP)
+    	echo "Start HTTP streaming from device source"
+    	echo "Stream from $serverIP:$port"
+        stream_devHTTP $*
+    ;;
+    	fileHTTP)
+    	echo "Start HTTP streaming from file source"
+    	echo "Stream from $serverIP:$port"
+        stream_fileHTTP $*
+    ;;
+    	devRTP)
+    	echo "Start RTP streaming from device source"
+        echo "Stream from $serverIP:$port to $clientIP:$port"
+        stream_devRTP $*
+    ;;    
+    	fileRTP)
+    	echo "Start RTP streaming from file source"
+    	echo "Stream from $serverIP:$port to $clientIP:$port"
+        stream_fileRTP $*
+    ;;    
+	*)
+	echo "Stream type not supported, exiting: ${OPPTIND}" 
+	exit 1
+    ;;
+esac
+
+exit 0
