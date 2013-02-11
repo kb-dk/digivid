@@ -23,10 +23,6 @@
     <entry key="STREAMSERVER_STARTCOMMAND">start_preview.sh</entry>
     <entry key="STREAMSERVER_STOPCOMMAND">stop_preview.sh</entry>
     <entry key="STREAMSERVER_UNIXEXEC">/home/bart/Deck/vlc/bin/streamctrl.sh</entry>
-    <entry key="STREAM_FRAME_WIDTH">352</entry>
-    <entry key="STREAM_FRAME_HEIGHT">288</entry>
-    <entry key="STREAM_BITRATE">1150000</entry>
-    <entry key="STREAM_MAXBITRATE">1150000</entry>
 
     <!--Capture Settings -->
     <!-- MPEG-1 -->

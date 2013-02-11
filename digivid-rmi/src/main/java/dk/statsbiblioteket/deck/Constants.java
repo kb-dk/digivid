@@ -57,12 +57,6 @@ public interface Constants {
     public static final String      DEFAULT_STREAMSERVER_IP  =  LoadXMLConfig.getProperty(DEFAULT_CLIENTCONF,"STREAMSERVER_IP");
     public static final Integer     DEFAULT_STREAMSERVER_HTTP_PORT  =  LoadXMLConfig.getPropertyInt(DEFAULT_CLIENTCONF,"STREAMSERVER_HTTP_PORT");
     public static final String      DEFAULT_STREAMSERVER_MEDIA  =  LoadXMLConfig.getProperty(DEFAULT_CLIENTCONF,"STREAMSERVER_MEDIA");
-    //customize your stream player window input
-    public static final Integer     DEFAULT_STREAMSERVER_FRAME_WIDTH  =  LoadXMLConfig.getPropertyInt(DEFAULT_CLIENTCONF,"STREAM_FRAME_WIDTH");
-    public static final Integer     DEFAULT_STREAMSERVER_FRAME_HEIGHT  =  LoadXMLConfig.getPropertyInt(DEFAULT_CLIENTCONF,"STREAM_FRAME_HEIGHT");
-    //Fix your Bandwith problems with a lower bitrate
-    public static final Integer     DEFAULT_STREAMSERVER_BITRATE     =  LoadXMLConfig.getPropertyInt(DEFAULT_CLIENTCONF,"STREAM_BITRATE");
-    public static final Integer     DEFAULT_STREAMSERVER_MAXBITRATE   =  LoadXMLConfig.getPropertyInt(DEFAULT_CLIENTCONF,"STREAM_MAXBITRATE");
 
     public static final Integer     DEFAULT_RMI_CLIENT_PORT  =  LoadXMLConfig.getPropertyInt(DEFAULT_CLIENTCONF,"RMI_PORT");
 
