@@ -5,31 +5,18 @@
         These are customizable constant values for Deck Client
         WARNING! DON'T USE LINEBREAKS when editing this file.
     </comment>
-    <!--
-        The directory where your configuration reside
-    -->
-    <!-- RMI 1099 standard port -->
-    <!-- Admin machine as RMI client 1-->
-
-    <entry key="RMI_CLIENT_NAME">localhost</entry>
-    <entry key="RMI_CLIENT_IP">127.0.0.1</entry>
 
     <!-- this has changed from apache to tomcat -->
 
     <entry key="Client_CONFIGURATION">/home/bart/tomcat/webapps/digivid/WEB-INF</entry>
-    <entry key="RMI_CLIENT_CLASSES">/home/bart/tomcat/webapps/digivid/WEB-INF/lib/client.jar</entry>
 
     <!--RMI Class Server 1-->
-    <entry key="RMI_CLASSSERVER_NAME">localhost</entry>
-    <entry key="RMI_CLASSSERVER_IP">127.0.01</entry>
     <entry key="RMI_PORT">9009</entry>
 
     <!--Stream Server 1-->
     <entry key="STREAMSERVER_NAME">localhost</entry>
     <entry key="STREAMSERVER_IP">0.0.0.0</entry>
     <entry key="STREAMSERVER_HTTP_PORT">9000</entry>
-    <entry key="STREAMSERVER_UDP_PORT">1235</entry>
-    <entry key="STREAMSERVER_RTP_PORT">1235</entry>
     <entry key="STREAMSERVER_DEVICEID">1</entry>
     <entry key="STREAMSERVER_MEDIA">tape</entry>
     <entry key="STREAMSERVER_BINDIR">/home/bart/Deck/vlc/bin</entry>

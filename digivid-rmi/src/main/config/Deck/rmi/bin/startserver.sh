@@ -1,7 +1,8 @@
 #!/bin/sh
 # this requires for execution to be on a Unix box with java J2SE installed
 # one network interface (eth0)
-SERVER_RMI_HOME=${HOME}/Deck/rmi
+SCRIPT_PATH=$(dirname $(readlink -f $0))
+SERVER_RMI_HOME=${SCRIPT_PATH}/..
 #CLASSERVER_DEFAULTS="/etc/default/deck.default"
 TIMESTAMP=`date "+%y-%m-%d_%H-%M-%S-%s"`
 IP=`/sbin/ifconfig ${NETINTERFACE} | awk '/inet addr/{print $2}' | cut -d: -f2`

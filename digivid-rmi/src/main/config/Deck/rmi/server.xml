@@ -5,28 +5,27 @@
         These are customizable constant values for Deck Server
         WARNING! DON'T USE LINEBREAKS when editing this file.
     </comment>
+    <entry key="RMI_CLASSSERVER_NAME">localhost</entry>
+    <entry key="RMI_PORT">9009</entry>
+
     <!--
         The directory where your configuration reside
     -->
     <!-- to serve to Admin client 1 -->
 
+    <!--
     <entry key="RMI_CLIENT_NAME">localhost</entry>
     <entry key="RMI_CLIENT_IP">127.0.0.1</entry>
 
-    <!-- this has changed from apache to tomcat -->
     <entry key="RMI_CLIENT_CONFIGURATION">http://127.0.0.1:${tomcatPort}/digivid/rmi</entry>
     <entry key="RMI_CLIENT_CLASSES">http://127.0.0.1:${tomcatPort}/digivid/rmi/client.jar</entry>
 
-    <!-- RMI Classes Server 1-->
-    <entry key="RMI_CLASSSERVER_NAME">localhost</entry>
     <entry key="RMI_CLASSSERVER_IP">0.0.0.0</entry>
-    <entry key="RMI_PORT">9009</entry>
     <entry key="RMI_CLASSSERVER_CONFIGURATION">/home/bart/Deck/rmi</entry>
     <entry key="RMI_CLASSSERVER_CLASSES">/home/bart/Deck/rmi/compute.jar</entry>
 
-    <!--Listing and replay streaming-->
      <entry key="RECORDSDIR">/home/bart/records</entry>
      <entry key="EXTENSION">.mpeg</entry>
      <entry key="FILENAME">testfile</entry>
-    
+     -->
 </properties>

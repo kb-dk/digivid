@@ -13,17 +13,7 @@ import java.util.ResourceBundle;
  * @since <pre>20-Nov-2006 ${Time}</pre>
  */
 public interface Constants {
-    //public static final String CONF_DIRECTORY_PARAM = "dk.statsbiblioteket.riff.utils.dk.statsbiblioteket.deck.config";
-    //static final ResourceBundle build_properties = ResourceBundle.getBundle("build");
-    //static final String application_name = build_properties.getString("application.name");
-    //if you like to use your own properties put your home path here
 
-    //TODO This is really horrible!
-    //public static final String DEFAULT_CLIENTCONF_DIRECTORY = System.getProperty("user.home")+"/tomcat/webapps/"+application_name+"/WEB-INF";
-    // CHANGE THESE TWO CONFIGURATION TO YOUR ENVIRONMENT,
-    // NOTE: FURTHERMORE YOU HAVE TO CHANGE YOUR ANT PROPERTIE FILE TOO  IO TO DEPLOY YOUR CONFIGS
-    //public static final String DEFAULT_CLIENTCONF = DEFAULT_CLIENTCONF_DIRECTORY + "/adminRMIClient_rigel_digibox01.xml";
-    //public static final String DEFAULT_CLIENTCONF = DEFAULT_CLIENTCONF_DIRECTORY + "/client.xml";
      public static final URL DEFAULT_CLIENTCONF =  Constants.class.getClassLoader().getResource("client.xml");
 
 
@@ -66,8 +56,6 @@ public interface Constants {
     public static final String      DEFAULT_STREAMSERVER_NAME  =  LoadXMLConfig.getProperty(DEFAULT_CLIENTCONF,"STREAMSERVER_NAME");
     public static final String      DEFAULT_STREAMSERVER_IP  =  LoadXMLConfig.getProperty(DEFAULT_CLIENTCONF,"STREAMSERVER_IP");
     public static final Integer     DEFAULT_STREAMSERVER_HTTP_PORT  =  LoadXMLConfig.getPropertyInt(DEFAULT_CLIENTCONF,"STREAMSERVER_HTTP_PORT");
-    public static final Integer     DEFAULT_STREAMSERVER_UDP_PORT  =  LoadXMLConfig.getPropertyInt(DEFAULT_CLIENTCONF,"STREAMSERVER_UDP_PORT");
-    public static final Integer     DEFAULT_STREAMSERVER_RTP_PORT  =  LoadXMLConfig.getPropertyInt(DEFAULT_CLIENTCONF,"STREAMSERVER_RTP_PORT");
     public static final String      DEFAULT_STREAMSERVER_MEDIA  =  LoadXMLConfig.getProperty(DEFAULT_CLIENTCONF,"STREAMSERVER_MEDIA");
     //customize your stream player window input
     public static final Integer     DEFAULT_STREAMSERVER_FRAME_WIDTH  =  LoadXMLConfig.getPropertyInt(DEFAULT_CLIENTCONF,"STREAM_FRAME_WIDTH");
@@ -77,11 +65,5 @@ public interface Constants {
     public static final Integer     DEFAULT_STREAMSERVER_MAXBITRATE   =  LoadXMLConfig.getPropertyInt(DEFAULT_CLIENTCONF,"STREAM_MAXBITRATE");
 
     public static final Integer     DEFAULT_RMI_CLIENT_PORT  =  LoadXMLConfig.getPropertyInt(DEFAULT_CLIENTCONF,"RMI_PORT");
-    public static final String      DEFAULT_RMI_CLIENT_NAME  =  LoadXMLConfig.getProperty(DEFAULT_CLIENTCONF,"RMI_CLIENT_NAME");
-    public static final String      DEFAULT_RMI_CLIENT_IP  =  LoadXMLConfig.getProperty(DEFAULT_CLIENTCONF,"RMI_CLIENT_IP");
-    public static final String      DEFAULT_RMI_CLIENT_CLASSES = LoadXMLConfig.getProperty(DEFAULT_CLIENTCONF,"RMI_CLIENT_CLASSES");
-    public static final String      DEFAULT_RMI_CLASSSERVER_NAME = LoadXMLConfig.getProperty(DEFAULT_CLIENTCONF,"RMI_CLASSSERVER_NAME");
-    public static final String      DEFAULT_RMI_CLASSSERVER_IP = LoadXMLConfig.getProperty(DEFAULT_CLIENTCONF,"RMI_CLASSSERVER_IP");
-
 
 }

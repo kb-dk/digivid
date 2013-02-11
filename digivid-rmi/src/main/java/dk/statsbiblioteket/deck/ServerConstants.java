@@ -2,6 +2,8 @@ package dk.statsbiblioteket.deck;
 
 import dk.statsbiblioteket.deck.config.LoadXMLConfig;
 
+import java.net.URL;
+
 /**
  * Created by IntelliJ IDEA.
  * User: stephan
@@ -10,18 +12,9 @@ import dk.statsbiblioteket.deck.config.LoadXMLConfig;
  * To change this template use File | Settings | File Templates.
  */
 public interface ServerConstants {
-    public static final String CONF_DIRECTORY_PARAM = "dk.statsbiblioteket.riff.utils.dk.statsbiblioteket.deck.config";
 
-    //if you like to use your own properties put your home path here
-    public static final String DEFAULT_SERVERCONF_DIRECTORY = "/home/bart/Deck/rmi";
+    public static final URL DEFAULT_CONF = ServerConstants.class.getClassLoader().getResource("server.xml");
 
-    // CHANGE THESE TWO CONFIGURATION TO YOUR ENVIRONMENT,
-    // NOTE: FURTHERMORE YOU HAVE TO CHANGE YOUR ANT PROPERTIE FILE TOO  IO TO DEPLOY YOUR CONFIGS
-
-    public static final String DEFAULT_SERVERCONF = DEFAULT_SERVERCONF_DIRECTORY +"/server.xml";
-
-    public static final Integer DEFAULT_RMI_CLASSSERVER_PORT = LoadXMLConfig.getPropertyInt(DEFAULT_SERVERCONF, "RMI_PORT");
-    public static final String  DEFAULT_RMI_CLASSSERVER_NAME = LoadXMLConfig.getProperty(DEFAULT_SERVERCONF, "RMI_CLASSSERVER_NAME");
-    public static final String  DEFAULT_RMI_CLASSSERVER_IP = LoadXMLConfig.getProperty(DEFAULT_SERVERCONF, "RMI_CLASSSERVER_IP");
-    public static final String  DEFAULT_RMI_CLASSSERVER_CLASSES = LoadXMLConfig.getProperty(DEFAULT_SERVERCONF, "RMI_CLASSSERVER_CLASSES");
+    public static final Integer DEFAULT_RMI_CLASSSERVER_PORT = LoadXMLConfig.getPropertyInt(DEFAULT_CONF, "RMI_PORT");
+    public static final String  DEFAULT_RMI_CLASSSERVER_NAME = LoadXMLConfig.getProperty(DEFAULT_CONF, "RMI_CLASSSERVER_NAME");
 }
