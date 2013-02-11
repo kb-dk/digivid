@@ -13,9 +13,9 @@ import java.util.ResourceBundle;
  * @since <pre>20-Nov-2006 ${Time}</pre>
  */
 public interface Constants {
-    public static final String CONF_DIRECTORY_PARAM = "dk.statsbiblioteket.riff.utils.dk.statsbiblioteket.deck.config";
-    static final ResourceBundle build_properties = ResourceBundle.getBundle("build");
-    static final String application_name = build_properties.getString("application.name");
+    //public static final String CONF_DIRECTORY_PARAM = "dk.statsbiblioteket.riff.utils.dk.statsbiblioteket.deck.config";
+    //static final ResourceBundle build_properties = ResourceBundle.getBundle("build");
+    //static final String application_name = build_properties.getString("application.name");
     //if you like to use your own properties put your home path here
 
     //TODO This is really horrible!

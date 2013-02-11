@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <comment>
+        These are customizable constant values for Deck Client
+        WARNING! DON'T USE LINEBREAKS when editing this file.
+    </comment>
+    <!--
+        The directory where your configuration reside
+    -->
+    <!-- RMI 1099 standard port -->
+    <!-- Admin machine as RMI client 1-->
+
+    <entry key="RMI_CLIENT_NAME">localhost</entry>
+    <entry key="RMI_CLIENT_IP">127.0.0.1</entry>
+
+    <!-- this has changed from apache to tomcat -->
+
+    <entry key="Client_CONFIGURATION">/home/bart/tomcat/webapps/digivid/WEB-INF</entry>
+    <entry key="RMI_CLIENT_CLASSES">/home/bart/tomcat/webapps/digivid/WEB-INF/lib/client.jar</entry>
+
+    <!--RMI Class Server 1-->
+    <entry key="RMI_CLASSSERVER_NAME">localhost</entry>
+    <entry key="RMI_CLASSSERVER_IP">127.0.01</entry>
+    <entry key="RMI_PORT">9009</entry>
+
+    <!--Stream Server 1-->
+    <entry key="STREAMSERVER_NAME">localhost</entry>
+    <entry key="STREAMSERVER_IP">0.0.0.0</entry>
+    <entry key="STREAMSERVER_HTTP_PORT">9000</entry>
+    <entry key="STREAMSERVER_UDP_PORT">1235</entry>
+    <entry key="STREAMSERVER_RTP_PORT">1235</entry>
+    <entry key="STREAMSERVER_DEVICEID">1</entry>
+    <entry key="STREAMSERVER_MEDIA">tape</entry>
+    <entry key="STREAMSERVER_BINDIR">/home/bart/Deck/vlc/bin</entry>
+    <entry key="STREAMSERVER_STARTCOMMAND">start_preview.sh</entry>
+    <entry key="STREAMSERVER_STOPCOMMAND">stop_preview.sh</entry>
+    <entry key="STREAMSERVER_UNIXEXEC">/home/bart/Deck/vlc/bin/streamctrl.sh</entry>
+    <entry key="STREAM_FRAME_WIDTH">352</entry>
+    <entry key="STREAM_FRAME_HEIGHT">288</entry>
+    <entry key="STREAM_BITRATE">1150000</entry>
+    <entry key="STREAM_MAXBITRATE">1150000</entry>
+
+    <!--Capture Settings -->
+    <!-- MPEG-1 -->
+    <entry key="FRAME_WIDTH_MPEG1">352</entry>
+    <entry key="FRAME_HEIGHT_MPEG1">288</entry>
+    <entry key="BITRATE_MPEG1">1150000</entry>
+    <entry key="MAXBITRATE_MPEG1">1150000</entry>
+    <entry key="RECORDER_FILE_LIMIT_SIZE_MPEG1">1000</entry>
+    <!-- MPEG-2 -->
+    <entry key="FRAME_WIDTH_MPEG2">720</entry>
+    <entry key="FRAME_HEIGHT_MPEG2">576</entry>
+    <entry key="BITRATE_MPEG2">6500000</entry>
+    <entry key="MAXBITRATE_MPEG2">6500000</entry>
+    <entry key="RECORDER_FILE_LIMIT_SIZE_MPEG2">6000</entry>
+
+    <!-- Format independend sttings -->
+    <entry key="FORMAT">2</entry>
+    <entry key="ENCODE_DEVICEID">0</entry>
+    <entry key="RECORDSDIR">/home/bart/Deck/records</entry>
+    <entry key="EXTENSION">.mpeg</entry>
+    <entry key="FILENAME">testfile</entry>
+    <entry key="RECORDER_UNIXEXEC">/home/bart/Deck/v4l/bin/capturectrl.sh</entry>
+    <entry key="RECORDER_BINDIR">/home/bart/Deck/v4l/bin</entry>
+    <!--4 hour default recordings limit -->
+    <entry key="RECORDER_FILE_LIMIT_TIME">14400000</entry>
+
+    <!--  yyyy/MM/dd plz don't change order of year,month,day -->
+    <entry key="DEFAULT_DATE_REGEXPRESSION">([0-9]{4})/([0-9]{2})/([0-9]{2})_([0-9]{2}):([0-9]{2}):([0-9]{2}).([0-9]{1})</entry>
+    <!--  HH:MM:SS.S plz don't change order of hours,minutes,seconds and milllis -->
+    <entry key="DEFAULT_TIME_REGEXPRESSION">([0-9]{2}):([0-9]{2}):([0-9]{2}).([0-9]{1})</entry>
+
+    <entry key="DEFAULT_RECORDSNAME_REGEXPRESSION">([0-9]{2}):([0-9]{2}):([0-9]{2}).([0-9]{1})</entry>
+</properties>

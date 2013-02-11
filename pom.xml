@@ -9,6 +9,7 @@
     <packaging>pom</packaging>
     <version>1.0</version>
     <modules>
+        <module>digivid-client</module>
         <module>digivid-web</module>
         <module>digivid-rmi</module>
     </modules>

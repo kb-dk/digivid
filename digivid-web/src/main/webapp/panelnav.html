@@ -1,0 +1,116 @@
+<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+
+<html>
+<head>
+
+	<title>Bart Tape Deck</title>
+
+	<meta name="robots" content="NOINDEX,NOFOLLOW">
+	<meta name="robots" content="NOARCHIVE">
+	<meta name="author" content="webmaster">
+	<meta name="rating" content="General">
+
+	<meta name="site-languages" content="English">
+	<meta http-equiv="Content-type" content="text/html; charset=iso-8859-1">
+	<meta http-equiv="Reply-to" content="helpdesk@statsbiblioteket.dk">
+
+	<!--<style type="text/css" src="panels.css"></style>-->
+	 <LINK rel="stylesheet" type="text/css" href="panels.css">
+     <script type="text/javascript" src="panels.js" language="JavaScript"></script>
+     <script type="text/javascript" src="debugger.js" language="JavaScript"></script>
+</head>
+
+<body id="theBody" onload="parent.showPage('navLayer')">
+    <FORM NAME="ctrl" METHOD="GET">
+
+    <TABLE BORDER=0>
+
+</TABLE>
+
+    <table width="100%" border="0" cellpadding="4" cellspacing="4" valign="bottom" bgcolor="black">
+    <tr>
+        <td colspan="4">
+        <!--<INPUT TYPE="TEXT" NAME="encoderIP">-->
+        <!-- todo: retreive this from adminRMIClient.xml config -->
+
+        <SELECT multiple="none" size="3" name="encoderIP">
+                <OPTION selected value="172.18.249.253">Encoder01</OPTION>
+                <OPTION value="172.18.249.253">Encoder02</OPTION>
+                <OPTION value="172.18.249.253">Encoder03</OPTION>
+        </SELECT>
+
+        <!--
+        <SELECT multiple="none" size="3" name="encoderIP">
+                <OPTION selected value="192.168.1.60">Encoder01</OPTION>
+                <OPTION value="192.168.1.60">Encoder02</OPTION>
+                <OPTION value="192.168.1.60">Encoder03</OPTION>
+        </SELECT>
+        -->
+        <!--
+        <a onmouseover="showContent('panel-bg'); return true;" href="javascript:showContent('panel-bg')">
+            [show]
+        </a>
+        <a onmouseover="reverseContentDisplay('panel-bg'); return true;" href="javascript:reverseContentDisplay('panel-bg')">
+            [togle]
+        </a>
+        -->
+        <!--
+        <a onmouseover="hideContent('panel-bg'); return true;"
+            href="javascript:hideContent('panel-bg')">
+            [hide]
+        </a>-->
+
+     </td>
+     </tr>
+     <tr>
+     <td>
+        <a onmouseover="javascript:showContent('panel-nav_bg'); return true;"
+            href="javascript:loadPage('contentLayer','./preview.jsp');">
+        <!--<img border="0" src="./images/icons/tMy_Computer.gif" vspace=0 hspace=0 alt="sites">
+        <br>-->
+            <span class="icondesc">preview &nbsp;</span>
+
+        </a>
+     </td><td align="center">
+        <a onmouseover="javascript:hideContent('panel-nav_bg'); return true;"
+           href="javascript:loadPage('contentLayer','./record.jsp')">
+        <!--<img border="0" src="./images/icons/tFind.gif" vspace=0 hspace=0 alt="search">
+            <br>-->
+        <span class="icondesc">record &nbsp;</span></a>
+    </td>
+    <td align="right">
+        <a onmouseover="javascript:hideContent('panel-nav_bg'); return true;"
+         href="javascript:loadPage('contentLayer','./replay.jsp');">
+        <!--<img border="0" src="./images/icons/tWorkgroup.gif" vspace=0 hspace=0 alt="develop">
+        <br>-->
+        <span class="icondesc">replay &nbsp;</span>
+        </a>
+    </td>
+     <td align="right">
+        <a onmouseover="javascript:hideContent('panel-nav_bg'); return true;"
+         href="javascript:loadPage('contentLayer','./jobstatus.jsp');">
+        <!--<img border="0" src="./images/icons/tWorkgroup.gif" vspace=0 hspace=0 alt="develop">
+        <br>-->
+        <span class="icondesc">status &nbsp;</span>
+        </a>
+    </td>
+    </tr>
+	</table>
+     </FORM>
+
+     <SCRIPT LANGUAGE="JavaScript"><!--
+              // setupWindow()
+              // describeBrowser()
+              // describeWindow()
+              // describeDocument()
+              // finishWindow()
+        //-->
+    </SCRIPT>
+
+</body>
+</html>
+
+
+
+
+

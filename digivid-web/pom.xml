@@ -16,8 +16,61 @@
     <dependencies>
         <dependency>
             <groupId>digivid</groupId>
-            <artifactId>digivid-rmi</artifactId>
+            <artifactId>digivid-client</artifactId>
+            <version>1.0</version>
         </dependency>
+
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                     <archiveClasses>false</archiveClasses>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>2.6</version>
+                    <executions>
+                      <execution>
+                        <id>copy</id>
+                        <phase>package</phase>
+                        <goals>
+                          <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                          <artifactItems>
+                            <artifactItem>
+                              <groupId>digivid</groupId>
+                              <artifactId>digivid-client</artifactId>
+                              <!--<version>3.8.1</version>-->
+                              <type>jar</type>
+                              <overWrite>false</overWrite>
+                              <outputDirectory>${project.build.directory}/${pom.artifactId}-${version}/rmi</outputDirectory>
+                              <destFileName>client.jar</destFileName>
+                            </artifactItem>
+                          </artifactItems>
+                          <outputDirectory>${project.build.directory}/wars</outputDirectory>
+                          <overWriteReleases>false</overWriteReleases>
+                          <overWriteSnapshots>true</overWriteSnapshots>
+                        </configuration>
+                      </execution>
+                    </executions>
+                  </plugin>
+        </plugins>
+    </build>
 
 </project>
