@@ -23,11 +23,11 @@
         }
 </script>
 <%
-    String encoder_name = request.getParameter(ENCODER_NAME_PARAM);
-    if (encoder_name == null) {
-        encoder_name = Constants.DEFAULT_STREAMSERVER_NAME;
-    }
-
+    //String encoder_name = request.getParameter(ENCODER_NAME_PARAM);
+    //if (encoder_name == null) {
+    //    encoder_name = Constants.DEFAULT_STREAMSERVER_NAME;
+    //}
+    String encoder_name = InetAddress.getLocalHost().getHostName();
     String encoderIP = java.net.InetAddress.getByName(encoder_name).getHostAddress();
     /*String encoder_name = encoderIP;
     if (encoderIP == null || "".equals(encoderIP)) {

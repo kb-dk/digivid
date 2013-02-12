@@ -14,7 +14,7 @@
         <module>digivid-rmi</module>
     </modules>
     <properties>
-        <tomcatPort>8080</tomcatPort>
+        <tomcatPort>8371</tomcatPort>
     </properties>
 
 </project>

@@ -29,7 +29,7 @@ if [ -n "$DEVICE_NUMBER" ]; then
   if [ -n "$vpid" ] ; then
      exit 0
   fi
-  vlc -vvv --intf dummy pvr:${DEVICE} --sout '#standard{access=http,mux=ps,dst='$ip':'$PORT'}' &
+  vlc -vvv --intf dummy pvr://${DEVICE} --sout '#standard{access=http,mux=ps,dst='$ip':'$PORT'}' &
 elif [ -n "$FILE" ]; then
   $BINDIR/stop_preview.sh -p ${PORT}
   vlc -vvv --intf dummy ${FILE} --sout '#standard{access=http,mux=ps,dst='$ip':'$PORT'}' &

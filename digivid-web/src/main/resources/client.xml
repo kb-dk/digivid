@@ -41,7 +41,7 @@
     <!-- Format independend sttings -->
     <entry key="FORMAT">2</entry>
     <entry key="ENCODE_DEVICEID">0</entry>
-    <entry key="RECORDSDIR">/home/bart/Deck/records</entry>
+    <entry key="RECORDSDIR">/home/bart/records</entry>
     <entry key="EXTENSION">.mpeg</entry>
     <entry key="FILENAME">testfile</entry>
     <entry key="RECORDER_UNIXEXEC">/home/bart/Deck/v4l/bin/capturectrl.sh</entry>
