@@ -14,7 +14,7 @@ NO_ARGS=0
 ARGS=$*
 
 MODULE_NAME="vlc"
-STREAMDECK_HOME="/home/bart/Deck/$MODULE_NAME"
+STREAMDECK_HOME="/home/${digividUser}/Deck/$MODULE_NAME"
 CONF=$STREAMDECK_HOME/etc/streamer-IVTV_0.4.conf
 
 if [ $# -eq "$NO_ARGS" ] # Script invoked with no arguments

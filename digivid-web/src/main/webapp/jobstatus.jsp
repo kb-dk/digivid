@@ -178,7 +178,7 @@ if (!recordings.isEmpty()) {
             // K11-DR1 720 576 mpeg2 3000000 4000000 /home/bytestroop/Deck/records
             // ldjcn 2007_03_05_15_02_31_827 3600000 6000 1173794269000
             // i.e. recordd has 16 parameters.
-            // /bin/bash /home/bart/Deck/v4l/bin/start_recording.sh -d 0 -i K11-DR1 -a 1 -f tttt -l 2 -o 1172749183000
+            // /bin/bash /home/${digividUser}/Deck/v4l/bin/start_recording.sh -d 0 -i K11-DR1 -a 1 -f tttt -l 2 -o 1172749183000
             // 14
 
             String[] split_recording = recording.split("\\s");

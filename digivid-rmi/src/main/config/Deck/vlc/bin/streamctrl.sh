@@ -7,7 +7,7 @@
 # Run bart as this user ID
 DECK_USER="bart"
 MODULE_NAME="vlc"
-STREAMDECK_HOME="/home/bart/Deck/$MODULE_NAME"
+STREAMDECK_HOME="/home/${digividUser}/Deck/$MODULE_NAME"
 SERVEREXEC=vlc
 #Run the Daemon here
 PWDIR="$STREAMDECK_HOME/run"
@@ -15,7 +15,7 @@ PWDIR="$STREAMDECK_HOME/run"
 STREAMER_NAME=vlcdeckd
 STREAMER_DAEMON="${STREAMDECK_HOME}/bin/${STREAMER_NAME}"
 DESC1="The Bart Deck Stream Daemon"
-STREAMER_DEFAULTS="/home/bart/Deck/deck.default"
+STREAMER_DEFAULTS="/home/${digividUser}/Deck/deck.default"
 PIDFILE="$PWDIR/$STREAMER_NAME.pid"
 
 # Source defaults file; edit that file to configure this script.

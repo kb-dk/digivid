@@ -9,7 +9,7 @@
 
 
 # basic configuration 
-RECORDERDECK_HOME="/home/bart/Deck/v4l"
+RECORDERDECK_HOME="/home/${digividUser}/Deck/v4l"
 CONF=$RECORDERDECK_HOME/etc/recorder-IVTV_0.4.conf
 TIME=`date +%H%M%S`
 #DATE=`date +%F"_"%V`

@@ -8,7 +8,7 @@
 
     <!-- this has changed from apache to tomcat -->
 
-    <entry key="Client_CONFIGURATION">/home/bart/tomcat/webapps/digivid/WEB-INF</entry>
+    <entry key="Client_CONFIGURATION">/home/${digividUser}/tomcat/webapps/digivid/WEB-INF</entry>
 
     <!--RMI Class Server 1-->
     <entry key="RMI_PORT">9009</entry>
@@ -19,10 +19,10 @@
     <entry key="STREAMSERVER_HTTP_PORT">9000</entry>
     <entry key="STREAMSERVER_DEVICEID">1</entry>
     <entry key="STREAMSERVER_MEDIA">tape</entry>
-    <entry key="STREAMSERVER_BINDIR">/home/bart/Deck/vlc/bin</entry>
+    <entry key="STREAMSERVER_BINDIR">/home/${digividUser}/Deck/vlc/bin</entry>
     <entry key="STREAMSERVER_STARTCOMMAND">start_preview.sh</entry>
     <entry key="STREAMSERVER_STOPCOMMAND">stop_preview.sh</entry>
-    <entry key="STREAMSERVER_UNIXEXEC">/home/bart/Deck/vlc/bin/streamctrl.sh</entry>
+    <entry key="STREAMSERVER_UNIXEXEC">/home/${digividUser}/Deck/vlc/bin/streamctrl.sh</entry>
 
     <!--Capture Settings -->
     <!-- MPEG-1 -->
@@ -41,11 +41,11 @@
     <!-- Format independend sttings -->
     <entry key="FORMAT">2</entry>
     <entry key="ENCODE_DEVICEID">0</entry>
-    <entry key="RECORDSDIR">/home/bart/records</entry>
+    <entry key="RECORDSDIR">/home/${digividUser}/records</entry>
     <entry key="EXTENSION">.mpeg</entry>
     <entry key="FILENAME">testfile</entry>
-    <entry key="RECORDER_UNIXEXEC">/home/bart/Deck/v4l/bin/capturectrl.sh</entry>
-    <entry key="RECORDER_BINDIR">/home/bart/Deck/v4l/bin</entry>
+    <entry key="RECORDER_UNIXEXEC">/home/${digividUser}/Deck/v4l/bin/capturectrl.sh</entry>
+    <entry key="RECORDER_BINDIR">/home/${digividUser}/Deck/v4l/bin</entry>
     <!--4 hour default recordings limit -->
     <entry key="RECORDER_FILE_LIMIT_TIME">14400000</entry>
 

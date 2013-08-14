@@ -21,10 +21,10 @@
     <entry key="RMI_CLIENT_CLASSES">http://127.0.0.1:${tomcatPort}/digivid/rmi/client.jar</entry>
 
     <entry key="RMI_CLASSSERVER_IP">0.0.0.0</entry>
-    <entry key="RMI_CLASSSERVER_CONFIGURATION">/home/bart/Deck/rmi</entry>
-    <entry key="RMI_CLASSSERVER_CLASSES">/home/bart/Deck/rmi/compute.jar</entry>
+    <entry key="RMI_CLASSSERVER_CONFIGURATION">/home/${digividUser}/Deck/rmi</entry>
+    <entry key="RMI_CLASSSERVER_CLASSES">/home/${digividUser}/Deck/rmi/compute.jar</entry>
 
-     <entry key="RECORDSDIR">/home/bart/records</entry>
+     <entry key="RECORDSDIR">/home/${digividUser}/records</entry>
      <entry key="EXTENSION">.mpeg</entry>
      <entry key="FILENAME">testfile</entry>
      -->

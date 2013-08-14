@@ -1,4 +1,4 @@
-DECK_USER=bart
+DECK_USER=${digividUser}
 STREAMDECK_HOME=/home/${DECK_USER}/Deck/vlc
 RECORDER_HOME=/home/${DECK_USER}/Deck/v4l
 SERVER_RMI_HOME=/home/${DECK_USER}/Deck/rmi

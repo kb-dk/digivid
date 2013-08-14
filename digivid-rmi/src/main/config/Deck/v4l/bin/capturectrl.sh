@@ -39,7 +39,7 @@
 # Run bart as this user ID
 DECK_USER=bart
 MODULE_NAME=v4l
-RECORDERDECK_HOME="/home/bart/Deck/$MODULE_NAME"
+RECORDERDECK_HOME="/home/${digividUser}/Deck/$MODULE_NAME"
 
 CONF=$RECORDERDECK_HOME/etc/recorder-IVTV_0.4.conf
 
