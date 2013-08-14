@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # This is a wrapper around the -identify functionality.
 # It is supposed to escape the output properly, so it can be easily
@@ -6,6 +6,8 @@
 #
 # Written by Tobias Diedrich <ranma+mplayer@tdiedrich.de>
 # Licensed under GNU GPL.
+
+set -o pipefail
 
 if [ -z "$1" ]; then
         echo "Usage: midentify <file> [<file> ...]"

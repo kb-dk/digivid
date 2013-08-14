@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Just a stupid checker tool
 
 RDIR=/home/mythtv/records

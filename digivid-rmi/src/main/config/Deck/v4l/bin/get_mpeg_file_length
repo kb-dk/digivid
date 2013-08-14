@@ -1,3 +1,4 @@
 #!/bin/bash
+set -o pipefail
 BINDIR=${HOME}/Deck/v4l/bin
 ${BINDIR}/midentify ${1} |grep ID_LENGTH  | cut -d "=" -f 2 

@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 
 # /vlcdeck -- script for the vlc stream server
 #
