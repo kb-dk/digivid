@@ -270,8 +270,8 @@ public class GeoLocation {
              * <pre>
              *  &lt;GeoLocation&gt;
              *       &lt;LocationName&gt;Lakewood, NJ&lt;/LocationName&gt;
-             *       &lt;Latitude&gt;40.0828º&lt;/Latitude&gt;
-             *       &lt;Longitude&gt;-74.2094º&lt;/Longitude&gt;
+             *       &lt;Latitude&gt;40.0828ï¿½&lt;/Latitude&gt;
+             *       &lt;Longitude&gt;-74.2094ï¿½&lt;/Longitude&gt;
              *       &lt;Elevation&gt;0 Meters&lt;/Elevation&gt;
              *       &lt;TimezoneName&gt;America/New_York&lt;/TimezoneName&gt;
              *       &lt;TimeZoneDisplayName&gt;Eastern Standard Time&lt;/TimeZoneDisplayName&gt;
@@ -287,9 +287,9 @@ public class GeoLocation {
                     sb.append("<GeoLocation>\n");
                     sb.append("\t<LocationName>").append(getLocationName()).append(
                                     "</LocationName>\n");
-                    sb.append("\t<Latitude>").append(getLatitude()).append("º").append(
+                    sb.append("\t<Latitude>").append(getLatitude()).append("ï¿½").append(
                                     "</Latitude>\n");
-                    sb.append("\t<Longitude>").append(getLongitude()).append("º").append(
+                    sb.append("\t<Longitude>").append(getLongitude()).append("ï¿½").append(
                                     "</Longitude>\n");
                     sb.append("\t<Elevation>").append(getElevation()).append(" Meters")
                                     .append("</Elevation>\n");
@@ -358,8 +358,8 @@ public class GeoLocation {
             public String toString() {
                     StringBuffer sb = new StringBuffer();
                     sb.append("\nLocation Name:\t\t\t").append(getLocationName());
-                    sb.append("\nLatitude:\t\t\t").append(getLatitude()).append("º");
-                    sb.append("\nLongitude:\t\t\t").append(getLongitude()).append("º");
+                    sb.append("\nLatitude:\t\t\t").append(getLatitude()).append("degrees");
+                    sb.append("\nLongitude:\t\t\t").append(getLongitude()).append("degrees");
                     sb.append("\nElevation:\t\t\t").append(getElevation())
                                     .append(" Meters");
                     sb.append("\nTimezone Name:\t\t\t").append(getTimeZone().getID());
