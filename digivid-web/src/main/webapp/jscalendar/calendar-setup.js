@@ -64,6 +64,7 @@ Calendar.setup = function (params) {
 
 	param_default("inputField",     null);
 	param_default("displayArea",    null);
+    param_default("displayInput",    null);
 	param_default("button",         null);
 	param_default("eventName",      "click");
 	param_default("ifFormat",       "%Y/%m/%d");
@@ -91,13 +92,13 @@ Calendar.setup = function (params) {
 	param_default("showOthers",     false);
 	param_default("multiple",       null);
 
-	var tmp = ["inputField", "displayArea", "button"];
+	var tmp = ["inputField", "displayArea","displayInput", "button"];
 	for (var i in tmp) {
 		if (typeof params[tmp[i]] == "string") {
 			params[tmp[i]] = document.getElementById(params[tmp[i]]);
 		}
 	}
-	if (!(params.flat || params.multiple || params.inputField || params.displayArea || params.button)) {
+	if (!(params.flat || params.multiple || params.inputField || params.displayArea || params.displayInput || params.button)) {
 		alert("Calendar.setup:\n  Nothing to setup (no fields found).  Please check your code");
 		return false;
 	}
@@ -112,6 +113,11 @@ Calendar.setup = function (params) {
 		}
 		if (update && p.displayArea)
 			p.displayArea.innerHTML = cal.date.print(p.daFormat);
+        if (update && p.displayInput) {
+  			p.displayInput.value = cal.date.print(p.daFormat);
+            if (typeof p.displayInput.onchange == "function")
+            	p.displayInput.onchange();
+        }
 		if (update && typeof p.onUpdate == "function")
 			p.onUpdate(cal);
 		if (update && p.flat) {
@@ -151,9 +157,9 @@ Calendar.setup = function (params) {
         return cal;
     }
 
-	var triggerEl = params.button || params.displayArea || params.inputField;
+	var triggerEl = params.button || params.displayArea || params.displayInput || params.inputField;
 	triggerEl["on" + params.eventName] = function() {
-		var dateEl = params.inputField || params.displayArea;
+		var dateEl = params.inputField || params.displayArea || params.displayInput;
 		var dateFmt = params.inputField ? params.ifFormat : params.daFormat;
 		var mustCreate = false;
 		cal = window.calendar;
@@ -196,7 +202,7 @@ Calendar.setup = function (params) {
         cal.refresh();
 		if (!params.position) {
             //alert("Calling showAt: " + cal.toString());
-            cal.showAtElement(params.button || params.displayArea || params.inputField, params.align);
+            cal.showAtElement(params.button || params.displayArea || params.displayInput || params.inputField, params.align);
 		} else {
 			cal.showAt(params.position[0], params.position[1]);
         }
