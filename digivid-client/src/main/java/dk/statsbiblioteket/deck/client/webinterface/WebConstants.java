@@ -76,6 +76,7 @@ public class WebConstants {
     public static final String FILE_NAME_PARAM = "fileName";
     public static final String CHANNEL_LABEL_PARAM = "labelChannelID";
     public static final String START_TIME_PARAM = "startTime";
+    public static final String END_TIME_PARAM = "endTime";
     public static final String CAPTURE_FORMAT_PARAM = "captureFormat";
     public static final String RECORDING_TIME_PARAM = "recordingTime";
     public static final String USER_NAME_PARAM = "digivid";

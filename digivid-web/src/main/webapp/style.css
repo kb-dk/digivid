@@ -1,58 +1,71 @@
 html, a {
-background: #99aaff;
-color: #444444;
+    background: #99aaff;
+    color: #444444;
 }
 
 #navigation {
-width:50%;
-margin-bottom: 10pt
+    width:50%;
+    margin-bottom: 10pt
 }
 
 #navigation a {
-background: #aabbff;
-font-size: large
+    background: #aabbff;
+    font-size: large
 }
 
 a {
-text-decoration: none;
+    text-decoration: none;
 }
 
 .status_table {
-border-spacing:0;
-margin: 10px;
-margin-left:0
+    border-spacing:0;
+    margin: 10px;
+    margin-left:0
 }
 
 .status_table th,.status_table td {
-border-width: 1px;
-padding: 1px;
-border-style: solid; 
-border-color: gray; 
+    border-width: 1px;
+    padding: 1px;
+    border-style: solid;
+    border-color: gray;
 }
 
 .status_table th {
-text-align: left
+    text-align: left
 }
 
 input[type='submit'], input[type='button'] {
-background: #aabbff;
-border: none;
-padding: 0;
+    background: #aabbff;
+    border: none;
+    padding: 0;
 }
 
 #video * {
-border: 5px inset #996633
+    border: 5px inset #996633
 }
 
 span.dummy_input, input, select {
-font-style: normal;
-font-weight: normal;
-font-size: medium
+    font-style: normal;
+    font-weight: normal;
+    font-size: medium
 }
 
 span.dummy_input {
     background: white;
     border: 2px inset #cccccc
 }
- 
 
+label{
+  float:left;
+  width:140px;
+  text-align:right;
+  margin-right:5px; /* optional */
+}
+
+.field{
+}
+
+
+.input_readonly {
+    background-color: #c0c0c0;
+}
