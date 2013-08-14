@@ -18,15 +18,25 @@
             <groupId>digivid</groupId>
             <artifactId>digivid-client</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>tomcat</groupId>
+                    <artifactId>servlets-default</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
     <build>
         <resources>
-                <resource>
-                    <directory>src/main/resources</directory>
-                    <filtering>true</filtering>
-                </resource>
-            </resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
 
         <plugins>
             <plugin>
@@ -56,7 +66,8 @@
                                     <artifactId>digivid-client</artifactId>
                                     <type>jar</type>
                                     <overWrite>false</overWrite>
-                                    <outputDirectory>${project.build.directory}/${pom.artifactId}-${version}/rmi</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/${pom.artifactId}-${version}/rmi
+                                    </outputDirectory>
                                     <destFileName>client.jar</destFileName>
                                 </artifactItem>
                             </artifactItems>
