@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # this requires for execution to be on a Unix box with java J2SE installed
 # one network interface (eth0)
 SCRIPT_PATH=$(dirname $(readlink -f $0))
