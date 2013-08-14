@@ -49,7 +49,7 @@ public class GenericTask implements Task {
     private boolean is_daemon;
 
     public GenericTask(String command, boolean is_daemon) {
-         if (command == null) {
+        if (command == null) {
             throw new RuntimeException("Attempt to create a GenericTask with " +
                     "null executtable");
         }
@@ -58,7 +58,7 @@ public class GenericTask implements Task {
     }
 
     public GenericTask(String command) {
-       this(command, false);
+        this(command, false);
     }
 
     public Object execute() {
@@ -86,17 +86,20 @@ public class GenericTask implements Task {
             String s;
             String er;
             Process  p = Runtime.getRuntime().exec(unixExecutable);
-             BufferedReader stdInput =
-                        new BufferedReader(new InputStreamReader(p.getInputStream()));
-                BufferedReader stdError =
-                        new BufferedReader(new InputStreamReader(p.getErrorStream()));
-                while ((s = stdInput.readLine()) != null) {
-                    result.add(s);
-                }
-               while ((er = stdError.readLine()) != null) {
-                    System.out.println(er);
-                    log.error(er);
-                }
+            BufferedReader stdInput =
+                    new BufferedReader(new InputStreamReader(p.getInputStream()));
+            BufferedReader stdError =
+                    new BufferedReader(new InputStreamReader(p.getErrorStream()));
+            while ((s = stdInput.readLine()) != null) {
+                result.add(s);
+            }
+            while ((er = stdError.readLine()) != null) {
+                System.out.println(er);
+                log.error(er);
+            }
+            if (p.waitFor() != 0){
+                throw new RuntimeException("Error executing " + unixExecutable +", returned "+p.exitValue());
+            }
         } catch(Exception e) {
             throw new RuntimeException("Error executing " + unixExecutable, e);
         }
@@ -104,39 +107,39 @@ public class GenericTask implements Task {
     }
 
     public static void logOutput(final Process p, final Logger log) {
-            Runnable standard_output_thread = new Runnable() {
-                public void run() {
-                    BufferedReader stdInput =
-                            new BufferedReader(new InputStreamReader(p.getInputStream()));
-                    String s = null;
-                    try {
-                        while (((s = stdInput.readLine()) != null)) {
-                            log.debug(s);
-                        }
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+        Runnable standard_output_thread = new Runnable() {
+            public void run() {
+                BufferedReader stdInput =
+                        new BufferedReader(new InputStreamReader(p.getInputStream()));
+                String s = null;
+                try {
+                    while (((s = stdInput.readLine()) != null)) {
+                        log.debug(s);
                     }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
-            } ;
+            }
+        } ;
 
-             Runnable standard_error_thread = new Runnable() {
-                public void run() {
-                    BufferedReader stdError =
-                            new BufferedReader(new InputStreamReader(p.getErrorStream()));
-                    String s = null;
-                    try {
-                        while (((s = stdError.readLine()) != null)) {
-                            log.error(s);
-                        }
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+        Runnable standard_error_thread = new Runnable() {
+            public void run() {
+                BufferedReader stdError =
+                        new BufferedReader(new InputStreamReader(p.getErrorStream()));
+                String s = null;
+                try {
+                    while (((s = stdError.readLine()) != null)) {
+                        log.error(s);
                     }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
-            } ;
+            }
+        } ;
 
-            (new Thread(standard_output_thread)).start();
-            (new Thread(standard_error_thread)).start();
+        (new Thread(standard_output_thread)).start();
+        (new Thread(standard_error_thread)).start();
 
-        }
+    }
 
 }

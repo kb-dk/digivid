@@ -103,6 +103,7 @@ public class GenericCtrl {
             log.error(" Failure, Task not executed! ", e1);
             System.out.println("Task failed " + e1.toString());
             e1.printStackTrace();
+            throw new RuntimeException("Failed to execute task '"+unix_command+"'",e1);
         }
 
         System.out.println("Returning: "+result);
