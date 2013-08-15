@@ -142,4 +142,24 @@ public class GenericTask implements Task {
 
     }
 
+
+    public String getUnixExecutable() {
+        return unixExecutable;
+    }
+
+    public void setUnixExecutable(String unixExecutable) {
+        this.unixExecutable = unixExecutable;
+    }
+
+    public boolean isDaemon() {
+        return is_daemon;
+    }
+
+    @Override
+    public String toString() {
+        return "GenericTask{" +
+                "unixExecutable='" + unixExecutable + '\'' +
+                ", is_daemon=" + is_daemon +
+                '}';
+    }
 }

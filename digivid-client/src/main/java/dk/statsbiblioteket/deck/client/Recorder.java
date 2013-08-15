@@ -273,4 +273,39 @@ public class Recorder implements Task {
         fileSerial = DateConverter.printMillisecondsIntoSerialnumber(System.currentTimeMillis());
         return fileSerial;
     }
+
+    @Override
+    public String toString() {
+        return "Recorder{" +
+                "recordType='" + recordType + '\'' +
+                ", userName='" + userName + '\'' +
+                ", fileSerial='" + fileSerial + '\'' +
+                ", clientHostIP='" + clientHostIP + '\'' +
+                ", encoderIP='" + encoderIP + '\'' +
+                ", cardName=" + cardName +
+                ", channelID='" + channelID + '\'' +
+                ", captureFormat='" + captureFormat + '\'' +
+                ", frameMPEG1Width=" + frameMPEG1Width +
+                ", frameMPEG1Height=" + frameMPEG1Height +
+                ", frameMPEG2Width=" + frameMPEG2Width +
+                ", frameMPEG2Height=" + frameMPEG2Height +
+                ", frameWidth=" + frameWidth +
+                ", frameHeight=" + frameHeight +
+                ", captureMPEG1Bitrate=" + captureMPEG1Bitrate +
+                ", captureMPEG1MaxBitrate=" + captureMPEG1MaxBitrate +
+                ", captureMPEG2Bitrate=" + captureMPEG2Bitrate +
+                ", captureMPEG2MaxBitrate=" + captureMPEG2MaxBitrate +
+                ", captureBitrate=" + captureBitrate +
+                ", captureMaxBitrate=" + captureMaxBitrate +
+                ", captureMPEG1Size=" + captureMPEG1Size +
+                ", captureMPEG2Size=" + captureMPEG2Size +
+                ", captureSize=" + captureSize +
+                ", captureStorage='" + captureStorage + '\'' +
+                ", fileName='" + fileName + '\'' +
+                ", captureLength=" + captureLength +
+                ", origStartDate=" + origStartDate +
+                ", command='" + command + '\'' +
+                ", unixExecutable='" + unixExecutable + '\'' +
+                '}';
+    }
 }

@@ -100,4 +100,11 @@ public class Pi implements Task {
         } while (term.compareTo(ZERO) != 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Pi{" +
+                "digits=" + digits +
+                '}';
+    }
 }

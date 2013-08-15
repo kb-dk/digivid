@@ -23,8 +23,8 @@ public class FileRedate implements Task {
     static Logger log = Logger.getLogger(ComputePi.class.getName());
 
 
-    private String captureStorage = Constants.DEFAULT_RECORDSDIR;;
     private String fileName;
+    private String captureStorage = Constants.DEFAULT_RECORDSDIR;;
     private long origStartTime;
     private long duration;
 
@@ -121,5 +121,15 @@ public class FileRedate implements Task {
             DateFormat.MEDIUM, DateFormat.SHORT).format(now));
         System.out.println("10. " + DateFormat.getDateTimeInstance(
             DateFormat.LONG, DateFormat.LONG).format(now));
+    }
+
+    @Override
+    public String toString() {
+        return "FileRedate{" +
+                "fileName='" + fileName + '\'' +
+                ", captureStorage='" + captureStorage + '\'' +
+                ", origStartTime=" + origStartTime +
+                ", duration=" + duration +
+                '}';
     }
 }

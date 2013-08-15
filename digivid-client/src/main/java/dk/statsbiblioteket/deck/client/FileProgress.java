@@ -18,8 +18,8 @@ public class FileProgress implements Task {
     /** constants used in computation */
     static Logger log = Logger.getLogger(ComputePi.class.getName());
 
-    private String captureStorage;
     private String fileName;
+    private String captureStorage;
     private String recordSerial;
     private long limit;
     private String regExpession;
@@ -89,4 +89,14 @@ public class FileProgress implements Task {
         return percentage;
     }
 
+    @Override
+    public String toString() {
+        return "FileProgress{" +
+                "fileName='" + fileName + '\'' +
+                ", captureStorage='" + captureStorage + '\'' +
+                ", recordSerial='" + recordSerial + '\'' +
+                ", limit=" + limit +
+                ", regExpession='" + regExpession + '\'' +
+                '}';
+    }
 }

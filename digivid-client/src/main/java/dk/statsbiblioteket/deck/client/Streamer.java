@@ -149,4 +149,21 @@ public class Streamer implements Task {
 
     }
 
+
+    @Override
+    public String toString() {
+        return "Streamer{" +
+                "unixExecutable='" + unixExecutable + '\'' +
+                ", streamToClientIP='" + streamToClientIP + '\'' +
+                ", streamServerPort=" + streamServerPort +
+                ", streamFromServerIP='" + streamFromServerIP + '\'' +
+                ", streamType='" + streamType + '\'' +
+                ", streamName='" + streamName + '\'' +
+                ", filePath='" + filePath + '\'' +
+                ", media='" + media + '\'' +
+                ", cardName=" + cardName +
+                ", captureStorage='" + captureStorage + '\'' +
+                ", ctrlCommand='" + ctrlCommand + '\'' +
+                '}';
+    }
 }

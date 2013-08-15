@@ -19,15 +19,9 @@ public class FileInSize implements Task {
     /** constants used in computation */
     static Logger log = Logger.getLogger(ComputePi.class.getName());
 
-    private static String prop;
-    private static int propInt;
-    //private static final String configure = Constants.DEFAULT_SERVERCONF_DIRECTORY + "/server.xml";
-   // private static final String configure = Constants.DEFAULT_CLIENTCONF_DIRECTORY + "/client.xml";
 
-    //private String unixExecutable  = getDefaultProperty("RECORDER.HOST.UNIXEXEC"); // the unix shell or command executable
-
-    private String captureStorage;
     private String fileName;
+    private String captureStorage;
     private int limit;
 
     /**
@@ -115,4 +109,13 @@ public class FileInSize implements Task {
            return propInt;
        }
     */
+
+    @Override
+    public String toString() {
+        return "FileInSize{" +
+                "fileName='" + fileName + '\'' +
+                ", captureStorage='" + captureStorage + '\'' +
+                ", limit=" + limit +
+                '}';
+    }
 }

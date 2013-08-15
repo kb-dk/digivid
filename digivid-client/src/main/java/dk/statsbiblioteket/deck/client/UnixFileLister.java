@@ -121,4 +121,13 @@ public class UnixFileLister implements Task {
            return propInt;
        }
     */
+
+    @Override
+    public String toString() {
+        return "UnixFileLister{" +
+                "unixExecutable='" + unixExecutable + '\'' +
+                ", captureStorage='" + captureStorage + '\'' +
+                ", extension='" + extension + '\'' +
+                '}';
+    }
 }

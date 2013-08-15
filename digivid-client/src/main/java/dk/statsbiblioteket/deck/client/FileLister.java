@@ -32,9 +32,6 @@ public class FileLister implements Task {
     private String captureStorage = Constants.DEFAULT_RECORDSDIR;
 
     private String extension;
-    private String fileName;
-    /** command */
-    private String command;    // the users control start | stop
 
 
 
@@ -117,4 +114,12 @@ public class FileLister implements Task {
            return propInt;
        }
     */
+
+    @Override
+    public String toString() {
+        return "FileLister{" +
+                "captureStorage='" + captureStorage + '\'' +
+                ", extension='" + extension + '\'' +
+                '}';
+    }
 }

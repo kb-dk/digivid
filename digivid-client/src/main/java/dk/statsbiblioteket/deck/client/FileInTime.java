@@ -31,8 +31,8 @@ public class FileInTime implements Task {
     private static final URL CONFIG = Constants.DEFAULT_CLIENTCONF;
 
 
-    private String captureStorage;
     private String fileName;
+    private String captureStorage;
     private long limit = (long) LoadXMLConfig.getPropertyInt(CONFIG, "RECORDER.FILE.LIMIT.TIME");
 
     /**
@@ -93,5 +93,14 @@ public class FileInTime implements Task {
             e.printStackTrace();
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "FileInTime{" +
+                "fileName='" + fileName + '\'' +
+                ", captureStorage='" + captureStorage + '\'' +
+                ", limit=" + limit +
+                '}';
     }
 }
