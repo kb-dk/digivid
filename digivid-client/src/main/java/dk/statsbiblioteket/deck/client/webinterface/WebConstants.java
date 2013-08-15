@@ -77,6 +77,9 @@ public class WebConstants {
     public static final String CHANNEL_LABEL_PARAM = "labelChannelID";
     public static final String START_TIME_PARAM = "startTime";
     public static final String END_TIME_PARAM = "endTime";
+    //TODO
+    public static final String VHS_LABEL = "endTime";
+    public static final String RECORDING_QUALITY = "endTime";
     public static final String CAPTURE_FORMAT_PARAM = "captureFormat";
     public static final String RECORDING_TIME_PARAM = "recordingTime";
     public static final String USER_NAME_PARAM = "digivid";
@@ -129,23 +132,23 @@ public class WebConstants {
    public static Map<String, String> lognames = new LinkedHashMap<String, String>();
 
     static {
-        lognames.put("K11-DR1", "dr1");
-        lognames.put("K9-DR2", "dr2");
-        lognames.put("K10-TV2-Danmark", "tv2d");
-        lognames.put("K67-TV2-Zulu", "tv2z");
-        lognames.put("K40-TV2-Charlie", "tv2c");
-        lognames.put("K53-TV2-Lorry", "tv2l");
-        lognames.put("S30-TV2-Syd", "tv2s");
+        lognames.put("DR1", "dr1");
+        lognames.put("DR2", "dr2");
+        lognames.put("TV2-Danmark", "tv2d");
+        lognames.put("TV2-Zulu", "tv2z");
+        lognames.put("TV2-Charlie", "tv2c");
+        lognames.put("TV2-Lorry", "tv2l");
+        lognames.put("TV2-Syd", "tv2s");
         lognames.put("TV2-Nord", "tv2n");
         lognames.put("TV2-Fyn", "tv2f");
         lognames.put("TV2-Midt-Vest", "tv2mv");
         lognames.put("TV2-Bornholm", "tv2b");
-        lognames.put("K10-TV2-Østjylland", "tv2d");        
-        lognames.put("K45-TV3", "tv3");
-        lognames.put("K43-TV3P", "tv3p");
-        lognames.put("S14-TV-Danmark", "tvdk");
-        lognames.put("K54-Kanal5", "kanal5");
-        lognames.put("K63-DK4", "dk4");
+        lognames.put("TV2-Østjylland", "tv2d");
+        lognames.put("TV3", "tv3");
+        lognames.put("TV3P", "tv3p");
+        lognames.put("TV-Danmark", "tvdk");
+        lognames.put("Kanal5", "kanal5");
+        lognames.put("DK4", "dk4");
         lognames.put("TV-Sport", "tvsport");
     }
 }

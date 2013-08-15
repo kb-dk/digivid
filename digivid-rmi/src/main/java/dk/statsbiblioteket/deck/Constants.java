@@ -20,6 +20,8 @@ public interface Constants {
 
     public static final String UNIX_STREAMSERVER_EXECUTABLE=LoadXMLConfig.getProperty(DEFAULT_CLIENTCONF, "STREAMSERVER_UNIXEXEC");
     public static final String UNIX_RECORDER_EXECUTABLE=LoadXMLConfig.getProperty(DEFAULT_CLIENTCONF, "RECORDER_UNIXEXEC");
+
+    public static final String HOOKS_BINDIR = LoadXMLConfig.getProperty(DEFAULT_CLIENTCONF, "HOOKS_BINDIR");
     public static final String RECORDER_BINDIR = LoadXMLConfig.getProperty(DEFAULT_CLIENTCONF, "RECORDER_BINDIR");
     public static final String STREAMER_STARTCOMMAND = LoadXMLConfig.getProperty(DEFAULT_CLIENTCONF, "STREAMSERVER_STARTCOMMAND");
     public static final String STREAMER_STOPCOMMAND = LoadXMLConfig.getProperty(DEFAULT_CLIENTCONF, "STREAMSERVER_STOPCOMMAND");

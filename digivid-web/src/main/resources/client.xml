@@ -46,6 +46,7 @@
     <entry key="FILENAME">testfile</entry>
     <entry key="RECORDER_UNIXEXEC">/home/${digividUser}/Deck/v4l/bin/capturectrl.sh</entry>
     <entry key="RECORDER_BINDIR">/home/${digividUser}/Deck/v4l/bin</entry>
+    <entry key="HOOKS_BINDIR">/home/${digividUser}/Deck/hooks/bin</entry>
     <!--4 hour default recordings limit -->
     <entry key="RECORDER_FILE_LIMIT_TIME">14400000</entry>
 
