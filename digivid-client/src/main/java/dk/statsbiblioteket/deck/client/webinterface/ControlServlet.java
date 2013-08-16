@@ -66,14 +66,18 @@ public class ControlServlet extends HttpServlet {
     private int quality;
     private String encoder_name;
 
-    private static final String time_format_string = "yyyy/MM/dd HH:mm";
-    private SimpleDateFormat time_format;
+    //These two must match
+    public static final String time_format_string = "yyyy/MM/dd HH:mm";
+    public static final String jscalendar_format_string = "%Y/%m/%e %H:%M";
 
     private String parameterString="";
 
-    {
-        time_format = new SimpleDateFormat(time_format_string);
-        time_format.setTimeZone(TimeZone.getTimeZone("GMT+1"));
+
+
+    public static SimpleDateFormat getTime_format() {
+        SimpleDateFormat temp = new SimpleDateFormat(time_format_string);
+        temp.setTimeZone(TimeZone.getTimeZone("GMT+1"));
+        return temp;
     }
 
     private void unmarshallParams(Map<String,String[]> param_map) {
@@ -121,14 +125,14 @@ public class ControlServlet extends HttpServlet {
                 addParam(CHANNEL_LABEL_PARAM,channel_label);
             } else if (name.equals(START_TIME_PARAM)) {
                 try {
-                    start_time_ms = time_format.parse(value).getTime();
+                    start_time_ms = getTime_format().parse(value).getTime();
                     addParam(START_TIME_PARAM,start_time_ms);
                 } catch (ParseException e) {
                     throw new RuntimeException("You must specify a start time for the recording");
                 }
             } else if (name.equals(END_TIME_PARAM)) {
                 try {
-                    stop_time_ms = time_format.parse(value).getTime();
+                    stop_time_ms = getTime_format().parse(value).getTime();
                     addParam(END_TIME_PARAM,stop_time_ms);
                 } catch (ParseException e) {
                     throw new RuntimeException("You must specify a stop time for the recording");

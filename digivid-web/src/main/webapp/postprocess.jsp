@@ -1,29 +1,18 @@
 <%@ page import="static dk.statsbiblioteket.deck.client.webinterface.WebConstants.*" %>
-<%@ page import="java.util.regex.Matcher" %>
-<%@ page import="java.util.regex.Pattern" %>
-<%@ page import="java.util.Map" %>
-<%@ page import="java.util.HashMap" %>
-<%@ page import="dk.statsbiblioteket.deck.Constants" %>
-<%@ page import="java.text.SimpleDateFormat" %>
-<%@ page import="java.util.Date" %>
+<%@ page import="dk.statsbiblioteket.deck.client.webinterface.ControlServlet" %>
 <%@ page import="dk.statsbiblioteket.deck.client.webinterface.WebConstants" %>
 <%@ page import="java.net.InetAddress" %>
-<%@ page import="java.util.TimeZone" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.util.regex.Matcher" %>
 <!DOCTYPE html
 PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <%@ page pageEncoding="UTF-8"
         %>
-<%!
-    public static final String DISPLAY_DATE_FORMAT = "yyyy/MM/dd HH:mm";
-    public static final SimpleDateFormat BART_DATE_FORMAT = new SimpleDateFormat(DISPLAY_DATE_FORMAT);
-
-
-
-%>
 <%
-    BART_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT+1"));
+    SimpleDateFormat BART_DATE_FORMAT = ControlServlet.getTime_format();
     String encoder_name = request.getParameter(ENCODER_NAME_PARAM);
     String encoderIP = null;
     if (encoder_name != null) {
@@ -130,9 +119,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         </div>
 
         <div class="field">
-            <label for="duration">
-                Length:
-            </label>
+            <label for="duration">Length:</label>
             <input name="<%=RECORDING_TIME_PARAM%>" readonly="readonly" id="duration" class="input_readonly" type="text"
                    value="<%=request.getAttribute(FILE_LENGTH_ATTR)%>">&nbsp;seconds
         </div>
@@ -162,12 +149,12 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 
         <div class="field">
             <label for="start_time_display_field">Start date/time:</label>
-            <input id="start_time_display_field" type="text" name="<%=START_TIME_PARAM%>" value="<%=start_timestamp%>"/>
+            <input id="start_time_display_field" type="text" readonly="readonly" name="<%=START_TIME_PARAM%>" value="<%=start_timestamp%>"/>
         </div>
 
         <div class="field">
             <label for="end_time_display_field">End date/time:</label>
-            <input id="end_time_display_field" type="text" name="<%=END_TIME_PARAM%>" value="<%=end_timestamp%>" />
+            <input id="end_time_display_field" type="text" readonly="readonly" name="<%=END_TIME_PARAM%>" value="<%=end_timestamp%>" />
         </div>
 
 
@@ -202,7 +189,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 
 <script type="text/javascript">
 
-    var date_format = "%Y/%m/%e %H:%M";
+    var date_format = "<%=ControlServlet.jscalendar_format_string%>";
 
     var start_date = new Date(<%=start_timestamp%>);
     var start_calendar = Calendar.setup({
@@ -212,7 +199,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         eventName: "dblclick",
         //onUpdate       :    setCurrentStartDate,
         showsTime: true,            // will display a time selector
-        singleClick: false,           // double-click mode
+        singleClick: true,           // double-click mode
         step: 1,                // show all years in drop-down boxes (instead of every other year as default)
         firstDay: 1
     });
@@ -227,7 +214,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         eventName: "dblclick",
         //onUpdate       :    setCurrentStartDate,
         showsTime: true,            // will display a time selector
-        singleClick: false,           // double-click mode
+        singleClick: true,           // double-click mode
         step: 1,                // show all years in drop-down boxes (instead of every other year as default)
         firstDay: 1
     });

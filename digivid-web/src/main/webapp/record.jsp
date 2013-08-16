@@ -1,13 +1,13 @@
 <%@ page import="static dk.statsbiblioteket.deck.client.webinterface.WebConstants.*" %>
-<%@ page import="java.util.List" %>
-<%@ page import="dk.statsbiblioteket.deck.client.GenericTask" %>
-<%@ page import="java.util.Arrays" %>
-<%@ page import="java.util.Set" %>
-<%@ page import="java.util.HashSet" %>
-<%@ page import="java.util.regex.Pattern" %>
-<%@ page import="java.util.regex.Matcher" %>
 <%@ page import="dk.statsbiblioteket.deck.client.GenericCtrl" %>
+<%@ page import="dk.statsbiblioteket.deck.client.webinterface.ControlServlet" %>
 <%@ page import="java.net.InetAddress" %>
+<%@ page import="java.util.Arrays" %>
+<%@ page import="java.util.HashSet" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.Set" %>
+<%@ page import="java.util.regex.Matcher" %>
+<%@ page import="java.util.regex.Pattern" %>
 <%
     String encoderIP = request.getParameter(ENCODER_IP_PARAM);
     String encoder_name = encoderIP;
@@ -96,7 +96,7 @@ Recording on <%=encoder_name%>
 
     <div class="field">
         <label for="start_time_field">Original Start Date-Time:</label>
-        <input type="text" id="start_time_field" name="<%=START_TIME_PARAM%>"/>
+        <input type="text" id="start_time_field" readonly="true" name="<%=START_TIME_PARAM%>"/>
     </div>
 
     <div class="field">
@@ -124,7 +124,7 @@ Recording on <%=encoder_name%>
 <script type="text/javascript">
     Calendar.setup({
         inputField: "start_time_field",      // id of the input field
-        ifFormat: "%Y/%m/%e %H:%M",
+        ifFormat: "<%=ControlServlet.jscalendar_format_string%>",
         showsTime: true,            // will display a time selector
         singleClick: true,           // double-click mode
         step: 1,                // show all years in drop-down boxes (instead of every other year as default)
