@@ -33,10 +33,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.io.File;
-import java.util.Map;
-import java.util.Set;
-import java.util.Date;
-import java.util.List;
+import java.text.ParseException;
+import java.util.*;
 import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.net.InetAddress;
@@ -68,13 +66,14 @@ public class ControlServlet extends HttpServlet {
     private int quality;
     private String encoder_name;
 
-    private static final String time_format_string = "S";
+    private static final String time_format_string = "yyyy/MM/dd HH:mm";
     private SimpleDateFormat time_format;
 
     private String parameterString="";
 
     {
         time_format = new SimpleDateFormat(time_format_string);
+        time_format.setTimeZone(TimeZone.getTimeZone("GMT+1"));
     }
 
     private void unmarshallParams(Map<String,String[]> param_map) {
@@ -122,16 +121,16 @@ public class ControlServlet extends HttpServlet {
                 addParam(CHANNEL_LABEL_PARAM,channel_label);
             } else if (name.equals(START_TIME_PARAM)) {
                 try {
-                    start_time_ms = Long.parseLong(value);
+                    start_time_ms = time_format.parse(value).getTime();
                     addParam(START_TIME_PARAM,start_time_ms);
-                } catch (NumberFormatException e) {
+                } catch (ParseException e) {
                     throw new RuntimeException("You must specify a start time for the recording");
                 }
             } else if (name.equals(END_TIME_PARAM)) {
                 try {
-                    stop_time_ms = Long.parseLong(value);
+                    stop_time_ms = time_format.parse(value).getTime();
                     addParam(END_TIME_PARAM,stop_time_ms);
-                } catch (NumberFormatException e) {
+                } catch (ParseException e) {
                     throw new RuntimeException("You must specify a stop time for the recording");
                 }
             } else if (name.equals(CAPTURE_FORMAT_PARAM)) {

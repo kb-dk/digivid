@@ -8,6 +8,7 @@
 <%@ page import="java.util.Date" %>
 <%@ page import="dk.statsbiblioteket.deck.client.webinterface.WebConstants" %>
 <%@ page import="java.net.InetAddress" %>
+<%@ page import="java.util.TimeZone" %>
 <!DOCTYPE html
 PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -15,12 +16,14 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 <%@ page pageEncoding="UTF-8"
         %>
 <%!
-    public static final String DISPLAY_DATE_FORMAT = "yyyy MMM d HH:mm";
-    public static final SimpleDateFormat BART_DATE_FORMAT = new SimpleDateFormat(BART_DATE_FORMAT_S);
+    public static final String DISPLAY_DATE_FORMAT = "yyyy/MM/dd HH:mm";
+    public static final SimpleDateFormat BART_DATE_FORMAT = new SimpleDateFormat(DISPLAY_DATE_FORMAT);
+
 
 
 %>
 <%
+    BART_DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT+1"));
     String encoder_name = request.getParameter(ENCODER_NAME_PARAM);
     String encoderIP = null;
     if (encoder_name != null) {
@@ -57,9 +60,9 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         start_timestamp = Long.parseLong(start_timestamp_string);
         end_timestamp = start_timestamp + Integer.parseInt(request.getAttribute(FILE_LENGTH_ATTR).toString())*1000;
         Date start_date = new Date(start_timestamp);
-        start_date_S = (new SimpleDateFormat(DISPLAY_DATE_FORMAT)).format(start_date);
+        start_date_S = BART_DATE_FORMAT.format(start_date);
         Date end_date = new Date(end_timestamp);
-        end_date_S = (new SimpleDateFormat(DISPLAY_DATE_FORMAT)).format(end_date);
+        end_date_S = BART_DATE_FORMAT.format(end_date);
 
     } else {
         Matcher m = WebConstants.BART_FILE_PATTERN.matcher(filename);
@@ -81,8 +84,8 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         } else {
             throw new RuntimeException("Unknown capture format: '" + format + "'");
         }
-        start_date_S = (new SimpleDateFormat(DISPLAY_DATE_FORMAT)).format(start_date);
-        end_date_S = (new SimpleDateFormat(DISPLAY_DATE_FORMAT)).format(end_date);
+        start_date_S = BART_DATE_FORMAT.format(start_date);
+        end_date_S = BART_DATE_FORMAT.format(end_date);
     }
 
 %>
@@ -159,14 +162,12 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 
         <div class="field">
             <label for="start_time_display_field">Start date/time:</label>
-            <input readonly="readonly" class="input" type="text" id="start_time_display_field"/>
-            <input id="start_time_field" type="hidden" name="<%=START_TIME_PARAM%>" value="<%=start_timestamp%>"/>
+            <input id="start_time_display_field" type="text" name="<%=START_TIME_PARAM%>" value="<%=start_timestamp%>"/>
         </div>
 
         <div class="field">
             <label for="end_time_display_field">End date/time:</label>
-            <input readonly="readonly" class="input" type="text" id="end_time_display_field"/>
-            <input id="end_time_field" type="hidden" name="<%=END_TIME_PARAM%>" value="<%=end_timestamp%>" />
+            <input id="end_time_display_field" type="text" name="<%=END_TIME_PARAM%>" value="<%=end_timestamp%>" />
         </div>
 
 
@@ -201,12 +202,10 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 
 <script type="text/javascript">
 
-    var date_format = "%Y %b %e %H:%M";
+    var date_format = "%Y/%m/%e %H:%M";
 
     var start_date = new Date(<%=start_timestamp%>);
     var start_calendar = Calendar.setup({
-        inputField: "start_time_field",      // id of the input field
-        ifFormat: "%s000",
         daFormat: date_format,
         displayInput: "start_time_display_field",
         date: start_date,
@@ -222,8 +221,6 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 
     var end_date = new Date(<%=end_timestamp%>);
     var end_calendar = Calendar.setup({
-        inputField: "end_time_field",      // id of the input field
-        ifFormat: "%s000",
         daFormat: date_format,
         displayInput: "end_time_display_field",
         date: end_date,
