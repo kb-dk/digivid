@@ -24,7 +24,7 @@ package dk.statsbiblioteket.deck.client.webinterface;
 
 import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.*;
 
-import dk.statsbiblioteket.deck.client.GenericCtrl;
+import dk.statsbiblioteket.deck.client.*;
 import dk.statsbiblioteket.deck.Constants;
 
 import javax.servlet.http.HttpServlet;
@@ -70,15 +70,25 @@ public class ControlServlet extends HttpServlet {
     public static final String time_format_string = "yyyy/MM/dd HH:mm";
     public static final String jscalendar_format_string = "%Y/%m/%e %H:%M";
 
+    public static final String BART_FILE_DATEFORMAT_STRING = "yyyyMMddHHmmss";
+
+
     private String parameterString="";
 
 
 
-    public static SimpleDateFormat getTime_format() {
+    public static SimpleDateFormat getPresentationDateFormat() {
         SimpleDateFormat temp = new SimpleDateFormat(time_format_string);
         temp.setTimeZone(TimeZone.getTimeZone("GMT+1"));
         return temp;
     }
+
+    public static SimpleDateFormat getFilenameDateFormat() {
+        SimpleDateFormat temp = new SimpleDateFormat(BART_FILE_DATEFORMAT_STRING);
+        temp.setTimeZone(TimeZone.getTimeZone("GMT+1"));
+        return temp;
+    }
+
 
     private void unmarshallParams(Map<String,String[]> param_map) {
         Set<Map.Entry<String,String[]>> params = param_map.entrySet();
@@ -125,14 +135,14 @@ public class ControlServlet extends HttpServlet {
                 addParam(CHANNEL_LABEL_PARAM,channel_label);
             } else if (name.equals(START_TIME_PARAM)) {
                 try {
-                    start_time_ms = getTime_format().parse(value).getTime();
+                    start_time_ms = getPresentationDateFormat().parse(value).getTime();
                     addParam(START_TIME_PARAM,start_time_ms);
                 } catch (ParseException e) {
                     throw new RuntimeException("You must specify a start time for the recording");
                 }
             } else if (name.equals(END_TIME_PARAM)) {
                 try {
-                    stop_time_ms = getTime_format().parse(value).getTime();
+                    stop_time_ms = getPresentationDateFormat().parse(value).getTime();
                     addParam(END_TIME_PARAM,stop_time_ms);
                 } catch (ParseException e) {
                     throw new RuntimeException("You must specify a stop time for the recording");
@@ -142,7 +152,6 @@ public class ControlServlet extends HttpServlet {
                 addParam(CAPTURE_FORMAT_PARAM,capture_format);
             } else if (name.equals(VHS_LABEL)) {
                 vhs_label = value;
-                addParam(VHS_LABEL,vhs_label);
             } else if (name.equals(RECORDING_QUALITY)) {
                 try {
                     quality = Integer.parseInt(value);
@@ -162,10 +171,13 @@ public class ControlServlet extends HttpServlet {
                 addParam(USER_NAME_PARAM,user_name);
             }
         }
+        if (vhs_label == null){
+            vhs_label =getComments();
+        }
     }
 
     private void addParam(String name, Object value) {
-        parameterString = parameterString + " "+name+"=\""+value.toString()+"\"";
+        parameterString = parameterString + " '"+name+"="+value.toString()+"'";
     }
 
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
@@ -192,7 +204,7 @@ public class ControlServlet extends HttpServlet {
         } else if (control_command == null || "".equals(control_command)) {
             httpServletRequest.setAttribute(PAGE_ATTR, STATUS_JSP);
         } else {
-            throw new RuntimeException("Comand '" + control_command + "' not implemented");
+            throw new RuntimeException("Command '" + control_command + "' not implemented");
         }
         //Give the command a chance to execute before requesting the new status
         try {
@@ -239,6 +251,10 @@ public class ControlServlet extends HttpServlet {
             throw new RuntimeException("You must set a recording time greater than 1 minute, not '" + recording_time + "'");
         }
 
+
+
+
+
         String unix_command = Constants.RECORDER_BINDIR + "/start_recording.sh " +
                 " -d " + card_name +
                 " -i " + channel_label +
@@ -247,12 +263,34 @@ public class ControlServlet extends HttpServlet {
                 " -l " + recording_time +
                 " -o " + start_time_ms;
         GenericCtrl ctrl = new GenericCtrl(encoder_IP, unix_command, true);
+        List<String> output;
         try {
-            ctrl.execute();
+            output = ctrl.execute();
+
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
+        String recordFile = findRecordFileFromOutput(output);
+
+        //Create comments file
+        FileCreator task = new FileCreator(new File(recordFile), vhs_label);
+        try {
+            Object result = new MoreGenericCtrl(encoder_IP, task).execute();
+        } catch (RemoteException e1) {
+            throw new RuntimeException(e1);
+        }
+
         request.setAttribute(PAGE_ATTR, STATUS_JSP);
+    }
+
+    private String findRecordFileFromOutput(List<String> output) {
+        String result = "";
+        for (String line : output) {
+            if (line.startsWith("Record File:")){
+                result = line.replace("Record File:","").trim();
+            }
+        }
+        return result;
     }
 
     private void stopRecording(HttpServletRequest request, HttpServletResponse response) {
@@ -300,6 +338,7 @@ public class ControlServlet extends HttpServlet {
         String file_length_S = result.get(0);
         long file_length = (long) Float.parseFloat(file_length_S);
         request.setAttribute(FILE_LENGTH_ATTR, new Long(file_length));
+        request.setAttribute(VHS_LABEL, vhs_label);
         request.setAttribute(STREAM_URL_ATTR, "http://" + encoder_IP + ":" + stream_port);
         request.setAttribute(PAGE_ATTR, POSTPROCESS_JSP);
     }
@@ -311,32 +350,45 @@ public class ControlServlet extends HttpServlet {
     private void postProcess(HttpServletRequest request, HttpServletResponse response) {
         File dir = new File(Constants.DEFAULT_RECORDSDIR);
         File old_file = new File(dir, file_name);
-        String startTimeBart = BART_DATE_FORMAT.format((new Date(start_time_ms)));
-        String endTimeBart = BART_DATE_FORMAT.format(new Date(stop_time_ms));
+        String startTimeBart = getFilenameDateFormat().format((new Date(start_time_ms)));
+        String endTimeBart = getFilenameDateFormat().format(new Date(stop_time_ms));
         String new_file_name = lognames.get(channel_label) + "_digivid_" + channel_label +
                 "_" + "mpeg" + capture_format + "_" + startTimeBart + "_" + endTimeBart +
                 "_" + encoder_IP + ".mpeg";
         File new_file = new File(dir, new_file_name);
         //rename the video file
-        GenericCtrl ctrl = new GenericCtrl(encoder_IP, "mv " + old_file.getAbsolutePath() + " " + new_file.getAbsolutePath());
-        System.out.println("Moving " + old_file.getAbsolutePath() + " to " + new_file.getAbsolutePath());
-        try {
-            ctrl.execute();
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-        //rename the log file
-        String old_log_file = old_file.getAbsolutePath().replace(".mpeg", ".log");
-        String new_log_file = new_file.getAbsolutePath().replace(".mpeg", ".log");
-        System.out.println("Moving " + old_log_file + " to " + new_log_file);
-        ctrl = new GenericCtrl(encoder_IP, "mv " + old_log_file + " " + new_log_file);
-        try {
-            ctrl.execute();
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
+        if (!old_file.equals(new_file)){
+            GenericCtrl ctrl = new GenericCtrl(encoder_IP, "mv " + old_file.getAbsolutePath() + " " + new_file.getAbsolutePath());
+            System.out.println("Moving " + old_file.getAbsolutePath() + " to " + new_file.getAbsolutePath());
+            try {
+                ctrl.execute();
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+            //rename the log file
+            String old_log_file = old_file.getAbsolutePath().replace(".mpeg", ".log");
+            String new_log_file = new_file.getAbsolutePath().replace(".mpeg", ".log");
+            System.out.println("Moving " + old_log_file + " to " + new_log_file);
+            ctrl = new GenericCtrl(encoder_IP, "mv " + old_log_file + " " + new_log_file);
+            try {
+                ctrl.execute();
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
         }
 
-        ctrl = new GenericCtrl(encoder_IP, Constants.HOOKS_BINDIR + "/post_postProcess.sh " + parameterString);
+        //Create comments file
+        FileCreator task = new FileCreator(new_file_name, vhs_label);
+        try {
+            Object result = new MoreGenericCtrl(encoder_IP, task).execute();
+        } catch (RemoteException e1) {
+            throw new RuntimeException(e1);
+        }
+
+
+        String fileDirParam = " fileDir=\'" + Constants.DEFAULT_RECORDSDIR + "\' ";
+        String filenameParam = " filename=\'" + new_file_name + "\' ";
+        GenericCtrl ctrl = new GenericCtrl(encoder_IP, Constants.HOOKS_BINDIR + "/post_postProcess.sh " + filenameParam +fileDirParam +parameterString);
         List<String> result = null;
         try {
             result = ctrl.execute();
@@ -346,5 +398,24 @@ public class ControlServlet extends HttpServlet {
 
 
         request.setAttribute(PAGE_ATTR, PLAYBACK_JSP);
+
+
+
+    }
+
+
+    private String getComments(){
+        //Create comments file
+        FileReader task = new FileReader(file_name);
+        try {
+            Object result = new MoreGenericCtrl(encoder_IP, task).execute();
+            if (result != null){
+                return result.toString();
+            } else {
+                return "";
+            }
+        } catch (RemoteException e1) {
+            throw new RuntimeException(e1);
+        }
     }
 }

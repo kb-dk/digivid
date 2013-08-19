@@ -112,6 +112,12 @@ Recording on <%=encoder_name%>
         <label for="recording_time_param">Recording Time (minutes):</label>
         <input id="recording_time_param" size="5" name="<%=RECORDING_TIME_PARAM%>" value="60"/><br/>
     </div>
+
+    <div class="field">
+        <label for="vhs_label">VHS Label:</label>
+        <textarea id="vhs_label" name="<%=VHS_LABEL%>" class="input" rows="3" cols="100"></textarea>
+    </div>
+
     <input type="hidden" name="<%=CONTROL_COMMAND_PARAM%>" value="<%=START_RECORDING%>"/>
     <input type="hidden" name="<%=USER_NAME_PARAM%>" value="digivid"/>
     <input type="hidden" name="<%=INPUT_CHANNEL_ID_PARAM%>" value="SB-Tape1"/>

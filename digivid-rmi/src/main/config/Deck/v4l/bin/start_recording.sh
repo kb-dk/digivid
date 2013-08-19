@@ -59,6 +59,8 @@ fi
     echo "VBI Embeded: " `${IVCTL} -d ${DEVICE} -X` >> ${LOGFILE}
     echo "Driver Version: " `${IVCTL} -V`  >> ${LOGFILE}
 
+echo "Record File: ${RECFILE}"
+
 ##start the capturing
 
 cat $DEVICE > ${RECFILE} &
