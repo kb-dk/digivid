@@ -52,8 +52,6 @@ public class WebConstants {
 
     private WebConstants(){}
 
-    public static final String BART_DATE_FORMAT_S = "yyyyMMddHHmmss";
-    public static final SimpleDateFormat BART_DATE_FORMAT = new SimpleDateFormat(BART_DATE_FORMAT_S);
 
     /**
      * Names of request attributes
@@ -78,8 +76,8 @@ public class WebConstants {
     public static final String START_TIME_PARAM = "startTime";
     public static final String END_TIME_PARAM = "endTime";
     //TODO
-    public static final String VHS_LABEL = "endTime";
-    public static final String RECORDING_QUALITY = "endTime";
+    public static final String VHS_LABEL = "vhsLabel";
+    public static final String RECORDING_QUALITY = "recordingQuality";
     public static final String CAPTURE_FORMAT_PARAM = "captureFormat";
     public static final String RECORDING_TIME_PARAM = "recordingTime";
     public static final String USER_NAME_PARAM = "digivid";
