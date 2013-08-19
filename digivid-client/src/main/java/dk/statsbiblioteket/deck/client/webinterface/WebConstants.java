@@ -25,6 +25,7 @@ package dk.statsbiblioteket.deck.client.webinterface;
 import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.regex.Pattern;
 
 /**
@@ -49,6 +50,10 @@ public class WebConstants {
     public static final String BART_FILE_REGEXP ="([^_]*)_([^_]*)_([^_]*)_([^_]*)_([0-9]{14})_([0-9]{14}).*\\.mpeg";
     public static final Pattern UNPROCESSED_FILE_PATTERN = Pattern.compile(UNPROCESSED_FILE_REGEXP);
     public static final Pattern BART_FILE_PATTERN = Pattern.compile(BART_FILE_REGEXP);
+    //These two must match
+    public static final String time_format_string = "yyyy/MM/dd HH:mm";
+    public static final String jscalendar_format_string = "%Y/%m/%e %H:%M";
+    public static final String BART_FILE_DATEFORMAT_STRING = "yyyyMMddHHmmss";
 
     private WebConstants(){}
 
@@ -148,5 +153,17 @@ public class WebConstants {
         lognames.put("Kanal5", "kanal5");
         lognames.put("DK4", "dk4");
         lognames.put("TV-Sport", "tvsport");
+    }
+
+    public static SimpleDateFormat getPresentationDateFormat() {
+        SimpleDateFormat temp = new SimpleDateFormat(time_format_string);
+        temp.setTimeZone(TimeZone.getTimeZone("GMT+1"));
+        return temp;
+    }
+
+    public static SimpleDateFormat getFilenameDateFormat() {
+        SimpleDateFormat temp = new SimpleDateFormat(BART_FILE_DATEFORMAT_STRING);
+        temp.setTimeZone(TimeZone.getTimeZone("GMT+1"));
+        return temp;
     }
 }

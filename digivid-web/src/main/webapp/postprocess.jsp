@@ -43,7 +43,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         //The unix timestamp as a long
         long start_timestamp = Long.parseLong(start_timestamp_string);
         //The end unix timestamp as a long
-        long end_timestamp = start_timestamp + Integer.parseInt(request.getAttribute(FILE_LENGTH_ATTR).toString())*1000;
+        long end_timestamp = start_timestamp + Integer.parseInt(request.getAttribute(FILE_LENGTH_ATTR).toString()) * 1000;
 
         //The start time as a Date
         start_date = new Date(start_timestamp);
@@ -57,10 +57,10 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 
         //The start timestamp in the bart format
         String bart_start_time = m.group(5);
-        start_date = ControlServlet.getFilenameDateFormat().parse(bart_start_time);
+        start_date = getFilenameDateFormat().parse(bart_start_time);
 
         String bart_end_time = m.group(6);
-        end_date = ControlServlet.getFilenameDateFormat().parse(bart_end_time);
+        end_date = getFilenameDateFormat().parse(bart_end_time);
 
     }
 
@@ -73,9 +73,9 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     }
 
 
-    start_date_S = ControlServlet.getPresentationDateFormat().format(start_date);
+    start_date_S = getPresentationDateFormat().format(start_date);
 
-    end_date_S = ControlServlet.getPresentationDateFormat().format(end_date);
+    end_date_S = getPresentationDateFormat().format(end_date);
 
 %>
 
@@ -115,7 +115,8 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         <legend>Postprocessing</legend>
         <div class="field">
             <label for="filename">Filename:</label>
-            <input id="filename" readonly="readonly" type="text" class="input_readonly"  size="100" value="<%=filename%>"/>
+            <input id="filename" name="<%=FILE_NAME_PARAM%>" readonly="readonly" type="text" class="input_readonly" size="100"
+                   value="<%=filename%>"/>
         </div>
 
         <div class="field">
@@ -125,39 +126,60 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         </div>
 
 
-
         <div class="field">
             <label for="vhs_label">VHS Label:</label>
-            <textarea id="vhs_label" name="<%=VHS_LABEL%>" class="input" rows="3" cols="100"><%=request.getAttribute(VHS_LABEL)%></textarea>
+            <textarea id="vhs_label" name="<%=VHS_LABEL%>" class="input" rows="3"
+                      cols="100"><%=request.getAttribute(VHS_LABEL)%></textarea>
         </div>
 
         <div class="field">
             <label for="quality">Quality:</label>
-            <select id="quality" name="<%=RECORDING_QUALITY%>" class="input" >
-                <option value="1">1 (Worst Quality)</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5" selected="selected">5 (Acceptable Quality)</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10 (Best Quality)</option>
+            <select id="quality" name="<%=RECORDING_QUALITY%>" class="input">
+                <%
+                    for (int qualityNr = 1; qualityNr <= 10; qualityNr++) {
+                        String selected = "";
+                        String comment = "";
+                        if (request.getAttribute(RECORDING_QUALITY) != null) {
+                            if (request.getAttribute(RECORDING_QUALITY).equals(qualityNr)) {
+                                selected = "selected=\"selected\"";
+                            }
+                        } else {
+                            if (qualityNr == 5) {
+                                selected = "selected=\"selected\"";
+                            }
+                        }
+                        if (qualityNr == 1) {
+                            comment = " (Worst Quality)";
+                        }
+                        if (qualityNr == 5) {
+                            comment = " (Average Quality)";
+                        }
+                        if (qualityNr == 10) {
+                            comment = " (Best Quality)";
+                        }
+
+                %> <%=selected%>
+
+                %>
+                <option value="<%=qualityNr%>" <%=selected%>><%=qualityNr%><%=comment%>
+                </option>
+                <%
+                    }
+                %>
             </select>
         </div>
 
         <div class="field">
             <label for="start_time_display_field">Start date/time:</label>
-            <input id="start_time_display_field" type="text" readonly="readonly" name="<%=START_TIME_PARAM%>" value="<%=start_date_S%>"/>
+            <input id="start_time_display_field" type="text" readonly="readonly" name="<%=START_TIME_PARAM%>"
+                   value="<%=start_date_S%>"/>
         </div>
 
         <div class="field">
             <label for="end_time_display_field">End date/time:</label>
-            <input id="end_time_display_field" type="text" readonly="readonly" name="<%=END_TIME_PARAM%>" value="<%=end_date_S%>"/>
+            <input id="end_time_display_field" type="text" readonly="readonly" name="<%=END_TIME_PARAM%>"
+                   value="<%=end_date_S%>"/>
         </div>
-
-
 
 
         <div class="field">
@@ -189,7 +211,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 
 <script type="text/javascript">
 
-    var date_format = "<%=ControlServlet.jscalendar_format_string%>";
+    var date_format = "<%=jscalendar_format_string%>";
 
     var start_calendar = Calendar.setup({
         daFormat: date_format,

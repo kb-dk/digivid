@@ -130,7 +130,7 @@ Recording on <%=encoder_name%>
 <script type="text/javascript">
     Calendar.setup({
         inputField: "start_time_field",      // id of the input field
-        ifFormat: "<%=ControlServlet.jscalendar_format_string%>",
+        ifFormat: "<%=jscalendar_format_string%>",
         showsTime: true,            // will display a time selector
         singleClick: true,           // double-click mode
         step: 1,                // show all years in drop-down boxes (instead of every other year as default)
