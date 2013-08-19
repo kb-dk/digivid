@@ -121,24 +121,38 @@ public class ControlServlet extends HttpServlet {
 
 
 
-
-
-        String unix_command = Constants.RECORDER_BINDIR + "/start_recording.sh " +
+        String unix_command = Constants.RECORDER_BINDIR + "/get_recording_name.sh " +
                 " -d " + params.getCard_name() +
                 " -i " + params.getChannel_label() +
                 " -a " + params.getCapture_format() +
                 " -f " + file_name +
                 " -l " + params.getRecording_time() +
                 " -o " + params.getStart_time_ms();
-        GenericCtrl ctrl = new GenericCtrl(params.getEncoder_IP(), unix_command, true);
+        GenericCtrl ctrl = new GenericCtrl(params.getEncoder_IP(), unix_command, false);
         List<String> output;
+        try {
+            output = ctrl.execute();
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+        String recordFile = findRecordFileFromOutput(output);
+
+
+        unix_command = Constants.RECORDER_BINDIR + "/start_recording.sh " +
+                " -d " + params.getCard_name() +
+                " -i " + params.getChannel_label() +
+                " -a " + params.getCapture_format() +
+                " -f " + file_name +
+                " -l " + params.getRecording_time() +
+                " -o " + params.getStart_time_ms();
+        ctrl = new GenericCtrl(params.getEncoder_IP(), unix_command, true);
         try {
             output = ctrl.execute();
 
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
-        String recordFile = findRecordFileFromOutput(output);
+
 
         //Create comments file
         Comments commentsStructure = new Comments();

@@ -22,11 +22,13 @@ fi
 
 #First find the start_recording process
 
-rpid=`ps ww  -C start_recording.sh -o pid,args | grep ".*start_recording.sh.*-d[[:space:]]${DEVICE_NUMBER}[[:space:]].*"| cut -c 0-5`
+rpid=`ps ww  -C start_recording.sh -o pid,args | grep ".*start_recording.sh.*-d[[:space:]]${DEVICE_NUMBER}[[:space:]].*"| cut -c 1-5`
 
 #Now find the cat process
-cpid=`ps ww  -C cat -o pid,args | grep "cat[[:space:]]${DEV}${DEVICE_NUMBER}"| cut -c 0-5`
+cpid=`ps ww  -C cat -o pid,args | grep "cat[[:space:]]${DEV}${DEVICE_NUMBER}"| cut -c 1-5`
 
 echo Killing $rpid $cpid
-kill -9 $rpid
-kill -9 $cpid
+[ ! -z "$rpid" ] &&  echo $rpid | xargs kill -9
+[ ! -z "$cpid" ] && echo $cpid | xargs kill -9
+
+exit 0

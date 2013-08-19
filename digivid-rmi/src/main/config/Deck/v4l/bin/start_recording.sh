@@ -29,7 +29,7 @@ echo -e "Starting recording with:\ndevice=${DEVICE_NUMBER}\nchannel=${CHANNEL_ID
 DEVICE=${DEV}${DEVICE_NUMBER}
 
 ##check for already recording
-dpid=`ps ww -C cat -o pid,args | grep "cat[[:space:]]$DEVICE"| cut -c 0-5`
+dpid=`ps ww -C cat -o pid,args | grep "cat[[:space:]]$DEVICE"| cut -c 1-5`
 if [ -n "$dpid" ]; then
   echo "Already recording on ${DEVICE}: process $dpid"
   exit 2
@@ -59,7 +59,7 @@ fi
     echo "VBI Embeded: " `${IVCTL} -d ${DEVICE} -X` >> ${LOGFILE}
     echo "Driver Version: " `${IVCTL} -V`  >> ${LOGFILE}
 
-echo "Record File: ${RECFILE}"
+
 
 ##start the capturing
 
