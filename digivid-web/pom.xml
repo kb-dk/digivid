@@ -5,7 +5,7 @@
     <parent>
         <artifactId>digivid</artifactId>
         <groupId>digivid</groupId>
-        <version>1.0</version>
+        <version>1.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -66,7 +66,7 @@
                                     <artifactId>digivid-client</artifactId>
                                     <type>jar</type>
                                     <overWrite>false</overWrite>
-                                    <outputDirectory>${project.build.directory}/${pom.artifactId}-${version}/rmi
+                                    <outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}/rmi
                                     </outputDirectory>
                                     <destFileName>client.jar</destFileName>
                                 </artifactItem>
