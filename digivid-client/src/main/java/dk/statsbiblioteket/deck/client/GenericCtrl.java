@@ -47,19 +47,25 @@ public class GenericCtrl {
     private String unix_command;
     final int encoderRMIport = Constants.DEFAULT_RMI_CLIENT_PORT ;
     private boolean is_daemon = false;
+    private Integer[] returncodes;
 
-    public GenericCtrl(String encoderIP, String unix_command, boolean is_daemon) {
+    public GenericCtrl(String encoderIP, String unix_command, boolean is_daemon, Integer... returncodes) {
+        this.returncodes = returncodes;
         if (encoderIP == null) {
             throw new RuntimeException("Attempt to create GenericCtrl with null encoderIP");
         }
        this.encoderIP = encoderIP;
        this.unix_command = unix_command;
        this.is_daemon = is_daemon;
+        if (returncodes == null || returncodes.length == 0){
+            returncodes = new Integer[]{0};
+        }
+        this.returncodes = returncodes;
     }
 
 
-    public GenericCtrl(String encoderIP, String unix_command) {
-       this(encoderIP, unix_command, false);
+    public GenericCtrl(String encoderIP, String unix_command,Integer... returncodes) {
+       this(encoderIP, unix_command, false, returncodes);
     }
 
     public List<String> execute() throws RemoteException {
@@ -94,7 +100,7 @@ public class GenericCtrl {
             throw new RuntimeException(re);
         }
 
-        GenericTask task = new GenericTask(unix_command, is_daemon);
+        GenericTask task = new GenericTask(unix_command, is_daemon, returncodes);
         try {
             log.debug("Executing command");
             System.out.println("Executing command");
@@ -110,4 +116,14 @@ public class GenericCtrl {
         return result;
     }
 
+
+    @Override
+    public String toString() {
+        return "GenericCtrl{" +
+                "encoderIP='" + encoderIP + '\'' +
+                ", unix_command='" + unix_command + '\'' +
+                ", encoderRMIport=" + encoderRMIport +
+                ", is_daemon=" + is_daemon +
+                '}';
+    }
 }

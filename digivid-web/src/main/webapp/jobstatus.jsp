@@ -38,7 +38,7 @@
 Status for <%=encoder_name%>:
 <%--<form action="get"><input type="hidden" name="<%=ENCODER_IP_PARAM%>" value="<%=encoderIP%>"/></form>--%>
 <%
-    GenericCtrl ctrl = new GenericCtrl(encoderIP, "ps -ww -C vlc,start_recording.sh -o args");
+    GenericCtrl ctrl = new GenericCtrl(encoderIP, "ps -ww -C vlc,start_recording.sh -o args",0,1);
     List<String> jobs = null;
     try {
         jobs = ctrl.execute();

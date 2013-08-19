@@ -26,6 +26,7 @@ import dk.statsbiblioteket.deck.rmiInterface.compute.Task;
 import dk.statsbiblioteket.deck.exception.BasicException;
 import org.apache.log4j.Logger;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.ArrayList;
 import java.io.BufferedReader;
@@ -44,6 +45,7 @@ import java.io.IOException;
 
 public class GenericTask implements Task {
     static Logger log = Logger.getLogger(GenericTask.class.getName());
+    private Integer[] returncodes;
 
     private String unixExecutable;
     private boolean is_daemon;
@@ -55,10 +57,18 @@ public class GenericTask implements Task {
         }
         unixExecutable = command;
         this.is_daemon = is_daemon;
+        returncodes = new Integer[]{0};
     }
 
     public GenericTask(String command) {
         this(command, false);
+    }
+
+    public GenericTask(String unix_command, boolean is_daemon, Integer[] returncodes) {
+        this(unix_command, is_daemon);
+        if (returncodes != null){
+            this.returncodes = returncodes;
+        }
     }
 
     public Object execute() {
@@ -97,7 +107,9 @@ public class GenericTask implements Task {
                 System.out.println(er);
                 log.error(er);
             }
-            if (p.waitFor() != 0){
+            int returncode = p.waitFor();
+
+            if ( ! Arrays.asList(returncodes).contains(returncode)){
                 throw new RuntimeException("Error executing " + unixExecutable +", returned "+p.exitValue());
             }
         } catch(Exception e) {
