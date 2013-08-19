@@ -214,8 +214,8 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     var date_format = "<%=jscalendar_format_string%>";
 
     var start_calendar = Calendar.setup({
-        daFormat: date_format,
-        displayInput: "start_time_display_field",
+        ifFormat: date_format,
+        inputField: "start_time_display_field",
         eventName: "click",
         //onUpdate       :    setCurrentStartDate,
         showsTime: true,            // will display a time selector
@@ -226,8 +226,8 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 
 
     var end_calendar = Calendar.setup({
-        daFormat: date_format,
-        displayInput: "end_time_display_field",
+        ifFormat: date_format,
+        inputField: "end_time_display_field",
         eventName: "click",
         //onUpdate       :    setCurrentStartDate,
         showsTime: true,            // will display a time selector
