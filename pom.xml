@@ -8,26 +8,39 @@
     <artifactId>digivid</artifactId>
     <packaging>pom</packaging>
     <version>1.0</version>
+
     <modules>
         <module>digivid-client</module>
         <module>digivid-web</module>
         <module>digivid-rmi</module>
     </modules>
-    <properties>
-        <tomcatPort>8371</tomcatPort>
-        <digividUser>abr</digividUser>
-    </properties>
+
+    <profiles>
+        <profile>
+            <id>default</id>
+            <properties>
+                <env>default</env>
+                <digividUser>bart</digividUser>
+                <tomcatPort>8371</tomcatPort>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
 
     <build>
         <plugins>
             <plugin>
-                           <groupId>org.apache.maven.plugins</groupId>
-                           <artifactId>maven-compiler-plugin</artifactId>
-                           <configuration>
-                               <source>1.6</source>
-                               <target>1.6</target>
-                           </configuration>
-                       </plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+
 </project>
