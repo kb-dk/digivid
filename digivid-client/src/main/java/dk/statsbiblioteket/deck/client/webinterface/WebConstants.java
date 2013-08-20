@@ -158,13 +158,13 @@ public class WebConstants {
 
     public static SimpleDateFormat getPresentationDateFormat() {
         SimpleDateFormat temp = new SimpleDateFormat(time_format_string);
-        temp.setTimeZone(TimeZone.getTimeZone("GMT+1"));
+        temp.setTimeZone(TimeZone.getTimeZone("Europe/Copenhagen"));
         return temp;
     }
 
     public static SimpleDateFormat getFilenameDateFormat() {
         SimpleDateFormat temp = new SimpleDateFormat(BART_FILE_DATEFORMAT_STRING);
-        temp.setTimeZone(TimeZone.getTimeZone("GMT+1"));
+        temp.setTimeZone(TimeZone.getTimeZone("Europe/Copenhagen"));
         return temp;
     }
 }

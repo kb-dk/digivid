@@ -24,6 +24,7 @@ package dk.statsbiblioteket.deck.client;
 
 import dk.statsbiblioteket.deck.rmiInterface.compute.Task;
 import org.apache.log4j.Logger;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -41,14 +42,14 @@ import java.util.List;
  * @since Feb 22, 2007
  */
 
-public class GenericTask implements Task {
-    static Logger log = Logger.getLogger(GenericTask.class.getName());
+public class CommandLineTask implements Task {
+    static Logger log = Logger.getLogger(CommandLineTask.class.getName());
     private Integer[] returncodes;
 
     private String unixExecutable;
     private boolean is_daemon;
 
-    public GenericTask(String command, boolean is_daemon) {
+    public CommandLineTask(String command, boolean is_daemon) {
         if (command == null) {
             throw new RuntimeException("Attempt to create a GenericTask with " +
                     "null executtable");
@@ -58,11 +59,11 @@ public class GenericTask implements Task {
         returncodes = new Integer[]{0};
     }
 
-    public GenericTask(String command) {
+    public CommandLineTask(String command) {
         this(command, false);
     }
 
-    public GenericTask(String unix_command, boolean is_daemon, Integer[] returncodes) {
+    public CommandLineTask(String unix_command, boolean is_daemon, Integer[] returncodes) {
         this(unix_command, is_daemon);
         if (returncodes != null){
             this.returncodes = returncodes;

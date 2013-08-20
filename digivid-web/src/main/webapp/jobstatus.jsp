@@ -1,11 +1,11 @@
+<%@ page import="dk.statsbiblioteket.deck.client.CommandLineCtrl" %>
 <%@ page import="dk.statsbiblioteket.deck.client.FSCtrl" %>
-<%@ page import="dk.statsbiblioteket.deck.client.GenericCtrl" %>
+<%@ page import="dk.statsbiblioteket.deck.client.webinterface.WebConstants" %>
 <%@ page import="java.net.InetAddress" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.regex.Matcher" %>
 <%@ page import="java.util.regex.Pattern" %>
-<%@ page import="dk.statsbiblioteket.deck.client.webinterface.WebConstants" %>
 <%--<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <HTML>
 <HEAD>
@@ -35,7 +35,7 @@
 Status for <%=encoder_name%>:
 <%--<form action="get"><input type="hidden" name="<%=ENCODER_IP_PARAM%>" value="<%=encoderIP%>"/></form>--%>
 <%
-    GenericCtrl ctrl = new GenericCtrl(encoderIP, "ps -ww -C vlc,start_recording.sh -o args",0,1);
+    CommandLineCtrl ctrl = new CommandLineCtrl(encoderIP, "ps -ww -C vlc,start_recording.sh -o args",0,1);
     List<String> jobs = null;
     try {
         jobs = ctrl.execute();

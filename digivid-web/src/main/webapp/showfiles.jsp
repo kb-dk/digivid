@@ -1,6 +1,6 @@
 <%@ page import="dk.statsbiblioteket.deck.Constants" %>
+<%@ page import="dk.statsbiblioteket.deck.client.CommandLineCtrl" %>
 <%@ page import="dk.statsbiblioteket.deck.client.FSCtrl" %>
-<%@ page import="dk.statsbiblioteket.deck.client.GenericCtrl" %>
 <%@ page import="dk.statsbiblioteket.deck.client.webinterface.WebConstants" %>
 <%@ page import="java.net.InetAddress" %>
 <%@ page import="java.util.ArrayList" %>
@@ -29,7 +29,7 @@
     List<String[]> records = new ArrayList<String[]>();
     //
     //Now get the current files
-    GenericCtrl ctrl2 = new GenericCtrl(encoderIP, Constants.RECORDER_BINDIR + "/get_current_recordings.sh",0,1);
+    CommandLineCtrl ctrl2 = new CommandLineCtrl(encoderIP, Constants.RECORDER_BINDIR + "/get_current_recordings.sh",0,1);
     List<String> current = ctrl2.execute();
     for (String[] record : all_records) {
         if (!current.contains(record[0].trim())) records.add(record);

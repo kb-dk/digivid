@@ -1,7 +1,7 @@
 package dk.statsbiblioteket.deck.client.webinterface;
 
 import dk.statsbiblioteket.deck.client.FileReader;
-import dk.statsbiblioteket.deck.client.MoreGenericCtrl;
+import dk.statsbiblioteket.deck.client.GenericCtrl;
 import dk.statsbiblioteket.deck.client.datastructures.Comments;
 
 import java.net.InetAddress;
@@ -173,7 +173,7 @@ public class WebParams {
         //Create comments file
         FileReader task = new FileReader(file_name);
         try {
-            Object result = new MoreGenericCtrl(encoder_IP, task).execute();
+            Object result = new GenericCtrl(encoder_IP, task).execute();
             if (result != null){
                 return Comments.fromJson(result.toString());
             } else {

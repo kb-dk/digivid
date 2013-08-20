@@ -23,9 +23,9 @@
 package dk.statsbiblioteket.deck.client.webinterface;
 
 import dk.statsbiblioteket.deck.Constants;
+import dk.statsbiblioteket.deck.client.CommandLineCtrl;
 import dk.statsbiblioteket.deck.client.FileCreator;
 import dk.statsbiblioteket.deck.client.GenericCtrl;
-import dk.statsbiblioteket.deck.client.MoreGenericCtrl;
 import dk.statsbiblioteket.deck.client.datastructures.Comments;
 
 import javax.servlet.ServletException;
@@ -110,7 +110,7 @@ public class ControlServlet extends HttpServlet {
         stopPreview(request, response, params);
         String unix_command = Constants.STREAMER_BINDIR + "/" + Constants.STREAMER_STARTCOMMAND +
                 " -d " + params.getCard_name() + " -p " + params.getStream_port();
-        GenericCtrl ctrl = new GenericCtrl(params.getEncoder_IP(), unix_command, true);
+        CommandLineCtrl ctrl = new CommandLineCtrl(params.getEncoder_IP(), unix_command, true);
         try {
             ctrl.execute();
         } catch (RemoteException e) {
@@ -124,7 +124,7 @@ public class ControlServlet extends HttpServlet {
     private void stopPreview(HttpServletRequest request, HttpServletResponse response, WebParams params) {
         String unix_command = Constants.STREAMER_BINDIR + "/" + Constants.STREAMER_STOPCOMMAND +
                 " -p " + params.getStream_port();
-        GenericCtrl ctrl = new GenericCtrl(params.getEncoder_IP(), unix_command, false);
+        CommandLineCtrl ctrl = new CommandLineCtrl(params.getEncoder_IP(), unix_command, false);
         try {
             ctrl.execute();
         } catch (RemoteException e) {
@@ -151,7 +151,7 @@ public class ControlServlet extends HttpServlet {
                 " -f " + file_name +
                 " -l " + params.getRecording_time() +
                 " -o " + params.getStart_time_ms();
-        GenericCtrl ctrl = new GenericCtrl(params.getEncoder_IP(), unix_command, false);
+        CommandLineCtrl ctrl = new CommandLineCtrl(params.getEncoder_IP(), unix_command, false);
         List<String> output;
         try {
             output = ctrl.execute();
@@ -168,7 +168,7 @@ public class ControlServlet extends HttpServlet {
                 " -f " + file_name +
                 " -l " + params.getRecording_time() +
                 " -o " + params.getStart_time_ms();
-        ctrl = new GenericCtrl(params.getEncoder_IP(), unix_command, true);
+        ctrl = new CommandLineCtrl(params.getEncoder_IP(), unix_command, true);
         try {
             output = ctrl.execute();
 
@@ -183,7 +183,7 @@ public class ControlServlet extends HttpServlet {
 
         FileCreator task = new FileCreator(new File(recordFile), commentsStructure.toJSon());
         try {
-            Object result = new MoreGenericCtrl(params.getEncoder_IP(), task).execute();
+            Object result = new GenericCtrl(params.getEncoder_IP(), task).execute();
         } catch (RemoteException e1) {
             throw new RuntimeException(e1);
         }
@@ -203,7 +203,7 @@ public class ControlServlet extends HttpServlet {
 
     private void stopRecording(HttpServletRequest request, HttpServletResponse response, WebParams params) {
         String unix_command = Constants.RECORDER_BINDIR + "/stop_recording.sh -d " + params.getCard_name();
-        GenericCtrl ctrl = new GenericCtrl(params.getEncoder_IP(), unix_command, false);
+        CommandLineCtrl ctrl = new CommandLineCtrl(params.getEncoder_IP(), unix_command, false);
         try {
             ctrl.execute();
         } catch (RemoteException e) {
@@ -230,13 +230,13 @@ public class ControlServlet extends HttpServlet {
         File file = new File(dir, params.getFile_name());
         String unix_command = Constants.STREAMER_BINDIR + "/" + Constants.STREAMER_STARTCOMMAND +
                 " -f " + file.getAbsolutePath() + " -p " + params.getStream_port();
-        GenericCtrl ctrl = new GenericCtrl(params.getEncoder_IP(), unix_command, true);
+        CommandLineCtrl ctrl = new CommandLineCtrl(params.getEncoder_IP(), unix_command, true);
         try {
             ctrl.execute();
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
-        ctrl = new GenericCtrl(params.getEncoder_IP(), Constants.RECORDER_BINDIR + "/get_mpeg_file_length " + file.getAbsolutePath());
+        ctrl = new CommandLineCtrl(params.getEncoder_IP(), Constants.RECORDER_BINDIR + "/get_mpeg_file_length " + file.getAbsolutePath());
         List<String> result = null;
         try {
             result = ctrl.execute();
@@ -267,7 +267,7 @@ public class ControlServlet extends HttpServlet {
         File new_file = new File(dir, new_file_name);
         //rename the video file
         if (!old_file.equals(new_file)){
-            GenericCtrl ctrl = new GenericCtrl(params.getEncoder_IP(), "mv " + old_file.getAbsolutePath() + " " + new_file.getAbsolutePath());
+            CommandLineCtrl ctrl = new CommandLineCtrl(params.getEncoder_IP(), "mv " + old_file.getAbsolutePath() + " " + new_file.getAbsolutePath());
             System.out.println("Moving " + old_file.getAbsolutePath() + " to " + new_file.getAbsolutePath());
             try {
                 ctrl.execute();
@@ -278,7 +278,7 @@ public class ControlServlet extends HttpServlet {
             String old_log_file = old_file.getAbsolutePath().replace(".mpeg", ".log");
             String new_log_file = new_file.getAbsolutePath().replace(".mpeg", ".log");
             System.out.println("Moving " + old_log_file + " to " + new_log_file);
-            ctrl = new GenericCtrl(params.getEncoder_IP(), "mv " + old_log_file + " " + new_log_file);
+            ctrl = new CommandLineCtrl(params.getEncoder_IP(), "mv " + old_log_file + " " + new_log_file);
             try {
                 ctrl.execute();
             } catch (RemoteException e) {
@@ -294,7 +294,7 @@ public class ControlServlet extends HttpServlet {
 
         FileCreator task = new FileCreator(new_file_name, commentsStructure.toJSon());
         try {
-            Object result = new MoreGenericCtrl(params.getEncoder_IP(), task).execute();
+            Object result = new GenericCtrl(params.getEncoder_IP(), task).execute();
         } catch (RemoteException e1) {
             throw new RuntimeException(e1);
         }
@@ -302,7 +302,7 @@ public class ControlServlet extends HttpServlet {
 
         String fileDirParam = " fileDir=\'" + Constants.DEFAULT_RECORDSDIR + "\' ";
         String filenameParam = " filename=\'" + new_file_name + "\' ";
-        GenericCtrl ctrl = new GenericCtrl(params.getEncoder_IP(), Constants.HOOKS_BINDIR + "/post_postProcess.sh " + filenameParam +fileDirParam +params.getParameterString());
+        CommandLineCtrl ctrl = new CommandLineCtrl(params.getEncoder_IP(), Constants.HOOKS_BINDIR + "/post_postProcess.sh " + filenameParam +fileDirParam +params.getParameterString());
         List<String> result = null;
         try {
             result = ctrl.execute();

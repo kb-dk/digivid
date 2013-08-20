@@ -1,4 +1,4 @@
-<%@ page import="dk.statsbiblioteket.deck.client.GenericCtrl" %>
+<%@ page import="dk.statsbiblioteket.deck.client.CommandLineCtrl" %>
 <%@ page import="dk.statsbiblioteket.deck.client.webinterface.WebConstants" %>
 <%@ page import="java.net.InetAddress" %>
 <%@ page import="java.util.Arrays" %>
@@ -17,7 +17,7 @@
     //The cards actually available as determined
     //by querying the encoder
     Pattern pattern = Pattern.compile(".*/dev/video([0-9]).*");
-    GenericCtrl task = new GenericCtrl(encoderIP, "ps -C cat -o args");
+    CommandLineCtrl task = new CommandLineCtrl(encoderIP, "ps -C cat -o args");
     List<String> jobs = (List<String>) task.execute();
     Set<Integer> used_cards = new HashSet<Integer>();
     for (String job : jobs) {
