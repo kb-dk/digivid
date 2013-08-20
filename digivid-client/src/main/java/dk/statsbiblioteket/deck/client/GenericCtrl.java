@@ -30,13 +30,6 @@ import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 
-/**
- * csr forgot to comment this!
- *
- * @author csr
- * @since Feb 22, 2007
- */
-
 public class GenericCtrl {
     static Logger log = Logger.getLogger(GenericCtrl.class.getName());
     private String encoderIP;
