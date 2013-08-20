@@ -7,8 +7,7 @@ package dk.statsbiblioteket.deck.server.engine;
 import dk.statsbiblioteket.deck.ServerConstants;
 import dk.statsbiblioteket.deck.rmiInterface.compute.Compute;
 import dk.statsbiblioteket.deck.rmiInterface.compute.Task;
-
-
+import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
@@ -18,8 +17,6 @@ import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import org.apache.log4j.Logger;
-
 
 import static java.rmi.registry.LocateRegistry.getRegistry;
 

@@ -1,6 +1,5 @@
-<%@ page import="static dk.statsbiblioteket.deck.client.webinterface.WebConstants.*" %>
 <%@ page import="dk.statsbiblioteket.deck.client.GenericCtrl" %>
-<%@ page import="dk.statsbiblioteket.deck.client.webinterface.ControlServlet" %>
+<%@ page import="dk.statsbiblioteket.deck.client.webinterface.WebConstants" %>
 <%@ page import="java.net.InetAddress" %>
 <%@ page import="java.util.Arrays" %>
 <%@ page import="java.util.HashSet" %>
@@ -9,10 +8,10 @@
 <%@ page import="java.util.regex.Matcher" %>
 <%@ page import="java.util.regex.Pattern" %>
 <%
-    String encoderIP = request.getParameter(ENCODER_IP_PARAM);
+    String encoderIP = request.getParameter(WebConstants.ENCODER_IP_PARAM);
     String encoder_name = encoderIP;
-    if (request.getParameter(ENCODER_NAME_PARAM) != null) {
-        encoder_name = request.getParameter(ENCODER_NAME_PARAM);
+    if (request.getParameter(WebConstants.ENCODER_NAME_PARAM) != null) {
+        encoder_name = request.getParameter(WebConstants.ENCODER_NAME_PARAM);
         encoderIP = InetAddress.getByName(encoder_name).getHostAddress();
     }
     //The cards actually available as determined
@@ -55,7 +54,7 @@ Recording on <%=encoder_name%>
     } else if (available_cards.length == 1) {
     %>
 
-    <input type="hidden" name="<%=CARD_NAME_PARAM%>" value="<%=available_cards[0].intValue()%>"/>
+    <input type="hidden" name="<%=WebConstants.CARD_NAME_PARAM%>" value="<%=available_cards[0].intValue()%>"/>
     Record on (<%=source_names[0]%><br/>
     <%
     } else {
@@ -65,7 +64,7 @@ Recording on <%=encoder_name%>
     %>
     <div class="field">
         <label for="<%=card_number%>"><%=source_names[i]%></label>
-        <input type="radio" id="<%=card_number%>" name="<%=CARD_NAME_PARAM%>" value="<%=card_number%>"/>
+        <input type="radio" id="<%=card_number%>" name="<%=WebConstants.CARD_NAME_PARAM%>" value="<%=card_number%>"/>
     </div>
     <%
             }
@@ -74,12 +73,12 @@ Recording on <%=encoder_name%>
 
     <div class="field">
         <label for="file_name_param">Extra filename component:</label>
-        <input type="text" id="file_name_param" name="<%=FILE_NAME_PARAM%>">
+        <input type="text" id="file_name_param" name="<%=WebConstants.FILE_NAME_PARAM%>">
     </div>
 
     <div class="field">
         <label for="channel_label_param">Original channel: </label>
-        <select id="channel_label_param" name="<%=CHANNEL_LABEL_PARAM%>">
+        <select id="channel_label_param" name="<%=WebConstants.CHANNEL_LABEL_PARAM%>">
             <option value="K11-DR1">DR1</option>
             <option value="K9-DR2">DR2</option>
             <option value="K10-TV2-Danmark">TV2-Danmark</option>
@@ -96,33 +95,33 @@ Recording on <%=encoder_name%>
 
     <div class="field">
         <label for="start_time_field">Original Start Date-Time:</label>
-        <input type="text" id="start_time_field" readonly="true" name="<%=START_TIME_PARAM%>"/>
+        <input type="text" id="start_time_field" readonly="true" name="<%=WebConstants.START_TIME_PARAM%>"/>
     </div>
 
     <div class="field">
         <label for="mpeg1">MPEG-1:</label>
-        <input type="radio" id="mpeg1" name="<%=CAPTURE_FORMAT_PARAM%>" value="1" checked="checked"/>
+        <input type="radio" id="mpeg1" name="<%=WebConstants.CAPTURE_FORMAT_PARAM%>" value="1" checked="checked"/>
     </div>
     <div class="field">
         <label for="mpeg2">MPEG-2:</label>
-        <input type="radio" id="mpeg2" name="<%=CAPTURE_FORMAT_PARAM%>" value="2"/><br/>
+        <input type="radio" id="mpeg2" name="<%=WebConstants.CAPTURE_FORMAT_PARAM%>" value="2"/><br/>
     </div>
 
     <div class="field">
         <label for="recording_time_param">Recording Time (minutes):</label>
-        <input id="recording_time_param" size="5" name="<%=RECORDING_TIME_PARAM%>" value="60"/><br/>
+        <input id="recording_time_param" size="5" name="<%=WebConstants.RECORDING_TIME_PARAM%>" value="60"/><br/>
     </div>
 
     <div class="field">
         <label for="vhs_label">VHS Label:</label>
-        <textarea id="vhs_label" name="<%=VHS_LABEL%>" class="input" rows="3" cols="100"></textarea>
+        <textarea id="vhs_label" name="<%=WebConstants.VHS_LABEL%>" class="input" rows="3" cols="100"></textarea>
     </div>
 
-    <input type="hidden" name="<%=CONTROL_COMMAND_PARAM%>" value="<%=START_RECORDING%>"/>
-    <input type="hidden" name="<%=USER_NAME_PARAM%>" value="digivid"/>
-    <input type="hidden" name="<%=INPUT_CHANNEL_ID_PARAM%>" value="SB-Tape1"/>
-    <input type="hidden" name="<%=ENCODER_IP_PARAM%>" value="<%=encoderIP%>"/>
-    <input type="hidden" name="<%=ENCODER_NAME_PARAM%>" value="<%=encoder_name%>"/>
+    <input type="hidden" name="<%=WebConstants.CONTROL_COMMAND_PARAM%>" value="<%=WebConstants.START_RECORDING%>"/>
+    <input type="hidden" name="<%=WebConstants.USER_NAME_PARAM%>" value="digivid"/>
+    <input type="hidden" name="<%=WebConstants.INPUT_CHANNEL_ID_PARAM%>" value="SB-Tape1"/>
+    <input type="hidden" name="<%=WebConstants.ENCODER_IP_PARAM%>" value="<%=encoderIP%>"/>
+    <input type="hidden" name="<%=WebConstants.ENCODER_NAME_PARAM%>" value="<%=encoder_name%>"/>
 
     <input type="submit" name="start" value="start"/>
 </form>
@@ -130,7 +129,7 @@ Recording on <%=encoder_name%>
 <script type="text/javascript">
     Calendar.setup({
         inputField: "start_time_field",      // id of the input field
-        ifFormat: "<%=jscalendar_format_string%>",
+        ifFormat: "<%=WebConstants.jscalendar_format_string%>",
         showsTime: true,            // will display a time selector
         singleClick: true,           // double-click mode
         step: 1,                // show all years in drop-down boxes (instead of every other year as default)

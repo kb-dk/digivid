@@ -22,20 +22,43 @@
 
 package dk.statsbiblioteket.deck.client.webinterface;
 
-import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.*;
-
-import dk.statsbiblioteket.deck.client.*;
 import dk.statsbiblioteket.deck.Constants;
+import dk.statsbiblioteket.deck.client.FileCreator;
+import dk.statsbiblioteket.deck.client.GenericCtrl;
+import dk.statsbiblioteket.deck.client.MoreGenericCtrl;
 import dk.statsbiblioteket.deck.client.datastructures.Comments;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
-import java.io.IOException;
 import java.io.File;
-import java.util.*;
+import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.Date;
+import java.util.List;
+
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.CARDS_ATTR;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.FILE_LENGTH_ATTR;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.INDEX_JSP;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.PAGE_ATTR;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.PLAYBACK_JSP;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.PLAY_JSP;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.POSTPROCESS;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.POSTPROCESS_JSP;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.RECORDING_QUALITY;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.START_POSTPROCESS;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.START_PREVIEW;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.START_RECORDING;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.STATUS_JSP;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.STOP_PLAYBACK;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.STOP_PREVIEW;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.STOP_RECORDING;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.STREAM_URL_ATTR;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.VHS_LABEL;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.getFilenameDateFormat;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.lognames;
+
 
 /**
  * csr forgot to comment this!

@@ -2,6 +2,7 @@ package dk.statsbiblioteket.deck.client;
 
 import java.util.TimeZone;
 
+
     /**
      * A class that contains location information such as latitude and longitude
      * required for astromomical calculations. The elevation field is not used by

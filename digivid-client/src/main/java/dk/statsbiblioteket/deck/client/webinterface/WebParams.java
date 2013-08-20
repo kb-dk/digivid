@@ -4,7 +4,6 @@ import dk.statsbiblioteket.deck.client.FileReader;
 import dk.statsbiblioteket.deck.client.MoreGenericCtrl;
 import dk.statsbiblioteket.deck.client.datastructures.Comments;
 
-import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
@@ -12,8 +11,23 @@ import java.text.ParseException;
 import java.util.Map;
 import java.util.Set;
 
-import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.*;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.CAPTURE_FORMAT_PARAM;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.CARD_NAME_PARAM;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.CHANNEL_LABEL_PARAM;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.CONTROL_COMMAND_PARAM;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.ENCODER_NAME_PARAM;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.END_TIME_PARAM;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.FILE_LENGTH_PARAM;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.FILE_NAME_PARAM;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.INPUT_CHANNEL_ID_PARAM;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.RECORDING_QUALITY;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.RECORDING_TIME_PARAM;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.START_TIME_PARAM;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.STREAM_PORT_HTTP_PARAM;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.STREAM_PROTOCOL_PARAM;
 import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.USER_NAME_PARAM;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.VHS_LABEL;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.getPresentationDateFormat;
 
 /**
  * Created with IntelliJ IDEA.

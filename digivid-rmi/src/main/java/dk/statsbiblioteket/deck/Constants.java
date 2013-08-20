@@ -1,9 +1,7 @@
 package dk.statsbiblioteket.deck;
 
 import dk.statsbiblioteket.deck.config.LoadXMLConfig;
-
 import java.net.URL;
-import java.util.ResourceBundle;
 
 /**
  * PACKAGE_NAME

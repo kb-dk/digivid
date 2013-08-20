@@ -1,14 +1,17 @@
 package dk.statsbiblioteket.deck.client;
 
+import dk.statsbiblioteket.deck.Constants;
 import org.apache.log4j.Logger;
 
-import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
-import java.util.*;
-import java.text.ParseException;
-
-import dk.statsbiblioteket.deck.Constants;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Enumeration;
 
 /**
  * Created by IntelliJ IDEA.

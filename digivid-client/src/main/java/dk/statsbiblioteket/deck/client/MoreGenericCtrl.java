@@ -22,18 +22,17 @@
 
 package dk.statsbiblioteket.deck.client;
 
-import dk.statsbiblioteket.deck.rmiInterface.compute.Task;
-import org.apache.log4j.Logger;
 import dk.statsbiblioteket.deck.Constants;
 import dk.statsbiblioteket.deck.rmiInterface.compute.Compute;
+import dk.statsbiblioteket.deck.rmiInterface.compute.Task;
+import org.apache.log4j.Logger;
 
-import java.util.List;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
-import java.rmi.NotBoundException;
-import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
-import java.net.MalformedURLException;
 
 /**
  * csr forgot to comment this!

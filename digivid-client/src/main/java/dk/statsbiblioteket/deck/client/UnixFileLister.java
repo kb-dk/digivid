@@ -1,14 +1,12 @@
 package dk.statsbiblioteket.deck.client;
 
-import dk.statsbiblioteket.deck.rmiInterface.compute.Task;
 import dk.statsbiblioteket.deck.Constants;
-import dk.statsbiblioteket.deck.config.LoadXMLConfig;
+import dk.statsbiblioteket.deck.rmiInterface.compute.Task;
 import org.apache.log4j.Logger;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.

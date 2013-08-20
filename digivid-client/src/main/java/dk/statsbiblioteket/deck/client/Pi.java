@@ -8,8 +8,10 @@ package dk.statsbiblioteket.deck.client;
  * To change this template use File | Settings | File Templates.
  */
 
-import dk.statsbiblioteket.deck.rmiInterface.compute.*;
-import java.math.*;
+
+import dk.statsbiblioteket.deck.rmiInterface.compute.Task;
+import java.math.BigDecimal;
+
 
 public class Pi implements Task {
 

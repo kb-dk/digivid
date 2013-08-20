@@ -1,14 +1,11 @@
-<%@ page import="dk.statsbiblioteket.deck.client.GenericTask" %>
-<%@ page import="dk.statsbiblioteket.deck.client.GenericCtrl" %>
-<%@ page import="java.util.List" %>
-<%@ page import="static dk.statsbiblioteket.deck.client.webinterface.WebConstants.*" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.regex.Pattern" %>
-<%@ page import="java.util.regex.Matcher" %>
 <%@ page import="dk.statsbiblioteket.deck.client.FSCtrl" %>
-<%@ page import="dk.statsbiblioteket.deck.Constants" %>
-<%@ page import="java.rmi.RemoteException" %>
+<%@ page import="dk.statsbiblioteket.deck.client.GenericCtrl" %>
 <%@ page import="java.net.InetAddress" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.regex.Matcher" %>
+<%@ page import="java.util.regex.Pattern" %>
+<%@ page import="dk.statsbiblioteket.deck.client.webinterface.WebConstants" %>
 <%--<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <HTML>
 <HEAD>
@@ -19,7 +16,7 @@
 <BODY id="theBody" onload="parent.showPage('contentLayer')">--%>
 <script type="text/javascript">
         function loadEncoderIP(aform, encoderip) {
-            aform.<%=ENCODER_IP_PARAM%>.value = document.nav_form.encoderip.value;
+            aform.<%=WebConstants.ENCODER_IP_PARAM%>.value = document.nav_form.encoderip.value;
         }
 </script>
 <%
@@ -96,19 +93,19 @@ Status for <%=encoder_name%>:
              </td>
              <td>
                  <form action="Control" method="post">
-                     <input type="hidden" name="<%=CARD_NAME_PARAM%>" value="<%=matcher.group(1)%>"/>
-                     <input type="hidden" name="<%=ENCODER_NAME_PARAM%>" value="<%=InetAddress.getByName(previewIP).getHostName()%>" />
-                     <input type="hidden" name="<%=STREAM_PORT_HTTP_PARAM%>" value="<%=matcher.group(3)%>"/>
-                     <input type="hidden" name="<%=CONTROL_COMMAND_PARAM%>" value="<%=START_PREVIEW%>" />
+                     <input type="hidden" name="<%=WebConstants.CARD_NAME_PARAM%>" value="<%=matcher.group(1)%>"/>
+                     <input type="hidden" name="<%=WebConstants.ENCODER_NAME_PARAM%>" value="<%=InetAddress.getByName(previewIP).getHostName()%>" />
+                     <input type="hidden" name="<%=WebConstants.STREAM_PORT_HTTP_PARAM%>" value="<%=matcher.group(3)%>"/>
+                     <input type="hidden" name="<%=WebConstants.CONTROL_COMMAND_PARAM%>" value="<%=WebConstants.START_PREVIEW%>" />
                      <input type="submit" name="view" value="view"/>
                  </form>
              </td>
              <td>
                  <form action="Control" method="post">
-                     <input type="hidden" name="<%=CARD_NAME_PARAM%>" value="<%=matcher.group(1)%>"/>
-                     <input type="hidden" name="<%=ENCODER_NAME_PARAM%>" value="<%=InetAddress.getByName(previewIP).getHostName()%>" />
-                     <input type="hidden" name="<%=STREAM_PORT_HTTP_PARAM%>" value="<%=matcher.group(3)%>"/>
-                     <input type="hidden" name="<%=CONTROL_COMMAND_PARAM%>" value="<%=STOP_PREVIEW%>" />
+                     <input type="hidden" name="<%=WebConstants.CARD_NAME_PARAM%>" value="<%=matcher.group(1)%>"/>
+                     <input type="hidden" name="<%=WebConstants.ENCODER_NAME_PARAM%>" value="<%=InetAddress.getByName(previewIP).getHostName()%>" />
+                     <input type="hidden" name="<%=WebConstants.STREAM_PORT_HTTP_PARAM%>" value="<%=matcher.group(3)%>"/>
+                     <input type="hidden" name="<%=WebConstants.CONTROL_COMMAND_PARAM%>" value="<%=WebConstants.STOP_PREVIEW%>" />
                      <input type="submit" name="kill" value="kill"/>
                  </form>
              </td>
@@ -143,18 +140,18 @@ Status for <%=encoder_name%>:
              </td>
              <!--<td>
                  <form action="Control" method="post">
-                     <input type="hidden" name="<%=ENCODER_NAME_PARAM%>" value="<%=InetAddress.getByName(ip).getHostName()%>" />
-                     <input type="hidden" name="<%=STREAM_PORT_HTTP_PARAM%>" value="<%=port%>"/>
-                     <input type="hidden" name="<%=FILE_NAME_PARAM%>" value=<%=filename%> />
-                     <input type="hidden" name="<%=CONTROL_COMMAND_PARAM%>" value="<%=START_POSTPROCESS%>" />
+                     <input type="hidden" name="<%=WebConstants.ENCODER_NAME_PARAM%>" value="<%=InetAddress.getByName(ip).getHostName()%>" />
+                     <input type="hidden" name="<%=WebConstants.STREAM_PORT_HTTP_PARAM%>" value="<%=port%>"/>
+                     <input type="hidden" name="<%=WebConstants.FILE_NAME_PARAM%>" value=<%=filename%> />
+                     <input type="hidden" name="<%=WebConstants.CONTROL_COMMAND_PARAM%>" value="<%=WebConstants.START_POSTPROCESS%>" />
                      <input type="submit" name="view" value="view"/>
                  </form>
              </td>-->
              <td>
                  <form action="Control" method="post">
-                     <input type="hidden" name="<%=ENCODER_NAME_PARAM%>" value="<%=InetAddress.getByName(ip).getHostName()%>" />
-                     <input type="hidden" name="<%=STREAM_PORT_HTTP_PARAM%>" value="<%=port%>"/>
-                     <input type="hidden" name="<%=CONTROL_COMMAND_PARAM%>" value="<%=STOP_PLAYBACK%>" />
+                     <input type="hidden" name="<%=WebConstants.ENCODER_NAME_PARAM%>" value="<%=InetAddress.getByName(ip).getHostName()%>" />
+                     <input type="hidden" name="<%=WebConstants.STREAM_PORT_HTTP_PARAM%>" value="<%=port%>"/>
+                     <input type="hidden" name="<%=WebConstants.CONTROL_COMMAND_PARAM%>" value="<%=WebConstants.STOP_PLAYBACK%>" />
                      <input type="submit" name="kill" value="kill"/>
                  </form>
              </td>
@@ -240,9 +237,9 @@ if (!recordings.isEmpty()) {
         <td>
             <!--<form action="Control" method="post" onsubmit="loadEncoderIP(this, <%=encoderIP%>);"> -->
              <form action="Control" method="post">   
-                <input type="hidden" name="<%=CARD_NAME_PARAM%>" value="<%=device_parameter%>"/>
-                <input type="hidden" name="<%=ENCODER_NAME_PARAM%>" value="<%=encoder_name%>"/>
-                <input type="hidden" name="<%=CONTROL_COMMAND_PARAM%>" value="<%=STOP_RECORDING%>" />
+                <input type="hidden" name="<%=WebConstants.CARD_NAME_PARAM%>" value="<%=device_parameter%>"/>
+                <input type="hidden" name="<%=WebConstants.ENCODER_NAME_PARAM%>" value="<%=encoder_name%>"/>
+                <input type="hidden" name="<%=WebConstants.CONTROL_COMMAND_PARAM%>" value="<%=WebConstants.STOP_RECORDING%>" />
                 <input type="submit" name="kill" value="kill"/>
             </form>
         </td>

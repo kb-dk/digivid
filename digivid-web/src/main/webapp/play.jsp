@@ -1,7 +1,7 @@
+<%@ page import="dk.statsbiblioteket.deck.client.webinterface.WebConstants" %>
 <!DOCTYPE html
      PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<%@page import="static dk.statsbiblioteket.deck.client.webinterface.WebConstants.*"%>
 <%@ page pageEncoding="UTF-8"
 %><html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -27,7 +27,7 @@
 <%
     String card_string = "?";
     try {
-        int card_number = ((Integer) request.getAttribute(CARDS_ATTR)).intValue();
+        int card_number = ((Integer) request.getAttribute(WebConstants.CARDS_ATTR)).intValue();
         if (card_number == 1) {
             card_string = "Source A";
         } else {

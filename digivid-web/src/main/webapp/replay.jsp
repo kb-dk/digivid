@@ -1,6 +1,6 @@
- <%@ page import="java.util.*" %>
-<%@ page import="dk.statsbiblioteket.deck.client.RecorderCtrl" %>
- <%@ page import="dk.statsbiblioteket.deck.client.FSCtrl"%>
+ <%@ page import="dk.statsbiblioteket.deck.client.FSCtrl" %>
+<%@ page import="java.util.Enumeration" %>
+ <%@ page import="java.util.List"%>
 
 
  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">

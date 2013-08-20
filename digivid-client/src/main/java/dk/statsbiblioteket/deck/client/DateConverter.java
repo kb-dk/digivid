@@ -3,9 +3,8 @@ package dk.statsbiblioteket.deck.client;
 import dk.statsbiblioteket.deck.exception.BasicException;
 
 import java.io.PrintStream;
-import java.sql.Timestamp;
 import java.sql.Time;
-import java.text.ParseException;
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;

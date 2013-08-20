@@ -9,18 +9,20 @@ package dk.statsbiblioteket.deck.client;
  */
 
 
-import java.net.URL;
-import java.rmi.*;
-import java.rmi.registry.Registry;
-import java.rmi.registry.LocateRegistry;
-import java.math.*;
-import java.net.MalformedURLException;
-
-import dk.statsbiblioteket.deck.rmiInterface.compute.*;
-import dk.statsbiblioteket.deck.client.Pi;
-import dk.statsbiblioteket.deck.config.LoadXMLConfig;
 import dk.statsbiblioteket.deck.Constants;
+import dk.statsbiblioteket.deck.config.LoadXMLConfig;
+import dk.statsbiblioteket.deck.rmiInterface.compute.Compute;
 import org.apache.log4j.Logger;
+
+import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.rmi.Naming;
+import java.rmi.NotBoundException;
+import java.rmi.RMISecurityManager;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 
 public class  ComputePi {
     //todo: make this an argument

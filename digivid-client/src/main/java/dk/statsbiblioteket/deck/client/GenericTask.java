@@ -23,15 +23,13 @@
 package dk.statsbiblioteket.deck.client;
 
 import dk.statsbiblioteket.deck.rmiInterface.compute.Task;
-import dk.statsbiblioteket.deck.exception.BasicException;
 import org.apache.log4j.Logger;
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ArrayList;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
 
 /**
  * Runs a generic remote task and returns a List<String>

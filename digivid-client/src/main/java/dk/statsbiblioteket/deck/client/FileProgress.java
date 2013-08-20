@@ -3,7 +3,6 @@ package dk.statsbiblioteket.deck.client;
 import dk.statsbiblioteket.deck.rmiInterface.compute.Task;
 import dk.statsbiblioteket.deck.Constants;
 import org.apache.log4j.Logger;
-
 import java.io.File;
 
 /**

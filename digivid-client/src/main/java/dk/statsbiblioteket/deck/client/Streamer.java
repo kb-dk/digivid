@@ -1,12 +1,11 @@
 package dk.statsbiblioteket.deck.client;
 
-import dk.statsbiblioteket.deck.rmiInterface.compute.Task;
 import dk.statsbiblioteket.deck.Constants;
+import dk.statsbiblioteket.deck.rmiInterface.compute.Task;
+import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-
-import org.apache.log4j.Logger;
 
 /**
  * Created by IntelliJ IDEA.

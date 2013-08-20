@@ -3,7 +3,6 @@ package dk.statsbiblioteket.deck.client;
 import org.apache.log4j.Logger;
 import dk.statsbiblioteket.deck.Constants;
 import dk.statsbiblioteket.deck.rmiInterface.compute.Compute;
-
 import java.rmi.RemoteException;
 import java.rmi.RMISecurityManager;
 import java.rmi.Naming;

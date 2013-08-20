@@ -13,7 +13,6 @@ package dk.statsbiblioteket.deck.config;
 
 
 import org.apache.log4j.Logger;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;

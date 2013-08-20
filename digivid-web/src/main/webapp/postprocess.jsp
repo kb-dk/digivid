@@ -1,8 +1,5 @@
-<%@ page import="static dk.statsbiblioteket.deck.client.webinterface.WebConstants.*" %>
-<%@ page import="dk.statsbiblioteket.deck.client.webinterface.ControlServlet" %>
 <%@ page import="dk.statsbiblioteket.deck.client.webinterface.WebConstants" %>
 <%@ page import="java.net.InetAddress" %>
-<%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="java.util.regex.Matcher" %>
 <!DOCTYPE html
@@ -12,14 +9,14 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 <%@ page pageEncoding="UTF-8"
         %>
 <%
-    String encoder_name = request.getParameter(ENCODER_NAME_PARAM);
+    String encoder_name = request.getParameter(WebConstants.ENCODER_NAME_PARAM);
     String encoderIP = null;
     if (encoder_name != null) {
         encoderIP = InetAddress.getByName(encoder_name).getHostAddress();
     }
 
     //This is where we process the filename and length
-    String filename = request.getParameter(FILE_NAME_PARAM);
+    String filename = request.getParameter(WebConstants.FILE_NAME_PARAM);
     String channel_code = null;
 
     int capture_format = 0;
@@ -34,7 +31,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     Date start_date;
     Date end_date;
     String format;
-    if (request.getParameter(IS_PROCESSED_PARAM).equals("false")) {
+    if (request.getParameter(WebConstants.IS_PROCESSED_PARAM).equals("false")) {
         //The unix timestamp from filename
         String start_timestamp_string = m.group(1);    //milliseconds
         channel_code = m.group(4);
@@ -43,7 +40,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         //The unix timestamp as a long
         long start_timestamp = Long.parseLong(start_timestamp_string);
         //The end unix timestamp as a long
-        long end_timestamp = start_timestamp + Integer.parseInt(request.getAttribute(FILE_LENGTH_ATTR).toString()) * 1000;
+        long end_timestamp = start_timestamp + Integer.parseInt(request.getAttribute(WebConstants.FILE_LENGTH_ATTR).toString()) * 1000;
 
         //The start time as a Date
         start_date = new Date(start_timestamp);
@@ -57,10 +54,10 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 
         //The start timestamp in the bart format
         String bart_start_time = m.group(5);
-        start_date = getFilenameDateFormat().parse(bart_start_time);
+        start_date = WebConstants.getFilenameDateFormat().parse(bart_start_time);
 
         String bart_end_time = m.group(6);
-        end_date = getFilenameDateFormat().parse(bart_end_time);
+        end_date = WebConstants.getFilenameDateFormat().parse(bart_end_time);
 
     }
 
@@ -73,9 +70,9 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     }
 
 
-    start_date_S = getPresentationDateFormat().format(start_date);
+    start_date_S = WebConstants.getPresentationDateFormat().format(start_date);
 
-    end_date_S = getPresentationDateFormat().format(end_date);
+    end_date_S = WebConstants.getPresentationDateFormat().format(end_date);
 
 %>
 
@@ -104,7 +101,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 
 </div>
 <%
-    String stream_url = (String) request.getAttribute(STREAM_URL_ATTR);
+    String stream_url = (String) request.getAttribute(WebConstants.STREAM_URL_ATTR);
     Thread.sleep(1000);
 %>
 <input type="button" onclick="play_video('<%=stream_url%>')" value="afspil"/>
@@ -115,32 +112,32 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         <legend>Postprocessing</legend>
         <div class="field">
             <label for="filename">Filename:</label>
-            <input id="filename" name="<%=FILE_NAME_PARAM%>" readonly="readonly" type="text" class="input_readonly" size="100"
+            <input id="filename" name="<%=WebConstants.FILE_NAME_PARAM%>" readonly="readonly" type="text" class="input_readonly" size="100"
                    value="<%=filename%>"/>
         </div>
 
         <div class="field">
             <label for="duration">Length:</label>
-            <input name="<%=RECORDING_TIME_PARAM%>" readonly="readonly" id="duration" class="input_readonly" type="text"
-                   value="<%=request.getAttribute(FILE_LENGTH_ATTR)%>">&nbsp;seconds
+            <input name="<%=WebConstants.RECORDING_TIME_PARAM%>" readonly="readonly" id="duration" class="input_readonly" type="text"
+                   value="<%=request.getAttribute(WebConstants.FILE_LENGTH_ATTR)%>">&nbsp;seconds
         </div>
 
 
         <div class="field">
             <label for="vhs_label">VHS Label:</label>
-            <textarea id="vhs_label" name="<%=VHS_LABEL%>" class="input" rows="3"
-                      cols="100"><%=request.getAttribute(VHS_LABEL)%></textarea>
+            <textarea id="vhs_label" name="<%=WebConstants.VHS_LABEL%>" class="input" rows="3"
+                      cols="100"><%=request.getAttribute(WebConstants.VHS_LABEL)%></textarea>
         </div>
 
         <div class="field">
             <label for="quality">Quality:</label>
-            <select id="quality" name="<%=RECORDING_QUALITY%>" class="input">
+            <select id="quality" name="<%=WebConstants.RECORDING_QUALITY%>" class="input">
                 <%
                     for (int qualityNr = 1; qualityNr <= 10; qualityNr++) {
                         String selected = "";
                         String comment = "";
-                        if (request.getAttribute(RECORDING_QUALITY) != null) {
-                            if (request.getAttribute(RECORDING_QUALITY).equals(qualityNr)) {
+                        if (request.getAttribute(WebConstants.RECORDING_QUALITY) != null) {
+                            if (request.getAttribute(WebConstants.RECORDING_QUALITY).equals(qualityNr)) {
                                 selected = "selected=\"selected\"";
                             }
                         } else {
@@ -171,22 +168,22 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 
         <div class="field">
             <label for="start_time_display_field">Start date/time:</label>
-            <input id="start_time_display_field" type="text" readonly="readonly" name="<%=START_TIME_PARAM%>"
+            <input id="start_time_display_field" type="text" readonly="readonly" name="<%=WebConstants.START_TIME_PARAM%>"
                    value="<%=start_date_S%>"/>
         </div>
 
         <div class="field">
             <label for="end_time_display_field">End date/time:</label>
-            <input id="end_time_display_field" type="text" readonly="readonly" name="<%=END_TIME_PARAM%>"
+            <input id="end_time_display_field" type="text" readonly="readonly" name="<%=WebConstants.END_TIME_PARAM%>"
                    value="<%=end_date_S%>"/>
         </div>
 
 
         <div class="field">
             <label for="channel_label">Channel:</label>
-            <select id="channel_label" name="<%=CHANNEL_LABEL_PARAM%>" class="input">
+            <select id="channel_label" name="<%=WebConstants.CHANNEL_LABEL_PARAM%>" class="input">
                 <%
-                    for (String channel : lognames.keySet()) {
+                    for (String channel : WebConstants.lognames.keySet()) {
                         String selected = "";
                         if (channel_code.contains(channel)) {
                             selected = "selected=\"selected\"";
@@ -200,18 +197,18 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
             </select>
         </div>
 
-        <input type="hidden" name="<%=CAPTURE_FORMAT_PARAM%>" value="<%=capture_format%>"/>
-        <input type="hidden" name="<%=CONTROL_COMMAND_PARAM%>" value="<%=POSTPROCESS%>"/>
-        <input type="hidden" name="<%=ENCODER_IP_PARAM%>" value="<%=encoderIP%>"/>
-        <input type="hidden" name="<%=ENCODER_NAME_PARAM%>" value="<%=encoder_name%>"/>
+        <input type="hidden" name="<%=WebConstants.CAPTURE_FORMAT_PARAM%>" value="<%=capture_format%>"/>
+        <input type="hidden" name="<%=WebConstants.CONTROL_COMMAND_PARAM%>" value="<%=WebConstants.POSTPROCESS%>"/>
+        <input type="hidden" name="<%=WebConstants.ENCODER_IP_PARAM%>" value="<%=encoderIP%>"/>
+        <input type="hidden" name="<%=WebConstants.ENCODER_NAME_PARAM%>" value="<%=encoder_name%>"/>
     </fieldset>
-    <input type="button" name="Reject" value="Reject" onclick="gotopage('<%=PLAYBACK_JSP%>')"/>
+    <input type="button" name="Reject" value="Reject" onclick="gotopage('<%=WebConstants.PLAYBACK_JSP%>')"/>
     <input type="submit" name="Process" value="Process"/>
 </form>
 
 <script type="text/javascript">
 
-    var date_format = "<%=jscalendar_format_string%>";
+    var date_format = "<%=WebConstants.jscalendar_format_string%>";
 
     var start_calendar = Calendar.setup({
         ifFormat: date_format,

@@ -7,8 +7,9 @@ package dk.statsbiblioteket.deck.client;
  * Time: 12:53:04 PM
  * To change this template use File | Settings | File Templates.
  */
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+
 
 /** Some simple time savers.
  *  Part of tutorial on servlets and JSP that appears at
