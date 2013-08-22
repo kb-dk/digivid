@@ -110,17 +110,14 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
             <select id="quality" name="<%=WebConstants.RECORDING_QUALITY%>" class="input">
                 <%
                     Integer quality = comments.getQuality();
+                    if (quality == null || quality < 0){
+                        quality = 5;
+                    }
                     for (int qualityNr = 1; qualityNr <= 10; qualityNr++) {
                         String selected = "";
                         String comment = "";
-                        if (quality != null) {
-                            if (quality.equals(qualityNr)) {
-                                selected = "selected=\"selected\"";
-                            }
-                        } else {
-                            if (qualityNr == 5) {
-                                selected = "selected=\"selected\"";
-                            }
+                        if (quality.equals(qualityNr)) {
+                            selected = "selected=\"selected\"";
                         }
                         if (qualityNr == 1) {
                             comment = " (Worst Quality)";
