@@ -13,6 +13,7 @@
         <module>digivid-client</module>
         <module>digivid-web</module>
         <module>digivid-rmi</module>
+        <module>digivid-remotedigividingest</module>
     </modules>
 
     <profiles>
