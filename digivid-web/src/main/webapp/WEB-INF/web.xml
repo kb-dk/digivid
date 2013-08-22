@@ -57,6 +57,24 @@
         <url-pattern>/Control</url-pattern>
     </servlet-mapping>
 
+    <filter>
+        <filter-name>EncodingFilter</filter-name>
+        <filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>ignore</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>EncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    
     <!-- Define the context-relative URL(s) to be protected -->
     <!-- If you list http methods, only those methods are protected -->
     <!-- Anyone with one of the listed roles may access this area -->
