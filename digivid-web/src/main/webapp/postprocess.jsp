@@ -102,18 +102,19 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
         <div class="field">
             <label for="vhs_label">VHS Label:</label>
             <textarea id="vhs_label" name="<%=WebConstants.VHS_LABEL_PARAM%>" class="input" rows="3"
-                      cols="100"><%=request.getAttribute(WebConstants.VHS_LABEL_PARAM)%></textarea>
+                      cols="100"><%=comments.getComments()%></textarea>
         </div>
 
         <div class="field">
             <label for="quality">Quality:</label>
             <select id="quality" name="<%=WebConstants.RECORDING_QUALITY%>" class="input">
                 <%
+                    Integer quality = comments.getQuality();
                     for (int qualityNr = 1; qualityNr <= 10; qualityNr++) {
                         String selected = "";
                         String comment = "";
-                        if (request.getAttribute(WebConstants.RECORDING_QUALITY) != null) {
-                            if (request.getAttribute(WebConstants.RECORDING_QUALITY).equals(qualityNr)) {
+                        if (quality != null) {
+                            if (quality.equals(qualityNr)) {
                                 selected = "selected=\"selected\"";
                             }
                         } else {
