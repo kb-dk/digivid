@@ -60,6 +60,9 @@ public class WebConstants {
 
 
     public static final String COMMENTS_SUFFIX = ".comments";
+    public static final String SORT_FIELD_PARAM = "sortField";
+    public static final String SORT_ORDER_NAME = "sortOrderName";
+    public static final String SORT_ORDER_MODIFIED = "sortOrderModified";
 
     private WebConstants(){}
 
