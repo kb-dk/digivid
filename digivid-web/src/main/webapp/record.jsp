@@ -53,18 +53,18 @@ Recording on <%=encoder_name%>
         return;
     } else if (available_cards.length == 1) {
     %>
-
-    <input type="hidden" name="<%=WebConstants.CARD_NAME_PARAM%>" value="<%=available_cards[0].intValue()%>"/>
-    Record on (<%=source_names[0]%><br/>
+    <div class="field">
+        <label for="singleCard"><%=source_names[0]%></label>
+        <input type="radio" id="singleCard" name="<%=WebConstants.CARD_NAME_PARAM%>" value="<%=available_cards[0].intValue()%>" checked="true"/>
+    </div>
     <%
     } else {
         for (int i = 0; i < available_cards.length; i++) {
-            Integer card_number_I = available_cards[i];
-            int card_number = card_number_I.intValue();
     %>
     <div class="field">
-        <label for="<%=card_number%>"><%=source_names[i]%></label>
-        <input type="radio" id="<%=card_number%>" name="<%=WebConstants.CARD_NAME_PARAM%>" value="<%=card_number%>"/>
+        <label for="<%=available_cards[i]%>"><%=source_names[i]%></label>
+        <input type="radio" id="<%=available_cards[i]%>" name="<%=WebConstants.CARD_NAME_PARAM%>"
+               value="<%=available_cards[i]%>"/>
     </div>
     <%
             }
