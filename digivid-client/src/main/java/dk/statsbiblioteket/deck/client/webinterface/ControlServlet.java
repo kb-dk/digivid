@@ -280,7 +280,7 @@ public class ControlServlet extends HttpServlet {
 
     private static void renameFile(WebParams params, String file, String new_file) {
         CommandLineCtrl ctrl;//rename the log file
-        ctrl = new CommandLineCtrl(params.getEncoder_IP(), "mv " + file + " " + new_file);
+        ctrl = new CommandLineCtrl(params.getEncoder_IP(), "mv " + file + " " + new_file,0,1);
         try {
             ctrl.execute();
         } catch (RemoteException e) {
