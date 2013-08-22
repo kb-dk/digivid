@@ -14,6 +14,7 @@
     }
 </script>
 <%
+    request.setCharacterEncoding("UTF-8");
     String encoder_name = request.getParameter(WebConstants.ENCODER_NAME_PARAM);
     String encoderIP = null;
     if (encoder_name != null) {

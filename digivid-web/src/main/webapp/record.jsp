@@ -8,6 +8,7 @@
 <%@ page import="java.util.regex.Matcher" %>
 <%@ page import="java.util.regex.Pattern" %>
 <%
+    request.setCharacterEncoding("UTF-8");
     String encoderIP = request.getParameter(WebConstants.ENCODER_IP_PARAM);
     String encoder_name = encoderIP;
     if (request.getParameter(WebConstants.ENCODER_NAME_PARAM) != null) {

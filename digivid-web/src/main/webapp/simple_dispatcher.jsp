@@ -1,7 +1,8 @@
-<%@ page import="java.io.UnsupportedEncodingException"%>
-<%@ page import="dk.statsbiblioteket.deck.client.webinterface.WebConstants" %>
+<%@ page import="dk.statsbiblioteket.deck.client.webinterface.WebConstants"%>
+<%@ page import="java.io.UnsupportedEncodingException" %>
 <%
     response.setCharacterEncoding("UTF-8");
+    response.setContentType("text/html; charset=UTF-8");
     String character_encoding = request.getCharacterEncoding();
     if (character_encoding == null || !character_encoding.equalsIgnoreCase("UTF-8")) {
         try {

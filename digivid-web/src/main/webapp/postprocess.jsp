@@ -10,6 +10,8 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 <%@ page pageEncoding="UTF-8"
         %>
 <%
+    request.setCharacterEncoding("UTF-8");
+    response.setContentType("text/html; charset=UTF-8");
     String encoder_name = request.getParameter(WebConstants.ENCODER_NAME_PARAM);
     String encoderIP = null;
     if (encoder_name != null) {
