@@ -59,7 +59,7 @@ public class FileCreator implements Task {
             if(flag) {
                 File commentsFile = new File(f, fileName + ".comments");
                 FileOutputStream outStream = new FileOutputStream(commentsFile);
-                outStream.write(contents.getBytes());
+                outStream.write(contents.getBytes("UTF-8"));
                 outStream.close();
             }else {
                 return false;
