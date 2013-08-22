@@ -56,13 +56,14 @@ span.dummy_input {
 }
 
 label{
-  float:left;
-  width:200px;
-  text-align:right;
-  margin-right:5px; /* optional */
+    float:left;
+    width:200px;
+    text-align:right;
+    margin-right:5px; /* optional */
 }
 
 .field{
+    clear:both;
 }
 
 
