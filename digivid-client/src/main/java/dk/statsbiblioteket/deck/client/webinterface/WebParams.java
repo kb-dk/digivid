@@ -39,7 +39,7 @@ public class WebParams {
     private Long start_time_ms;
     private Long stop_time_ms;
     private String vhs_label;
-    private Integer quality = -1;
+    private Integer quality;
     private String encoder_name;
     private Boolean isPostProcessed;
 
@@ -138,7 +138,7 @@ public class WebParams {
 
 
     private void addParam(String name, Object value) {
-        parameterString = parameterString + " '" + name + "=" + value.toString() + "'";
+        parameterString = parameterString + " --" + name + "='" + value.toString() + "'";
     }
 
     public static Comments createCommentsFromParams(WebParams params, File file) {
@@ -152,7 +152,6 @@ public class WebParams {
         commentsStructure.setEncoderIP(params.getEncoder_IP());
         commentsStructure.setComments(params.getVhs_label());
         commentsStructure.setQuality(params.getQuality());
-        commentsStructure.setDuration(params.getRecording_time());
         commentsStructure.setUsername(params.getUser_name());
         return commentsStructure;
     }
@@ -188,8 +187,6 @@ public class WebParams {
                                 .getTime());
                         comments.setEndDate(WebConstants.getFilenameDateFormat().parse(matcher.group("endTime"))
                                 .getTime());
-                        //Set duration in minutes
-                        comments.setDuration((comments.getEndDate() - comments.getStartDate())/1000/60);
                     } else{
                         return comments;
                     }

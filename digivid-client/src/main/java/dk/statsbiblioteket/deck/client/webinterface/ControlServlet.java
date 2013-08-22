@@ -228,10 +228,10 @@ public class ControlServlet extends HttpServlet {
         createCommentsFile(params, file, commentsStructure);
 
 
-        String fileDirParam = " fileDir=\'" + Constants.DEFAULT_RECORDSDIR + "\' ";
-        String filenameParam = " filename=\'" + file.getName() + "\' ";
-        runUnixCommand(params,Constants.HOOKS_BINDIR + "/post_postProcess.sh " + filenameParam +fileDirParam +params
-                .getParameterString());
+        String fileDirParam = " --fileDir=\'" + Constants.DEFAULT_RECORDSDIR + "\' ";
+
+        runUnixCommand(params,Constants.HOOKS_BINDIR + "/post_postProcess.sh " + fileDirParam +
+                commentsStructure.toParameterString());
 
         request.setAttribute(PAGE_ATTR, PLAYBACK_JSP);
 

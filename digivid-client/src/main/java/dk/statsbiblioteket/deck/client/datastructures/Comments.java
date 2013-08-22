@@ -16,7 +16,6 @@ public class Comments {
     private String encoderIP;
     private Long startDate;
     private Long endDate;
-    private Long duration;
     private String channelLabel;
     private String channelID;
     private String captureFormat;
@@ -117,11 +116,34 @@ public class Comments {
         this.encoderIP = encoderIP;
     }
 
-    public Long getDuration() {
-        return duration;
+
+    @Override
+    public String toString() {
+        return "Comments{" +
+                "filename='" + filename + '\'' +
+                ", comments='" + comments + '\'' +
+                ", quality=" + quality +
+                ", encoderIP='" + encoderIP + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", channelLabel='" + channelLabel + '\'' +
+                ", channelID='" + channelID + '\'' +
+                ", captureFormat='" + captureFormat + '\'' +
+                ", username='" + username + '\'' +
+                '}';
     }
 
-    public void setDuration(Long duration) {
-        this.duration = duration;
+    public String toParameterString(){
+        return
+                "--filename='" + filename + '\'' +
+                " --comments='" + comments + '\'' +
+                " --quality=" + quality +
+                " --encoderIP='" + encoderIP + '\'' +
+                " --startDate=" + startDate +
+                " --endDate=" + endDate +
+                " --channelLabel='" + channelLabel + '\'' +
+                " --channelID='" + channelID + '\'' +
+                " --captureFormat='" + captureFormat + '\'' +
+                " --username='" + username + '\'';
     }
 }
