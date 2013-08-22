@@ -1,6 +1,6 @@
 <%@ page import="dk.statsbiblioteket.deck.Constants" %>
-<%@ page import="dk.statsbiblioteket.deck.client.CommandLineCtrl" %>
 <%@ page import="dk.statsbiblioteket.deck.client.FSCtrl" %>
+<%@ page import="dk.statsbiblioteket.deck.client.webinterface.ControlServlet" %>
 <%@ page import="dk.statsbiblioteket.deck.client.webinterface.WebConstants" %>
 <%@ page import="java.net.InetAddress" %>
 <%@ page import="java.util.ArrayList" %>
@@ -19,18 +19,12 @@
     if (encoder_name != null) {
         encoderIP = InetAddress.getByName(encoder_name).getHostAddress();
     }
-
-   /* String encoderIP = request.getParameter(ENCODER_IP_PARAM);
-    if (encoderIP == null) {
-        encoderIP = Constants.DEFAULT_STREAMSERVER_IP;
-    }*/
     FSCtrl ctrl = new FSCtrl(encoderIP);
-    List<String[]> all_records = (List<String[]>) ctrl.getFileInfo();
+    List<String[]> all_records = ctrl.getFileInfo();
     List<String[]> records = new ArrayList<String[]>();
     //
     //Now get the current files
-    CommandLineCtrl ctrl2 = new CommandLineCtrl(encoderIP, Constants.RECORDER_BINDIR + "/get_current_recordings.sh",0,1);
-    List<String> current = ctrl2.execute();
+    List<String> current = ControlServlet.runUnixCommand(encoderIP, Constants.RECORDER_BINDIR + "/get_current_recordings.sh", 0, 1);
     for (String[] record : all_records) {
         if (!current.contains(record[0].trim())) records.add(record);
     }

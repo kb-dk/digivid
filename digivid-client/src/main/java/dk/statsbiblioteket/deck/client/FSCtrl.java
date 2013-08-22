@@ -1,16 +1,17 @@
 package dk.statsbiblioteket.deck.client;
 
-import org.apache.log4j.Logger;
 import dk.statsbiblioteket.deck.Constants;
 import dk.statsbiblioteket.deck.rmiInterface.compute.Compute;
-import java.rmi.RemoteException;
-import java.rmi.RMISecurityManager;
+import org.apache.log4j.Logger;
+
+import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
+import java.rmi.RMISecurityManager;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
-import java.net.MalformedURLException;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,10 +24,6 @@ public class FSCtrl {
 
     //"start","record",userName,clientHostIP,encoderIP,cardName,captureFormat,captureLength,captureSize,fileName
 
-    //todo: make this an argument
-    //private static String host = "//node02.portend.net";
-    //private static String host = "encoder1.sb.statsbiblioteket.dk";
-    //private static String hostIP = "172.18.249.253"; //encoder1.sb.statsbiblioteket.dk
     static Logger log = Logger.getLogger(FSCtrl.class.getName());
 
     //private static String prop;

@@ -46,7 +46,6 @@ import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.PLAYBACK
 import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.PLAY_JSP;
 import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.POSTPROCESS;
 import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.POSTPROCESS_JSP;
-import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.RECORDING_QUALITY;
 import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.START_POSTPROCESS;
 import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.START_PREVIEW;
 import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.START_RECORDING;
@@ -55,7 +54,6 @@ import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.STOP_PLA
 import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.STOP_PREVIEW;
 import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.STOP_RECORDING;
 import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.STREAM_URL_ATTR;
-import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.VHS_LABEL;
 import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.getFilenameDateFormat;
 import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.lognames;
 
@@ -87,7 +85,7 @@ public class ControlServlet extends HttpServlet {
         } else if (STOP_RECORDING.equals(params.getControl_command())) {
             stopRecording(httpServletRequest, httpServletResponse,params);
         } else if (START_POSTPROCESS.equals(params.getControl_command())) {
-            startPlayback(httpServletRequest, httpServletResponse,params);
+            startPostProcess(httpServletRequest, httpServletResponse, params);
         } else if (POSTPROCESS.equals(params.getControl_command())) {
             postProcess(httpServletRequest, httpServletResponse,params);
         } else if (STOP_PLAYBACK.equals(params.getControl_command())) {
@@ -110,28 +108,21 @@ public class ControlServlet extends HttpServlet {
         stopPreview(request, response, params);
         String unix_command = Constants.STREAMER_BINDIR + "/" + Constants.STREAMER_STARTCOMMAND +
                 " -d " + params.getCard_name() + " -p " + params.getStream_port();
-        CommandLineCtrl ctrl = new CommandLineCtrl(params.getEncoder_IP(), unix_command, true);
-        try {
-            ctrl.execute();
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-        request.setAttribute(STREAM_URL_ATTR, "http://" + params.getEncoder_IP() + ":" + params.getStream_port());
-        request.setAttribute(CARDS_ATTR, new Integer(params.getCard_name()));
+        startUnixDaemon(params.getEncoder_IP(), unix_command);
+        request.setAttribute(STREAM_URL_ATTR, getStreamUrl(params));
+        request.setAttribute(CARDS_ATTR, params.getCard_name());
         request.setAttribute(PAGE_ATTR, PLAY_JSP);
     }
+
+
 
     private void stopPreview(HttpServletRequest request, HttpServletResponse response, WebParams params) {
         String unix_command = Constants.STREAMER_BINDIR + "/" + Constants.STREAMER_STOPCOMMAND +
                 " -p " + params.getStream_port();
-        CommandLineCtrl ctrl = new CommandLineCtrl(params.getEncoder_IP(), unix_command, false);
-        try {
-            ctrl.execute();
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
+        runUnixCommand(params, unix_command);
         request.setAttribute(PAGE_ATTR, STATUS_JSP);
     }
+
 
     private void startRecording(HttpServletRequest request, HttpServletResponse response, WebParams params) {
         if (params.getCard_name() < 0) {
@@ -143,53 +134,29 @@ public class ControlServlet extends HttpServlet {
         }
 
 
-
-        String unix_command = Constants.RECORDER_BINDIR + "/get_recording_name.sh " +
-                " -d " + params.getCard_name() +
+        String unixParams = " -d " + params.getCard_name() +
                 " -i " + params.getChannel_label() +
-                " -a " + params.getCapture_format() +
+                " -a " + params.getCapture_format().replaceAll("mpeg","") +
                 " -f " + file_name +
                 " -l " + params.getRecording_time() +
                 " -o " + params.getStart_time_ms();
-        CommandLineCtrl ctrl = new CommandLineCtrl(params.getEncoder_IP(), unix_command, false);
-        List<String> output;
-        try {
-            output = ctrl.execute();
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
+
+        String unix_command = Constants.RECORDER_BINDIR + "/get_recording_name.sh " + unixParams;
+        List<String> output = runUnixCommand(params,unix_command);
+
         String recordFile = findRecordFileFromOutput(output);
 
 
-        unix_command = Constants.RECORDER_BINDIR + "/start_recording.sh " +
-                " -d " + params.getCard_name() +
-                " -i " + params.getChannel_label() +
-                " -a " + params.getCapture_format() +
-                " -f " + file_name +
-                " -l " + params.getRecording_time() +
-                " -o " + params.getStart_time_ms();
-        ctrl = new CommandLineCtrl(params.getEncoder_IP(), unix_command, true);
-        try {
-            output = ctrl.execute();
-
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-
+        unix_command = Constants.RECORDER_BINDIR + "/start_recording.sh " + unixParams;
+        startUnixDaemon(params.getEncoder_IP(), unix_command);
 
         //Create comments file
-        Comments commentsStructure = new Comments();
-        commentsStructure.setComments(params.getVhs_label());
-
-        FileCreator task = new FileCreator(new File(recordFile), commentsStructure.toJSon());
-        try {
-            Object result = new GenericCtrl(params.getEncoder_IP(), task).execute();
-        } catch (RemoteException e1) {
-            throw new RuntimeException(e1);
-        }
+        Comments commentsStructure = WebParams.createCommentsFromParams(params,new File(recordFile));
+        createCommentsFile(params,new File(recordFile),commentsStructure);
 
         request.setAttribute(PAGE_ATTR, STATUS_JSP);
     }
+
 
     private String findRecordFileFromOutput(List<String> output) {
         String result = "";
@@ -203,53 +170,30 @@ public class ControlServlet extends HttpServlet {
 
     private void stopRecording(HttpServletRequest request, HttpServletResponse response, WebParams params) {
         String unix_command = Constants.RECORDER_BINDIR + "/stop_recording.sh -d " + params.getCard_name();
-        CommandLineCtrl ctrl = new CommandLineCtrl(params.getEncoder_IP(), unix_command, false);
-        try {
-            ctrl.execute();
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
+        runUnixCommand(params, unix_command);
         request.setAttribute(PAGE_ATTR, STATUS_JSP);
     }
 
-    private void startPlayback(HttpServletRequest request, HttpServletResponse response, WebParams params) {
-        //We allow only one playback at a time so always stop the current playback
-        //here
-        //stopPlayback(request, response);
-        /*StreamServerCtrl ssctlr = new StreamServerCtrl("replay", "fileHTTP",
-                params.getEncoder_IP(), null, params.getEncoder_IP(), 0, file_name,
-                params.getStream_port(), null, null);
-         try {
-             ssctlr.remoteControl();
-         } catch (RemoteException e) {
-             throw new RuntimeException("Could not start replay of file", e);
-         }*/
-
+    private void startPostProcess(HttpServletRequest request, HttpServletResponse response, WebParams params) {
         // Get the file length
         File dir = new File(Constants.DEFAULT_RECORDSDIR);
         File file = new File(dir, params.getFile_name());
         String unix_command = Constants.STREAMER_BINDIR + "/" + Constants.STREAMER_STARTCOMMAND +
                 " -f " + file.getAbsolutePath() + " -p " + params.getStream_port();
-        CommandLineCtrl ctrl = new CommandLineCtrl(params.getEncoder_IP(), unix_command, true);
-        try {
-            ctrl.execute();
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-        ctrl = new CommandLineCtrl(params.getEncoder_IP(), Constants.RECORDER_BINDIR + "/get_mpeg_file_length " + file.getAbsolutePath());
-        List<String> result = null;
-        try {
-            result = ctrl.execute();
-        } catch (RemoteException e) {
-            throw new RuntimeException("Could not find length of " + file.getAbsolutePath());
-        }
+        startUnixDaemon(params.getEncoder_IP(), unix_command);
+        unix_command = Constants.RECORDER_BINDIR + "/get_mpeg_file_length " + file.getAbsolutePath();
+        List<String> result = runUnixCommand(params,unix_command);
+
         String file_length_S = result.get(0);
         long file_length = (long) Float.parseFloat(file_length_S);
-        request.setAttribute(FILE_LENGTH_ATTR, new Long(file_length));
-        request.setAttribute(RECORDING_QUALITY, params.getQuality());
-        request.setAttribute(VHS_LABEL, params.getVhs_label());
-        request.setAttribute(STREAM_URL_ATTR, "http://" + params.getEncoder_IP() + ":" + params.getStream_port());
+        request.setAttribute(FILE_LENGTH_ATTR, file_length);
+        request.setAttribute(STREAM_URL_ATTR, getStreamUrl(params));
         request.setAttribute(PAGE_ATTR, POSTPROCESS_JSP);
+    }
+
+
+    private String getStreamUrl(WebParams params) {
+        return "http://" + params.getEncoder_IP() + ":" + params.getStream_port();
     }
 
     private void stopPlayback(HttpServletRequest request, HttpServletResponse response, WebParams params) {
@@ -258,63 +202,90 @@ public class ControlServlet extends HttpServlet {
 
     private void postProcess(HttpServletRequest request, HttpServletResponse response, WebParams params) {
         File dir = new File(Constants.DEFAULT_RECORDSDIR);
-        File old_file = new File(dir, params.getFile_name());
-        String startTimeBart = getFilenameDateFormat().format((new Date(params.getStart_time_ms())));
-        String endTimeBart = getFilenameDateFormat().format(new Date(params.getStop_time_ms()));
-        String new_file_name = lognames.get(params.getChannel_label()) + "_digivid_" + params.getChannel_label() +
-                "_" + "mpeg" + params.getCapture_format() + "_" + startTimeBart + "_" + endTimeBart +
-                "_" + params.getEncoder_IP() + ".mpeg";
-        File new_file = new File(dir, new_file_name);
-        //rename the video file
-        if (!old_file.equals(new_file)){
-            CommandLineCtrl ctrl = new CommandLineCtrl(params.getEncoder_IP(), "mv " + old_file.getAbsolutePath() + " " + new_file.getAbsolutePath());
-            System.out.println("Moving " + old_file.getAbsolutePath() + " to " + new_file.getAbsolutePath());
-            try {
-                ctrl.execute();
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
+        File file = new File(dir, params.getFile_name());
+
+        //Only rename on the initial post processing
+        if (!params.getPostProcessed()){
+            String new_file_name = filenameFromParams(params);
+            File new_file = new File(dir, new_file_name);
+            //rename the video file
+            if (!file.equals(new_file)){
+                renameFile(params,file.getAbsolutePath(),new_file.getAbsolutePath());
+
+                String old_log_file = file.getAbsolutePath().replace(".mpeg", ".log");
+                String new_log_file = new_file.getAbsolutePath().replace(".mpeg", ".log");
+                renameFile(params, old_log_file, new_log_file);
+
+                String old_comments_file = file.getAbsolutePath()+WebConstants.COMMENTS_SUFFIX;
+                String new_comments_file = new_file.getAbsolutePath()+WebConstants.COMMENTS_SUFFIX;
+                renameFile(params, old_comments_file, new_comments_file);
             }
-            //rename the log file
-            String old_log_file = old_file.getAbsolutePath().replace(".mpeg", ".log");
-            String new_log_file = new_file.getAbsolutePath().replace(".mpeg", ".log");
-            System.out.println("Moving " + old_log_file + " to " + new_log_file);
-            ctrl = new CommandLineCtrl(params.getEncoder_IP(), "mv " + old_log_file + " " + new_log_file);
-            try {
-                ctrl.execute();
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
+            file = new_file;
         }
 
         //Create comments file
-        //Create comments file
-        Comments commentsStructure = new Comments();
-        commentsStructure.setComments(params.getVhs_label());
-        commentsStructure.setQuality(params.getQuality());
+        Comments commentsStructure = WebParams.createCommentsFromParams(params, file);
+        createCommentsFile(params, file, commentsStructure);
 
-        FileCreator task = new FileCreator(new_file_name, commentsStructure.toJSon());
+
+        String fileDirParam = " fileDir=\'" + Constants.DEFAULT_RECORDSDIR + "\' ";
+        String filenameParam = " filename=\'" + file.getName() + "\' ";
+        runUnixCommand(params,Constants.HOOKS_BINDIR + "/post_postProcess.sh " + filenameParam +fileDirParam +params
+                .getParameterString());
+
+        request.setAttribute(PAGE_ATTR, PLAYBACK_JSP);
+
+
+    }
+
+    public static List<String> runUnixCommand(String encoderIP, String unix_command, Integer... returnCodes) {
+         CommandLineCtrl ctrl = new CommandLineCtrl(encoderIP, unix_command, false,returnCodes);
+         try {
+             return ctrl.execute();
+         } catch (RemoteException e) {
+             throw new RuntimeException(e);
+         }
+     }
+
+    public static void startUnixDaemon(String encoderIP, String unix_command) {
+         CommandLineCtrl ctrl = new CommandLineCtrl(encoderIP, unix_command, true);
+         try {
+             ctrl.execute();
+         } catch (RemoteException e) {
+             throw new RuntimeException(e);
+         }
+     }
+
+
+    public static List<String> runUnixCommand(WebParams params, String unix_command, Integer... returnCodes) {
+        return runUnixCommand(params.getEncoder_IP(),unix_command,returnCodes);
+     }
+
+    private static void createCommentsFile(WebParams params, File file, Comments commentsStructure) {
+        FileCreator task = new FileCreator(file.getName(), commentsStructure.toJSon());
         try {
             Object result = new GenericCtrl(params.getEncoder_IP(), task).execute();
         } catch (RemoteException e1) {
             throw new RuntimeException(e1);
         }
+    }
 
+    private static String filenameFromParams(WebParams params) {
+        String startTimeBart = getFilenameDateFormat().format((new Date(params.getStart_time_ms())));
+        String endTimeBart = getFilenameDateFormat().format(new Date(params.getStop_time_ms()));
+        return lognames.get(params.getChannel_label()) + "_digivid_" + params.getChannel_label() +
+                "_" + params.getCapture_format() + "_" + startTimeBart + "_" + endTimeBart +
+                "_" + params.getEncoder_IP() + ".mpeg";
+    }
 
-        String fileDirParam = " fileDir=\'" + Constants.DEFAULT_RECORDSDIR + "\' ";
-        String filenameParam = " filename=\'" + new_file_name + "\' ";
-        CommandLineCtrl ctrl = new CommandLineCtrl(params.getEncoder_IP(), Constants.HOOKS_BINDIR + "/post_postProcess.sh " + filenameParam +fileDirParam +params.getParameterString());
-        List<String> result = null;
+    private static void renameFile(WebParams params, String file, String new_file) {
+        CommandLineCtrl ctrl;//rename the log file
+        ctrl = new CommandLineCtrl(params.getEncoder_IP(), "mv " + file + " " + new_file);
         try {
-            result = ctrl.execute();
+            ctrl.execute();
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
-
-
-        request.setAttribute(PAGE_ATTR, PLAYBACK_JSP);
-
-
-
     }
 
 

@@ -3,6 +3,7 @@ package dk.statsbiblioteket.deck.client;
 import dk.statsbiblioteket.deck.Constants;
 import dk.statsbiblioteket.deck.rmiInterface.compute.Compute;
 import org.apache.log4j.Logger;
+
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -21,10 +22,6 @@ public class RecorderCtrl {
 
     //"start","record",userName,clientHostIP,encoderIP,cardName,captureFormat,captureLength,captureSize,fileName
 
-    //todo: make this an argument
-    //private static String host = "//node02.portend.net";
-    //private static String host = "encoder1.sb.statsbiblioteket.dk";
-    //private static String hostIP = "172.18.249.253"; //encoder1.sb.statsbiblioteket.dk
     static Logger log = Logger.getLogger(RecorderCtrl.class.getName());
 
     //private static String prop;

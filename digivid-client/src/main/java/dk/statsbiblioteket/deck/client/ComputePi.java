@@ -25,10 +25,6 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 public class  ComputePi {
-    //todo: make this an argument
-    //private static String host = "//node02.portend.net";
-    //private static String host = "encoder1.sb.statsbiblioteket.dk";
-    //private static String hostIP = "172.18.249.253"; //encoder1.sb.statsbiblioteket.dk
     static Logger log = Logger.getLogger(ComputePi.class.getName());
 
     private static String prop;

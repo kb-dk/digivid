@@ -22,11 +22,12 @@
 
 package dk.statsbiblioteket.deck.client.webinterface;
 
+import com.google.code.regexp.Pattern;
+
 import java.text.SimpleDateFormat;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TimeZone;
-import java.util.regex.Pattern;
 
 
 /**
@@ -45,16 +46,20 @@ public class WebConstants {
      * 4) channel name
      * 5) mpeg1 | mpeg2
      */
-    public static final String UNPROCESSED_FILE_REGEXP = "([0-9]+)_([^_]*)_([^_]*)_([^_]*)_([^_]*)\\.mpeg";
+    //1331882386000_bart_pmdkarate_K11-DR1_mpeg2
+    public static final String UNPROCESSED_FILE_REGEXP = "(?<startTimestamp>[0-9]+)_(?<user>[^_]+)_(?<userComment>[^_]+)_(?<channelLabel>[^_]+)_(?<capturingFormat>[^_]+)\\.mpeg";
 
-    // /bitarkiv/0105/files/dk4_807.250_K63-DK4_mpeg1_20070314045601_20070315045501.mpeg
-    public static final String BART_FILE_REGEXP ="([^_]*)_([^_]*)_([^_]*)_([^_]*)_([0-9]{14})_([0-9]{14}).*\\.mpeg";
+    //tvsport_digivid_TV-Sport_mpeg1_20120305104229_20120305104529_172.18.243.243
+    public static final String BART_FILE_REGEXP ="(?<channelID>[^_]+)_(?<user>[^_]+)_(?<channelLabel>[^_]+)_(?<capturingFormat>[^_]+)_(?<startTime>[0-9]{14})_(?<endTime>[0-9]{14}).*\\.mpeg";
     public static final Pattern UNPROCESSED_FILE_PATTERN = Pattern.compile(UNPROCESSED_FILE_REGEXP);
     public static final Pattern BART_FILE_PATTERN = Pattern.compile(BART_FILE_REGEXP);
     //These two must match
     public static final String time_format_string = "yyyy/MM/dd HH:mm";
     public static final String jscalendar_format_string = "%Y/%m/%e %H:%M";
     public static final String BART_FILE_DATEFORMAT_STRING = "yyyyMMddHHmmss";
+
+
+    public static final String COMMENTS_SUFFIX = ".comments";
 
     private WebConstants(){}
 
@@ -81,8 +86,7 @@ public class WebConstants {
     public static final String CHANNEL_LABEL_PARAM = "labelChannelID";
     public static final String START_TIME_PARAM = "startTime";
     public static final String END_TIME_PARAM = "endTime";
-    //TODO
-    public static final String VHS_LABEL = "vhsLabel";
+    public static final String VHS_LABEL_PARAM = "vhsLabel";
     public static final String RECORDING_QUALITY = "recordingQuality";
     public static final String CAPTURE_FORMAT_PARAM = "captureFormat";
     public static final String RECORDING_TIME_PARAM = "recordingTime";

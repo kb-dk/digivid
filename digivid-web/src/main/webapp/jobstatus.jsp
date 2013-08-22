@@ -1,5 +1,5 @@
-<%@ page import="dk.statsbiblioteket.deck.client.CommandLineCtrl" %>
 <%@ page import="dk.statsbiblioteket.deck.client.FSCtrl" %>
+<%@ page import="dk.statsbiblioteket.deck.client.webinterface.ControlServlet" %>
 <%@ page import="dk.statsbiblioteket.deck.client.webinterface.WebConstants" %>
 <%@ page import="java.net.InetAddress" %>
 <%@ page import="java.util.ArrayList" %>
@@ -35,13 +35,7 @@
 Status for <%=encoder_name%>:
 <%--<form action="get"><input type="hidden" name="<%=ENCODER_IP_PARAM%>" value="<%=encoderIP%>"/></form>--%>
 <%
-    CommandLineCtrl ctrl = new CommandLineCtrl(encoderIP, "ps -ww -C vlc,start_recording.sh -o args",0,1);
-    List<String> jobs = null;
-    try {
-        jobs = ctrl.execute();
-    } catch (Exception e) {
-        throw new RuntimeException("Error listing jobs on ('"+encoder_name+"','"+encoderIP+"')", e);
-    }
+    List<String> jobs = ControlServlet.runUnixCommand(encoderIP, "ps -ww -C vlc,start_recording.sh -o args", 0, 1);
     List<String> previews = new ArrayList<String>();
     List<String> playbacks = new ArrayList<String>();
     List<String> recordings = new ArrayList<String>();
@@ -58,7 +52,7 @@ Status for <%=encoder_name%>:
 
     // If there are recordings in progress then we need to get file information for them
     FSCtrl fctrl = new FSCtrl(encoderIP);
-    List<String[]> files = (List<String[]>) fctrl.getFileInfo();
+    List<String[]> files = fctrl.getFileInfo();
 
 %>
 

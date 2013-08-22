@@ -1,4 +1,4 @@
-<%@ page import="dk.statsbiblioteket.deck.client.CommandLineCtrl" %>
+<%@ page import="dk.statsbiblioteket.deck.client.webinterface.ControlServlet" %>
 <%@ page import="dk.statsbiblioteket.deck.client.webinterface.WebConstants" %>
 <%@ page import="java.net.InetAddress" %>
 <%@ page import="java.util.Arrays" %>
@@ -17,8 +17,7 @@
     //The cards actually available as determined
     //by querying the encoder
     Pattern pattern = Pattern.compile(".*/dev/video([0-9]).*");
-    CommandLineCtrl task = new CommandLineCtrl(encoderIP, "ps -C cat -o args");
-    List<String> jobs = (List<String>) task.execute();
+    List<String> jobs = ControlServlet.runUnixCommand(encoderIP, "ps -C cat -o args", 0, 1);
     Set<Integer> used_cards = new HashSet<Integer>();
     for (String job : jobs) {
         Matcher m = pattern.matcher(job);
@@ -31,10 +30,10 @@
     int[] all_cards = new int[]{0, 2};
     for (int card : all_cards) {
         if (!used_cards.contains(new Integer(card))) {
-            available_cards_s.add(new Integer(card));
+            available_cards_s.add(card);
         }
     }
-    Integer[] available_cards = (Integer[]) available_cards_s.toArray(new Integer[]{});
+    Integer[] available_cards = available_cards_s.toArray(new Integer[available_cards_s.size()]);
     Arrays.sort(available_cards);
     String[] source_names = new String[available_cards.length];
     for (int i = 0; i < available_cards.length; i++) {
@@ -100,11 +99,11 @@ Recording on <%=encoder_name%>
 
     <div class="field">
         <label for="mpeg1">MPEG-1:</label>
-        <input type="radio" id="mpeg1" name="<%=WebConstants.CAPTURE_FORMAT_PARAM%>" value="1" checked="checked"/>
+        <input type="radio" id="mpeg1" name="<%=WebConstants.CAPTURE_FORMAT_PARAM%>" value="mpeg1" checked="checked"/>
     </div>
     <div class="field">
         <label for="mpeg2">MPEG-2:</label>
-        <input type="radio" id="mpeg2" name="<%=WebConstants.CAPTURE_FORMAT_PARAM%>" value="2"/><br/>
+        <input type="radio" id="mpeg2" name="<%=WebConstants.CAPTURE_FORMAT_PARAM%>" value="mpeg2"/><br/>
     </div>
 
     <div class="field">
@@ -114,7 +113,7 @@ Recording on <%=encoder_name%>
 
     <div class="field">
         <label for="vhs_label">VHS Label:</label>
-        <textarea id="vhs_label" name="<%=WebConstants.VHS_LABEL%>" class="input" rows="3" cols="100"></textarea>
+        <textarea id="vhs_label" name="<%=WebConstants.VHS_LABEL_PARAM%>" class="input" rows="3" cols="100"></textarea>
     </div>
 
     <input type="hidden" name="<%=WebConstants.CONTROL_COMMAND_PARAM%>" value="<%=WebConstants.START_RECORDING%>"/>

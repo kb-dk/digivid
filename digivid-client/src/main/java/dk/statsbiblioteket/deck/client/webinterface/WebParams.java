@@ -1,9 +1,11 @@
 package dk.statsbiblioteket.deck.client.webinterface;
 
+import com.google.code.regexp.Matcher;
 import dk.statsbiblioteket.deck.client.FileReader;
 import dk.statsbiblioteket.deck.client.GenericCtrl;
 import dk.statsbiblioteket.deck.client.datastructures.Comments;
 
+import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
@@ -11,23 +13,7 @@ import java.text.ParseException;
 import java.util.Map;
 import java.util.Set;
 
-import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.CAPTURE_FORMAT_PARAM;
-import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.CARD_NAME_PARAM;
-import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.CHANNEL_LABEL_PARAM;
-import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.CONTROL_COMMAND_PARAM;
-import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.ENCODER_NAME_PARAM;
-import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.END_TIME_PARAM;
-import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.FILE_LENGTH_PARAM;
-import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.FILE_NAME_PARAM;
-import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.INPUT_CHANNEL_ID_PARAM;
-import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.RECORDING_QUALITY;
-import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.RECORDING_TIME_PARAM;
-import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.START_TIME_PARAM;
-import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.STREAM_PORT_HTTP_PARAM;
-import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.STREAM_PROTOCOL_PARAM;
-import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.USER_NAME_PARAM;
-import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.VHS_LABEL;
-import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.getPresentationDateFormat;
+import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.lognames;
 
 /**
  * Created with IntelliJ IDEA.
@@ -55,105 +41,110 @@ public class WebParams {
     private String vhs_label;
     private Integer quality = -1;
     private String encoder_name;
+    private Boolean isPostProcessed;
 
 
-    private String parameterString="";
+    private String parameterString = "";
 
 
 
     public void unmarshallParams(Map<String, String[]> param_map) {
-        Set<Map.Entry<String,String[]>> params = param_map.entrySet();
+        Set<Map.Entry<String, String[]>> params = param_map.entrySet();
         parameterString = "";
 
-        for (Map.Entry<String,String[]> entry : params) {
+        for (Map.Entry<String, String[]> entry : params) {
             String name = entry.getKey();
             String value = entry.getValue()[0];
-            if (name.equals(CARD_NAME_PARAM)) {
+
+            if (name.equals(WebConstants.CARD_NAME_PARAM)) {
                 try {
                     card_name = Integer.parseInt(value);
-                    addParam(CARD_NAME_PARAM,card_name);
+                    addParam(WebConstants.CARD_NAME_PARAM, card_name);
                 } catch (NumberFormatException e) {
                     throw new RuntimeException("You must specify a recording source");
                 }
-            } else if (name.equals(INPUT_CHANNEL_ID_PARAM)) {
+            } else if (name.equals(WebConstants.IS_PROCESSED_PARAM)) {
+                isPostProcessed = Boolean.parseBoolean(value);
+                addParam(WebConstants.IS_PROCESSED_PARAM, isPostProcessed);
+            } else if (name.equals(WebConstants.INPUT_CHANNEL_ID_PARAM)) {
                 input_channel_id = value;
-                addParam(INPUT_CHANNEL_ID_PARAM,input_channel_id);
-            } else if (name.equals(STREAM_PROTOCOL_PARAM)) {
+                addParam(WebConstants.INPUT_CHANNEL_ID_PARAM, input_channel_id);
+            } else if (name.equals(WebConstants.STREAM_PROTOCOL_PARAM)) {
                 stream_protocol = value;
-                addParam(STREAM_PROTOCOL_PARAM,stream_protocol);
-            } else if (name.equals(STREAM_PORT_HTTP_PARAM)) {
+                addParam(WebConstants.STREAM_PROTOCOL_PARAM, stream_protocol);
+            } else if (name.equals(WebConstants.STREAM_PORT_HTTP_PARAM)) {
                 try {
                     stream_port = Integer.parseInt(value);
-                    addParam(STREAM_PORT_HTTP_PARAM,stream_port);
+                    addParam(WebConstants.STREAM_PORT_HTTP_PARAM, stream_port);
                 } catch (NumberFormatException e) {
                     throw new RuntimeException(e);
                 }
-            } else if (name.equals(ENCODER_NAME_PARAM)) {
+            } else if (name.equals(WebConstants.ENCODER_NAME_PARAM)) {
                 encoder_name = value;
                 try {
                     encoder_IP = InetAddress.getByName(encoder_name).getHostAddress();
-                    addParam(ENCODER_NAME_PARAM,encoder_IP);
+                    addParam(WebConstants.ENCODER_NAME_PARAM, encoder_IP);
                 } catch (UnknownHostException e) {
                     throw new RuntimeException("Could not find host '" + encoder_name + "'");
                 }
-            } else if (name.equals(CONTROL_COMMAND_PARAM)) {
+            } else if (name.equals(WebConstants.CONTROL_COMMAND_PARAM)) {
                 control_command = value;
-                addParam(CONTROL_COMMAND_PARAM,control_command);
-            } else if (name.equals(FILE_NAME_PARAM)) {
+                addParam(WebConstants.CONTROL_COMMAND_PARAM, control_command);
+            } else if (name.equals(WebConstants.FILE_NAME_PARAM)) {
                 file_name = value;
-                addParam(FILE_LENGTH_PARAM,file_name);
-            } else if (name.equals(CHANNEL_LABEL_PARAM)) {
+                addParam(WebConstants.FILE_LENGTH_PARAM, file_name);
+            } else if (name.equals(WebConstants.CHANNEL_LABEL_PARAM)) {
                 channel_label = value;
-                addParam(CHANNEL_LABEL_PARAM,channel_label);
-            } else if (name.equals(START_TIME_PARAM)) {
+                addParam(WebConstants.CHANNEL_LABEL_PARAM, channel_label);
+            } else if (name.equals(WebConstants.START_TIME_PARAM)) {
                 try {
-                    start_time_ms = getPresentationDateFormat().parse(value).getTime();
-                    addParam(START_TIME_PARAM,start_time_ms);
+                    start_time_ms = WebConstants.getPresentationDateFormat().parse(value).getTime();
+                    addParam(WebConstants.START_TIME_PARAM, start_time_ms);
                 } catch (ParseException e) {
                     throw new RuntimeException("You must specify a start time for the recording");
                 }
-            } else if (name.equals(END_TIME_PARAM)) {
+            } else if (name.equals(WebConstants.END_TIME_PARAM)) {
                 try {
-                    stop_time_ms = getPresentationDateFormat().parse(value).getTime();
-                    addParam(END_TIME_PARAM,stop_time_ms);
+                    stop_time_ms = WebConstants.getPresentationDateFormat().parse(value).getTime();
+                    addParam(WebConstants.END_TIME_PARAM, stop_time_ms);
                 } catch (ParseException e) {
                     throw new RuntimeException("You must specify a stop time for the recording");
                 }
-            } else if (name.equals(CAPTURE_FORMAT_PARAM)) {
+            } else if (name.equals(WebConstants.CAPTURE_FORMAT_PARAM)) {
                 capture_format = value;
-                addParam(CAPTURE_FORMAT_PARAM,capture_format);
-            } else if (name.equals(VHS_LABEL)) {
+                addParam(WebConstants.CAPTURE_FORMAT_PARAM, capture_format);
+            } else if (name.equals(WebConstants.VHS_LABEL_PARAM)) {
                 vhs_label = value;
-            } else if (name.equals(RECORDING_QUALITY)) {
+            } else if (name.equals(WebConstants.RECORDING_QUALITY)) {
                 try {
                     quality = Integer.parseInt(value);
-                    addParam(RECORDING_QUALITY,quality);
+                    addParam(WebConstants.RECORDING_QUALITY, quality);
                 } catch (NumberFormatException e) {
                     throw new RuntimeException("You must specify an integer value for the quality");
                 }
-            } else if (name.equals(RECORDING_TIME_PARAM)) {
+            } else if (name.equals(WebConstants.RECORDING_TIME_PARAM)) {
                 try {
                     recording_time = Long.parseLong(value);
-                    addParam(RECORDING_TIME_PARAM,recording_time);
+                    addParam(WebConstants.RECORDING_TIME_PARAM, recording_time);
                 } catch (NumberFormatException e) {
                     throw new RuntimeException("You must enter a recording time as a whole number of minutes");
                 }
-            } else if (name.equals(USER_NAME_PARAM)) {
+            } else if (name.equals(WebConstants.USER_NAME_PARAM)) {
                 user_name = value;
-                addParam(USER_NAME_PARAM,user_name);
+                addParam(WebConstants.USER_NAME_PARAM, user_name);
             }
         }
-        Comments commentsStructure = getComments();
+        Comments commentsStructure = getComments(file_name,encoder_IP);
 
 
-        if (vhs_label == null){
-            if (commentsStructure != null && commentsStructure.getComments() != null){
-                vhs_label =commentsStructure.getComments();
+        if (vhs_label == null) {
+            if (commentsStructure != null && commentsStructure.getComments() != null) {
+                vhs_label = commentsStructure.getComments();
             } else {
                 vhs_label = "";
             }
         }
-        if (quality < 0){
+        if (quality < 0) {
             if (commentsStructure != null && commentsStructure.getQuality() != null) {
                 quality = commentsStructure.getQuality();
             } else {
@@ -163,24 +154,69 @@ public class WebParams {
     }
 
 
-
     private void addParam(String name, Object value) {
-        parameterString = parameterString + " '"+name+"="+value.toString()+"'";
+        parameterString = parameterString + " '" + name + "=" + value.toString() + "'";
+    }
+
+    public static Comments createCommentsFromParams(WebParams params, File file) {
+        Comments commentsStructure = new Comments();
+        commentsStructure.setFilename(file.getName());
+        commentsStructure.setChannelID(lognames.get(params.getChannel_label()));
+        commentsStructure.setChannelLabel(params.getChannel_label());
+        commentsStructure.setCaptureFormat(params.getCapture_format());
+        commentsStructure.setStartDate(params.getStart_time_ms());
+        commentsStructure.setEndDate(params.getStop_time_ms());
+        commentsStructure.setEncoderIP(params.getEncoder_IP());
+        commentsStructure.setComments(params.getVhs_label());
+        commentsStructure.setQuality(params.getQuality());
+        commentsStructure.setDuration(params.getRecording_time());
+        commentsStructure.setUsername(params.getUser_name());
+        return commentsStructure;
     }
 
 
-    private Comments getComments(){
+    public static Comments getComments(String file_name, String encoder_IP) {
         //Create comments file
         FileReader task = new FileReader(file_name);
         try {
             Object result = new GenericCtrl(encoder_IP, task).execute();
-            if (result != null){
+            if (result != null && ! result.toString().isEmpty()) {
                 return Comments.fromJson(result.toString());
             } else {
-                return null;
+                Matcher matcher = WebConstants.UNPROCESSED_FILE_PATTERN.matcher(file_name);
+                Comments comments = new Comments();
+                comments.setFilename(file_name);
+                comments.setComments("");
+                comments.setQuality(5);
+                comments.setEncoderIP(encoder_IP);
+
+                if (matcher.matches()){
+                    comments.setStartDate(Long.parseLong(matcher.group("startTimestamp")));
+                    //Additional file name component?
+                } else {
+                    matcher = WebConstants.BART_FILE_PATTERN.matcher(file_name);
+                    if (matcher.matches()){
+                        comments.setChannelID(matcher.group("channelID"));
+                        comments.setStartDate(WebConstants.getFilenameDateFormat().parse(matcher.group("startTime"))
+                                .getTime());
+                        comments.setEndDate(WebConstants.getFilenameDateFormat().parse(matcher.group("endTime"))
+                                .getTime());
+                        //Set duration in minutes
+                        comments.setDuration((comments.getEndDate() - comments.getStartDate())/1000/60);
+                    } else{
+                        return comments;
+                    }
+                }
+                //shared groups
+                comments.setUsername(matcher.group("user"));
+                comments.setChannelLabel(matcher.group("channelLabel"));
+                comments.setCaptureFormat(matcher.group("capturingFormat"));
+                return comments;
             }
         } catch (RemoteException e1) {
             throw new RuntimeException(e1);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -251,5 +287,9 @@ public class WebParams {
 
     public String getParameterString() {
         return parameterString;
+    }
+
+    public Boolean getPostProcessed() {
+        return isPostProcessed;
     }
 }

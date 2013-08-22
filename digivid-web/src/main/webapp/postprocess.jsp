@@ -1,7 +1,8 @@
+<%@ page import="dk.statsbiblioteket.deck.client.datastructures.Comments" %>
 <%@ page import="dk.statsbiblioteket.deck.client.webinterface.WebConstants" %>
+<%@ page import="dk.statsbiblioteket.deck.client.webinterface.WebParams" %>
 <%@ page import="java.net.InetAddress" %>
 <%@ page import="java.util.Date" %>
-<%@ page import="java.util.regex.Matcher" %>
 <!DOCTYPE html
 PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -17,55 +18,30 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 
     //This is where we process the filename and length
     String filename = request.getParameter(WebConstants.FILE_NAME_PARAM);
-    String channel_code = null;
 
-    int capture_format = 0;
+    Comments comments = WebParams.getComments(filename, encoderIP);
+
+
+
+    String channel_code = comments.getChannelLabel();
+
     String start_date_S = null;
     String end_date_S = null;
-
-    Matcher m = WebConstants.BART_FILE_PATTERN.matcher(filename);
-    if (!m.matches()) {
-        throw new RuntimeException("Cannot parse filename: " + filename + "\nWith regexp: " + WebConstants.BART_FILE_REGEXP);
-    }
-
-    Date start_date;
+    Date start_date = new Date(comments.getStartDate());
     Date end_date;
-    String format;
+
+
     if (request.getParameter(WebConstants.IS_PROCESSED_PARAM).equals("false")) {
-        //The unix timestamp from filename
-        String start_timestamp_string = m.group(1);    //milliseconds
-        channel_code = m.group(4);
-        format = m.group(5);
-
-        //The unix timestamp as a long
-        long start_timestamp = Long.parseLong(start_timestamp_string);
         //The end unix timestamp as a long
-        long end_timestamp = start_timestamp + Integer.parseInt(request.getAttribute(WebConstants.FILE_LENGTH_ATTR).toString()) * 1000;
-
-        //The start time as a Date
-        start_date = new Date(start_timestamp);
+        long end_timestamp = start_date.getTime() + Integer.parseInt(request.getAttribute(WebConstants.FILE_LENGTH_ATTR).toString()) * 1000;
         //The end time as a Date
         end_date = new Date(end_timestamp);
-
-
     } else {
-        channel_code = m.group(3);
-        format = m.group(4);
-
-        //The start timestamp in the bart format
-        String bart_start_time = m.group(5);
-        start_date = WebConstants.getFilenameDateFormat().parse(bart_start_time);
-
-        String bart_end_time = m.group(6);
-        end_date = WebConstants.getFilenameDateFormat().parse(bart_end_time);
-
+        end_date = new Date(comments.getEndDate());
     }
 
-    if ("mpeg1".equals(format)) {
-        capture_format = 1;
-    } else if ("mpeg2".equals(format)) {
-        capture_format = 2;
-    } else {
+    String format = comments.getCaptureFormat();
+    if (!("mpeg1".equals(format) || "mpeg2".equals(format))){
         throw new RuntimeException("Unknown capture format: '" + format + "'");
     }
 
@@ -125,8 +101,8 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 
         <div class="field">
             <label for="vhs_label">VHS Label:</label>
-            <textarea id="vhs_label" name="<%=WebConstants.VHS_LABEL%>" class="input" rows="3"
-                      cols="100"><%=request.getAttribute(WebConstants.VHS_LABEL)%></textarea>
+            <textarea id="vhs_label" name="<%=WebConstants.VHS_LABEL_PARAM%>" class="input" rows="3"
+                      cols="100"><%=request.getAttribute(WebConstants.VHS_LABEL_PARAM)%></textarea>
         </div>
 
         <div class="field">
@@ -197,10 +173,11 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
             </select>
         </div>
 
-        <input type="hidden" name="<%=WebConstants.CAPTURE_FORMAT_PARAM%>" value="<%=capture_format%>"/>
+        <input type="hidden" name="<%=WebConstants.CAPTURE_FORMAT_PARAM%>" value="<%=format%>"/>
         <input type="hidden" name="<%=WebConstants.CONTROL_COMMAND_PARAM%>" value="<%=WebConstants.POSTPROCESS%>"/>
         <input type="hidden" name="<%=WebConstants.ENCODER_IP_PARAM%>" value="<%=encoderIP%>"/>
         <input type="hidden" name="<%=WebConstants.ENCODER_NAME_PARAM%>" value="<%=encoder_name%>"/>
+        <input type="hidden" name="<%=WebConstants.IS_PROCESSED_PARAM%>" value="<%=request.getParameter(WebConstants.IS_PROCESSED_PARAM)%>"/>
     </fieldset>
     <input type="button" name="Reject" value="Reject" onclick="gotopage('<%=WebConstants.PLAYBACK_JSP%>')"/>
     <input type="submit" name="Process" value="Process"/>
