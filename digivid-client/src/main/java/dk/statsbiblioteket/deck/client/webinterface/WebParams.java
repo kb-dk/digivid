@@ -134,23 +134,6 @@ public class WebParams {
                 addParam(WebConstants.USER_NAME_PARAM, user_name);
             }
         }
-        Comments commentsStructure = getComments(file_name,encoder_IP);
-
-
-        if (vhs_label == null) {
-            if (commentsStructure != null && commentsStructure.getComments() != null) {
-                vhs_label = commentsStructure.getComments();
-            } else {
-                vhs_label = "";
-            }
-        }
-        if (quality < 0) {
-            if (commentsStructure != null && commentsStructure.getQuality() != null) {
-                quality = commentsStructure.getQuality();
-            } else {
-                quality = 5;
-            }
-        }
     }
 
 
