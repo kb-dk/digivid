@@ -177,7 +177,11 @@ public class WebParams {
 
     public static Comments getComments(String file_name, String encoder_IP) {
         //Create comments file
+        if (file_name == null){
+            return null;
+        }
         FileReader task = new FileReader(file_name);
+
         try {
             Object result = new GenericCtrl(encoder_IP, task).execute();
             if (result != null && ! result.toString().isEmpty()) {
