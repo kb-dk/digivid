@@ -1,11 +1,14 @@
 package dk.statsbiblioteket.deck.client;
 
 import dk.statsbiblioteket.deck.Constants;
+import dk.statsbiblioteket.deck.client.webinterface.WebConstants;
 import dk.statsbiblioteket.deck.rmiInterface.compute.Task;
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -23,21 +26,22 @@ public class FileLister implements Task {
     private static String prop;
     private static int propInt;
     //private static final String configure = Constants.DEFAULT_SERVERCONF_DIRECTORY + "/server.xml";
-   // private static final String configure = Constants.DEFAULT_CLIENTCONF_DIRECTORY + "/client.xml";
+    // private static final String configure = Constants.DEFAULT_CLIENTCONF_DIRECTORY + "/client.xml";
 
     //private String unixExecutable  = getDefaultProperty("RECORDER.HOST.UNIXEXEC"); // the unix shell or command executable
 
     private String captureStorage = Constants.DEFAULT_RECORDSDIR;
 
     private String extension;
-
+    private String sortOrder;
 
 
     /**
      * Construct a task to operate the server to the specified
      * control command.
      */
-     public FileLister(String extension) {
+    public FileLister(String extension, String sortOrder) {
+        this.sortOrder = sortOrder;
 
         if (captureStorage != null) this.captureStorage=captureStorage;
         if (extension != null)this.extension = extension;
@@ -57,21 +61,18 @@ public class FileLister implements Task {
         {
             File f = new File(captureStorage);
             System.out.println("Directory: " + captureStorage);
-            boolean flag =  f.isDirectory();
-            if(flag)
+            if(f.isDirectory())
             {
                 File fs[] = f.listFiles();
-                for(int i=0;i<fs.length;i++)
-                {
-                    if(!fs[i].isDirectory())
-                    {
-                        String filename = fs[i].getName();
-                        long size=fs[i].length()/1024L;
+                for (File f1 : fs) {
+                    if (!f1.isDirectory()) {
+                        String filename = f1.getName();
+                        long size = f1.length() / 1024L;
 
-                        if(filename.endsWith(extension.trim())) {
+                        if (filename.endsWith(extension.trim())) {
                             System.out.println("File: " + filename);
-                            System.out.println(" of " + size+"KB");
-                            String[] fileinfo = new String[] {filename, String.valueOf(size)};
+                            System.out.println(" of " + size + "KB");
+                            String[] fileinfo = new String[]{filename, String.valueOf(size), f1.lastModified() + ""};
                             records.add(fileinfo);
                         }
                     }
@@ -80,8 +81,18 @@ public class FileLister implements Task {
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            throw new RuntimeException("Failed listing files",e);
         }
+
+        Collections.sort(records,new Comparator<String[]>() {
+            @Override
+            public int compare(String[] o1, String[] o2) {
+                if (sortOrder.equals(WebConstants.SORT_ORDER_MODIFIED)){
+                    return Long.compare(Long.parseLong(o1[2]),Long.parseLong(o2[2]));
+                }
+                return o1[0].compareTo(o2[0]);
+            }
+        });
         return records;
     }
 

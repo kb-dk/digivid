@@ -1,6 +1,7 @@
 package dk.statsbiblioteket.deck.client;
 
 import dk.statsbiblioteket.deck.Constants;
+import dk.statsbiblioteket.deck.client.webinterface.WebConstants;
 import dk.statsbiblioteket.deck.rmiInterface.compute.Compute;
 import org.apache.log4j.Logger;
 
@@ -193,6 +194,10 @@ public class FSCtrl {
 
     }
 
+
+    public List<String[]> getFileInfo() throws RemoteException {
+        return getFileInfo(WebConstants.SORT_ORDER_NAME);
+    }
     /**
      * Returns a list of which each entry is an array.
      * The first element is the file name and the second is the
@@ -200,7 +205,7 @@ public class FSCtrl {
      * @return
      * @throws RemoteException
      */
-    public List<String[]> getFileInfo() throws RemoteException {
+    public List<String[]> getFileInfo(String sortOrder) throws RemoteException {
 
         System.out.println("Bind dk.statsbiblioteket.deck.client.RecorderCtrl");
         if (System.getSecurityManager() == null) {
@@ -230,7 +235,7 @@ public class FSCtrl {
 
         System.out.println("Execute the Command...");
 
-        FileLister task = new FileLister(extension);
+        FileLister task = new FileLister(extension,sortOrder );
 
         List<String[]> fileInfo = new ArrayList<String[]>() ;
         try {
