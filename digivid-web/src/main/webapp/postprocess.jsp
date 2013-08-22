@@ -33,13 +33,14 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
     Date end_date;
 
 
-    if (request.getParameter(WebConstants.IS_PROCESSED_PARAM).equals("false")) {
+    boolean postProcessed = Boolean.parseBoolean(request.getParameter(WebConstants.IS_PROCESSED_PARAM));
+    if (postProcessed) {
+        end_date = new Date(comments.getEndDate());
+    } else {
         //The end unix timestamp as a long
         long end_timestamp = start_date.getTime() + Integer.parseInt(request.getAttribute(WebConstants.FILE_LENGTH_ATTR).toString()) * 1000;
         //The end time as a Date
         end_date = new Date(end_timestamp);
-    } else {
-        end_date = new Date(comments.getEndDate());
     }
 
     String format = comments.getCaptureFormat();
@@ -52,6 +53,13 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 
     end_date_S = WebConstants.getPresentationDateFormat().format(end_date);
 
+    String selectedChannel ="";
+    for (String channel : WebConstants.lognames.keySet()) {
+        if (channel_code.contains(channel)) {
+            selectedChannel = channel;
+            break;
+        }
+    }
 %>
 
 <script type="text/javascript">
@@ -157,11 +165,15 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 
         <div class="field">
             <label for="channel_label">Channel:</label>
-            <select id="channel_label" name="<%=WebConstants.CHANNEL_LABEL_PARAM%>" class="input">
+            <select id="channel_label" name="<%=WebConstants.CHANNEL_LABEL_PARAM%>" class="input" <%
+            if (postProcessed){
+                %>disabled="disabled" <%
+            }
+            %>>
                 <%
                     for (String channel : WebConstants.lognames.keySet()) {
                         String selected = "";
-                        if (channel_code.contains(channel)) {
+                        if (selectedChannel.equals(channel)) {
                             selected = "selected=\"selected\"";
                         }
                 %>
@@ -171,13 +183,21 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
                     }
                 %>
             </select>
+            <%
+                if (postProcessed){
+                    %>
+            <input type="hidden" name="<%=WebConstants.CHANNEL_LABEL_PARAM%>" value="<%=selectedChannel%>"/>
+            <%
+                }
+
+            %>
         </div>
 
         <input type="hidden" name="<%=WebConstants.CAPTURE_FORMAT_PARAM%>" value="<%=format%>"/>
         <input type="hidden" name="<%=WebConstants.CONTROL_COMMAND_PARAM%>" value="<%=WebConstants.POSTPROCESS%>"/>
         <input type="hidden" name="<%=WebConstants.ENCODER_IP_PARAM%>" value="<%=encoderIP%>"/>
         <input type="hidden" name="<%=WebConstants.ENCODER_NAME_PARAM%>" value="<%=encoder_name%>"/>
-        <input type="hidden" name="<%=WebConstants.IS_PROCESSED_PARAM%>" value="<%=request.getParameter(WebConstants.IS_PROCESSED_PARAM)%>"/>
+        <input type="hidden" name="<%=WebConstants.IS_PROCESSED_PARAM%>" value="<%=postProcessed%>"/>
     </fieldset>
     <input type="button" name="Reject" value="Reject" onclick="gotopage('<%=WebConstants.PLAYBACK_JSP%>')"/>
     <input type="submit" name="Process" value="Process"/>
