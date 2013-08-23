@@ -34,6 +34,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.List;
@@ -235,7 +237,7 @@ public class ControlServlet extends HttpServlet {
         String command = Constants.HOOKS_BINDIR + "/post_postProcess.sh " + fileDirParam +
                 commentsStructure.toParameterString();
         command = command.replaceAll(Pattern.quote("\""), Matcher.quoteReplacement("\\\""));
-        runUnixCommandWithArgs(params, "bash",new String[]{"-c",command},0);
+        runUnixCommandWithArgs(params, "bash", new String[]{"-c", command}, 0);
 
         request.setAttribute(PAGE_ATTR, PLAYBACK_JSP);
 
@@ -288,9 +290,25 @@ public class ControlServlet extends HttpServlet {
     private static String filenameFromParams(WebParams params) {
         String startTimeBart = getFilenameDateFormat().format((new Date(params.getStart_time_ms())));
         String endTimeBart = getFilenameDateFormat().format(new Date(params.getStop_time_ms()));
+        String host = getHostname(params.getEncoder_IP());
         return lognames.get(params.getChannel_label()) + "_digivid_" + params.getChannel_label() +
                 "_" + params.getCapture_format() + "_" + startTimeBart + "_" + endTimeBart +
-                "_" + params.getEncoder_IP() + ".mpeg";
+                "_" + host + ".mpeg";
+    }
+
+    private static String getHostname(String encoder_ip) {
+
+        String host;
+        try {
+            InetAddress addr = InetAddress.getByName(encoder_ip);
+            host = addr.getHostName();
+        } catch (UnknownHostException e) {
+            return encoder_ip;
+        }
+        if (host == null){
+            return encoder_ip;
+        }
+        return host;
     }
 
     private static void renameFile(WebParams params, String file, String new_file) {
