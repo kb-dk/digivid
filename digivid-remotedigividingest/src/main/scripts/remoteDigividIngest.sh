@@ -15,26 +15,32 @@ while true; do
   case "$1" in
     --fileDir)
       shift;
+      shift;
       ;;
     --filename)
       shift;
       FILENAME='$1'
+      shift;
       ;;
     --comments)
       shift;
       VHSLABEL='$1'
+      shift;
       ;;
     --quality)
       shift;
       QUALITY='$1'
+      shift;
       ;;
     --encoderIP)
       shift;
       ENCODER='$1'
+      shift;
       ;;
     --startDate)
       shift;
       STARTTIME=$(date -d "@$(($1/1000))" +"%Y-%M-%dT%H:%m:%S")
+      shift;
       if [ $? -ne 0 ];
       then
         exit 1
@@ -43,6 +49,7 @@ while true; do
     --endDate)
       shift;
       STOPTIME=$(date -d "@$(($1/1000))" +"%Y-%M-%dT%H:%m:%S")
+      shift;
       if [ $? -ne 0 ];
       then
         exit 1
@@ -50,19 +57,28 @@ while true; do
       ;;
     --channelLabel)
       shift;
+      shift;
       ;;
     --channelID)
+      shift;
       shift;
       ;;
     --captureFormat)
       shift;
+      shift;
       ;;
     --username)
+      shift;
       shift;
       ;;
     --)
       shift;
+      shift;
       break;
+      ;;
+    *)
+      echo "Unknown parameter $1" > /dev/stderr
+      exit 1;
       ;;
   esac
 done
@@ -70,4 +86,4 @@ done
 cd $(dirname $(readlink -f $0))
 source remoteDigividIngestSetEnv.sh
 cd $VHSINGEST_HOME
-./bin/vhsFileIngest.sh -inputvalue vhslabel "$VHSLABEL" -inputvalue starttime "$STARTTIME" -inputvalue stoptime "$STOPTIME" -inputvalue mpgfile "$ENCODER/$FILENAME"  -inputvalue domsUser "$DOMSUSER" -inputvalue domsPass "$DOMSPASS"
+./bin/ingestVHSFile.sh -inputvalue vhslabel "$VHSLABEL" -inputvalue starttime "$STARTTIME" -inputvalue stoptime "$STOPTIME" -inputvalue mpgfile "$ENCODER/$FILENAME"  -inputvalue domsUser "$DOMSUSER" -inputvalue domsPass "$DOMSPASS"
