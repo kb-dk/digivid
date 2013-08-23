@@ -19,22 +19,22 @@ while true; do
       ;;
     --filename)
       shift;
-      FILENAME='$1'
+      FILENAME="$1"
       shift;
       ;;
     --comments)
       shift;
-      VHSLABEL='$1'
+      VHSLABEL="$1"
       shift;
       ;;
     --quality)
       shift;
-      QUALITY='$1'
+      QUALITY="$1"
       shift;
       ;;
     --encoderIP)
       shift;
-      ENCODER='$1'
+      ENCODER="$1"
       shift;
       ;;
     --startDate)
@@ -86,4 +86,4 @@ done
 cd $(dirname $(readlink -f $0))
 source remoteDigividIngestSetEnv.sh
 cd $VHSINGEST_HOME
-./bin/ingestVHSFile.sh -inputvalue vhslabel "$VHSLABEL" -inputvalue starttime "$STARTTIME" -inputvalue stoptime "$STOPTIME" -inputvalue mpgfile "$ENCODER/$FILENAME"  -inputvalue domsUser "$DOMSUSER" -inputvalue domsPass "$DOMSPASS"
+./bin/ingestVHSFile.sh -inputvalue vhslabel "$VHSLABEL" -inputvalue starttime "$STARTTIME" -inputvalue stoptime "$STOPTIME" -inputvalue mpgfile "$ENCODER/$FILENAME" -inputvalue quality "$QUALITY" -inputvalue domsUser "$DOMSUSER" -inputvalue domsPass "$DOMSPASS"
