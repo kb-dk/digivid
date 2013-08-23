@@ -31,6 +31,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * Runs a generic remote task and returns a List<String>
@@ -44,6 +45,7 @@ import java.util.List;
 
 public class CommandLineTask implements Task {
     static Logger log = Logger.getLogger(CommandLineTask.class.getName());
+    private String[] arguments;
     private Integer[] returncodes;
 
     private String unixExecutable;
@@ -57,17 +59,13 @@ public class CommandLineTask implements Task {
         unixExecutable = command;
         this.is_daemon = is_daemon;
         returncodes = new Integer[]{0};
+        arguments = null;
     }
 
-    public CommandLineTask(String command) {
-        this(command, false);
-    }
-
-    public CommandLineTask(String unix_command, boolean is_daemon, Integer[] returncodes) {
+    public CommandLineTask(String unix_command, boolean is_daemon, String[] arguments, Integer[] returncodes) {
         this(unix_command, is_daemon);
-        if (returncodes != null){
-            this.returncodes = returncodes;
-        }
+        this.arguments = arguments;
+        this.returncodes = returncodes;
     }
 
     public Object execute() {
@@ -81,20 +79,37 @@ public class CommandLineTask implements Task {
 
     public void execute_daemon() {
         try {
-            Process  p = Runtime.getRuntime().exec(unixExecutable);
+            Process p = execProcess();
             logOutput(p, log);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+    private Process execProcess() throws IOException {
+        Process p;
+        String logCommand = getLogCommand();
+        if (arguments != null){
+            String[] cmdArray = new String[arguments.length + 1];
+            cmdArray[0] = unixExecutable;
+            System.arraycopy(arguments, 0, cmdArray, 1, arguments.length);
+            log.debug(cmdArray);
+            p = Runtime.getRuntime().exec(cmdArray);
+        } else {
+            log.debug("Command: " + logCommand);
+            p = Runtime.getRuntime().exec(unixExecutable);
+        }
+        return p;
+    }
+
     public Object execute_nondaemon() {
         List<String> result = new ArrayList<String>();
-        log.debug("Command: " + unixExecutable);
+        String logCommand = getLogCommand();
         try {
             String s;
             String er;
-            Process  p = Runtime.getRuntime().exec(unixExecutable);
+            Process  p = execProcess();
+
             BufferedReader stdInput =
                     new BufferedReader(new InputStreamReader(p.getInputStream()));
             BufferedReader stdError =
@@ -109,12 +124,29 @@ public class CommandLineTask implements Task {
             int returncode = p.waitFor();
 
             if ( ! Arrays.asList(returncodes).contains(returncode)){
-                throw new RuntimeException("Error executing " + unixExecutable +", returned "+p.exitValue());
+                throw new RuntimeException("Error executing " +  logCommand +", returned "+p.exitValue());
             }
         } catch(Exception e) {
-            throw new RuntimeException("Error executing " + unixExecutable, e);
+            throw new RuntimeException("Error executing " + logCommand, e);
         }
         return result;
+    }
+
+    private String getLogCommand() {
+        List<String> cmdArray;
+        if (arguments != null){
+            cmdArray = new ArrayList<String>(Arrays.asList(arguments));
+            cmdArray.add(0,unixExecutable);
+        } else {
+            cmdArray = new ArrayList<String>();
+            StringTokenizer tokenizer = new StringTokenizer(unixExecutable);
+            while (tokenizer.hasMoreTokens()) {
+                String s = tokenizer.nextToken();
+                cmdArray.add(s);
+
+            }
+        }
+        return cmdArray.toString();
     }
 
     public static void logOutput(final Process p, final Logger log) {
@@ -168,8 +200,10 @@ public class CommandLineTask implements Task {
 
     @Override
     public String toString() {
-        return "GenericTask{" +
-                "unixExecutable='" + unixExecutable + '\'' +
+        return "CommandLineTask{" +
+                "arguments=" + Arrays.toString(arguments) +
+                ", returncodes=" + Arrays.toString(returncodes) +
+                ", unixExecutable='" + unixExecutable + '\'' +
                 ", is_daemon=" + is_daemon +
                 '}';
     }

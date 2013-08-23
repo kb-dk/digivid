@@ -2,6 +2,9 @@ package dk.statsbiblioteket.deck.client.datastructures;
 
 import com.google.gson.Gson;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Created with IntelliJ IDEA.
  * User: abr
@@ -135,15 +138,15 @@ public class Comments {
 
     public String toParameterString(){
         return
-                "--filename='" + filename + '\'' +
-                " --comments='" + comments + '\'' +
-                " --quality=" + quality +
-                " --encoderIP='" + encoderIP + '\'' +
-                " --startDate=" + startDate +
-                " --endDate=" + endDate +
-                " --channelLabel='" + channelLabel + '\'' +
-                " --channelID='" + channelID + '\'' +
-                " --captureFormat='" + captureFormat + '\'' +
-                " --username='" + username + '\'';
+        "--filename='" + filename + '\'' +
+        " --comments='" + comments.replaceAll(Pattern.quote("'"), Matcher.quoteReplacement("'\\''")) + '\'' +
+        " --quality=" + quality +
+        " --encoderIP='" + encoderIP + '\'' +
+        " --startDate=" + startDate +
+        " --endDate=" + endDate +
+        " --channelLabel='" + channelLabel + '\'' +
+        " --channelID='" + channelID + '\'' +
+        " --captureFormat='" + captureFormat + '\'' +
+        " --username='" + username + '\'';
     }
 }

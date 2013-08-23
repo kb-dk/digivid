@@ -48,6 +48,7 @@ public class CommandLineCtrl {
     final int encoderRMIport = Constants.DEFAULT_RMI_CLIENT_PORT ;
     private boolean is_daemon = false;
     private Integer[] returncodes;
+    private String[] arguments;
 
     public CommandLineCtrl(String encoderIP, String unix_command, boolean is_daemon, Integer... returncodes) {
         this.returncodes = returncodes;
@@ -66,6 +67,11 @@ public class CommandLineCtrl {
 
     public CommandLineCtrl(String encoderIP, String unix_command, Integer... returncodes) {
        this(encoderIP, unix_command, false, returncodes);
+    }
+
+    public CommandLineCtrl(String encoder_ip, String unix_command, boolean b, String[] arguments, Integer[] returnCodes) {
+        this(encoder_ip, unix_command, b, returnCodes);
+        this.arguments = arguments;
     }
 
     public List<String> execute() throws RemoteException {
@@ -100,7 +106,7 @@ public class CommandLineCtrl {
             throw new RuntimeException(re);
         }
 
-        CommandLineTask task = new CommandLineTask(unix_command, is_daemon, returncodes);
+        CommandLineTask task = new CommandLineTask(unix_command, is_daemon, arguments, returncodes);
         try {
             log.debug("Executing command");
             System.out.println("Executing command");

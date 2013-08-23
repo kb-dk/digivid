@@ -37,6 +37,8 @@ import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.CARDS_ATTR;
 import static dk.statsbiblioteket.deck.client.webinterface.WebConstants.FILE_LENGTH_ATTR;
@@ -228,10 +230,12 @@ public class ControlServlet extends HttpServlet {
         createCommentsFile(params, file, commentsStructure);
 
 
-        String fileDirParam = " --fileDir=\'" + Constants.DEFAULT_RECORDSDIR + "\' ";
+        String fileDirParam = "--fileDir=\'" + Constants.DEFAULT_RECORDSDIR + "\' ";
 
-        runUnixCommand(params,Constants.HOOKS_BINDIR + "/post_postProcess.sh " + fileDirParam +
-                commentsStructure.toParameterString());
+        String command = Constants.HOOKS_BINDIR + "/post_postProcess.sh " + fileDirParam +
+                commentsStructure.toParameterString();
+        command = command.replaceAll(Pattern.quote("\""), Matcher.quoteReplacement("\\\""));
+        runUnixCommandWithArgs(params, "bash",new String[]{"-c",command},0);
 
         request.setAttribute(PAGE_ATTR, PLAYBACK_JSP);
 
@@ -239,27 +243,38 @@ public class ControlServlet extends HttpServlet {
     }
 
     public static List<String> runUnixCommand(String encoderIP, String unix_command, Integer... returnCodes) {
-         CommandLineCtrl ctrl = new CommandLineCtrl(encoderIP, unix_command, false,returnCodes);
-         try {
-             return ctrl.execute();
-         } catch (RemoteException e) {
-             throw new RuntimeException(e);
-         }
-     }
+        CommandLineCtrl ctrl = new CommandLineCtrl(encoderIP, unix_command, false,returnCodes);
+        try {
+            return ctrl.execute();
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static void startUnixDaemon(String encoderIP, String unix_command) {
-         CommandLineCtrl ctrl = new CommandLineCtrl(encoderIP, unix_command, true);
-         try {
-             ctrl.execute();
-         } catch (RemoteException e) {
-             throw new RuntimeException(e);
-         }
-     }
+        CommandLineCtrl ctrl = new CommandLineCtrl(encoderIP, unix_command, true);
+        try {
+            ctrl.execute();
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static List<String> runUnixCommandWithArgs(WebParams params, String unix_command,
+                                                      String[] arguments, Integer... returnCodes) {
+        CommandLineCtrl ctrl = new CommandLineCtrl(params.getEncoder_IP(), unix_command, false,arguments, returnCodes);
+        try {
+            return ctrl.execute();
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 
 
     public static List<String> runUnixCommand(WebParams params, String unix_command, Integer... returnCodes) {
         return runUnixCommand(params.getEncoder_IP(),unix_command,returnCodes);
-     }
+    }
 
     private static void createCommentsFile(WebParams params, File file, Comments commentsStructure) {
         FileCreator task = new FileCreator(file.getName(), commentsStructure.toJSon());
