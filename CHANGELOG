@@ -1,0 +1,22 @@
+# Changelog
+
+## Version 1.1
+### Changes
+Added support for registering recording endtime, quality and VHS label
+Post processing now starts automatic ingest in our repository
+Metadata now not only stored in filename, and filename is immutable after first ingest
+Fix bug that moves recording time one hour timestamps in september/october before 1996
+Start of changelog
+
+### News for installation/configuration
+In compute-zip-package.zip:
+  In 'Deck/deck.default':
+  INGEST_COMMAND: Needs to be updated to call command on remote machine that starts workflow ingest.
+  On that machine the package "digivid-remotedigivid-ingester-package.zip" needs to be installed
+  HOOKS_LOGDIR: Can be updated to define directory where runs of the workflow are logged.
+In the digivid-remotedigividingester-1.1-zip-package.zip:
+  digivid-remotedigividingest-1.1-SNAPSHOT/bin/remoteDigividIngestSetEnv.sh:
+  VHSINGEST_* and TAVERNA_HOME: Need to be updated to reflect the installation of the ingest workflow
+  JAVA_HOME: Needs to be updated to reflect installation of Java
+  DOMS*: Need to be updated to reflect a doms username and password
+
