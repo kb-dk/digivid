@@ -44,4 +44,9 @@
         </plugins>
     </build>
 
+    <scm>
+        <url>https://github.com/statsbiblioteket/digivid</url>
+        <connection>https://github.com/statsbiblioteket/digivid</connection>
+        <developerConnection>git@github.com:statsbiblioteket/digivid</developerConnection>
+    </scm>
 </project>
