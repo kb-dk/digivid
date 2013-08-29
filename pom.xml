@@ -42,6 +42,19 @@
         </plugins>
     </build>
 
+    <distributionManagement>
+        <repository>
+            <id>sbforge-nexus</id>
+            <name>SBForgeb Nexus Repo manager</name>
+            <url>https://sbforge.org/nexus/content/repositories/releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>sbforge-nexus</id>
+            <name>SBForge Nexus Repo manager</name>
+            <url>https://sbforge.org/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <scm>
         <url>https://github.com/statsbiblioteket/digivid</url>
         <connection>scm:git:https://github.com/statsbiblioteket/digivid</connection>
