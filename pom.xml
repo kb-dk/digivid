@@ -45,7 +45,7 @@
     <distributionManagement>
         <repository>
             <id>sbforge-nexus</id>
-            <name>SBForgeb Nexus Repo manager</name>
+            <name>SBForge Nexus Repo manager</name>
             <url>https://sbforge.org/nexus/content/repositories/releases</url>
         </repository>
         <snapshotRepository>
