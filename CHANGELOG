@@ -1,5 +1,15 @@
 # Changelog
 
+## Version 1.2
+### Changes
+Alternative deployment of the remote script.
+Slightly better logging
+
+### News for installation/configuration
+In the digivid-remotedigividingester-1.1-zip-package.zip:
+  Now contains only one shellscript with no configuration.
+  Should be deployed in the "bin" directory of the VHS ingest workflow.
+
 ## Version 1.1
 ### Changes
 Added support for registering recording endtime, quality and VHS label

@@ -12,9 +12,9 @@ done
 
 # Log execution
 mkdir -p $HOOKS_LOGDIR
-echo "$PWD" >> $HOOKS_LOGDIR/post_postProcess.log
-bash -c "echo $QUOTE_ARGS" >> $HOOKS_LOGDIR/post_postProcess.log
-echo -e "\n"  >>  $HOOKS_LOGDIR/post_postProcess.log
+date >> $HOOKS_LOGDIR/post_postProcess.log
+echo "$INGEST_COMMAND" "$QUOTE_ARGS" >> $HOOKS_LOGDIR/post_postProcess.log
+echo >> $HOOKS_LOGDIR/post_postProcess.log
 
 # Call command
-$INGEST_COMMAND "$QUOTE_ARGS"
+$INGEST_COMMAND "$QUOTE_ARGS >> logs/post_postProcess_ingest_command.log 2>&1 < /dev/null &"

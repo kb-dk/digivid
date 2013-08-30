@@ -84,6 +84,5 @@ while true; do
 done
 
 cd $(dirname $(readlink -f $0))
-source remoteDigividIngestSetEnv.sh
-cd $VHSINGEST_HOME
-nohup ./bin/ingestVHSFile.sh -inputvalue vhslabel "$VHSLABEL" -inputvalue starttime "$STARTTIME" -inputvalue stoptime "$STOPTIME" -inputvalue mpgfile "$ENCODER/$FILENAME" -inputvalue quality "$QUALITY" -inputvalue domsUser "$DOMSUSER" -inputvalue domsPass "$DOMSPASS" &
+
+./ingestVHSFile.sh -inputvalue vhslabel "$VHSLABEL" -inputvalue starttime "$STARTTIME" -inputvalue stoptime "$STOPTIME" -inputvalue mpgfile "$ENCODER/$FILENAME" -inputvalue quality "$QUALITY" -inputvalue domsUser "$DOMSUSER" -inputvalue domsPass "$DOMSPASS" 

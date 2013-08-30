@@ -4,4 +4,4 @@ HOOKS_LOGDIR=/home/${DECK_USER}/logs
 STREAMDECK_HOME=/home/${DECK_USER}/Deck/vlc
 RECORDER_HOME=/home/${DECK_USER}/Deck/v4l
 SERVER_RMI_HOME=/home/${DECK_USER}/Deck/rmi
-INGEST_COMMAND="ssh tvtape@canopus digivid-remotedigividingest-*/bin/remoteDigividIngest.sh"
+INGEST_COMMAND="ssh tvtape@capella . .bash_profile ; services/vhs-ingest-workflow/bin/remoteDigividIngest.sh"
