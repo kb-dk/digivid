@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source $HOME/services/conf/vhs-ingest/remoteDigividIngest.conf
+
 # Get parameters
 ARGS=$(getopt -l "fileDir:,filename:,comments:,quality:,encoderIP:,startDate:,endDate:,channelLabel:,channelID:,captureFormat:,username:" -n "remoteDigividIngest.sh" -- "$@");
 
