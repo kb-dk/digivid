@@ -92,6 +92,9 @@ public class WebParams {
                 addParam(WebConstants.CONTROL_COMMAND_PARAM, control_command);
             } else if (name.equals(WebConstants.FILE_NAME_PARAM)) {
                 file_name = value;
+                if (file_name == null || file_name.isEmpty()){
+                    file_name = "default";
+                }
                 addParam(WebConstants.FILE_LENGTH_PARAM, file_name);
             } else if (name.equals(WebConstants.CHANNEL_LABEL_PARAM)) {
                 channel_label = value;
