@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source $HOME/services/conf/vhs-ingest/remoteDigividIngest.conf
+
 # Get parameters
 ARGS=$(getopt -l "fileDir:,filename:,comments:,quality:,encoderIP:,startDate:,endDate:,channelLabel:,channelID:,captureFormat:,username:" -n "remoteDigividIngest.sh" -- "$@");
 
@@ -84,6 +86,5 @@ while true; do
 done
 
 cd $(dirname $(readlink -f $0))
-source remoteDigividIngestSetEnv.sh
-cd $VHSINGEST_HOME
-./bin/ingestVHSFile.sh -inputvalue vhslabel "$VHSLABEL" -inputvalue starttime "$STARTTIME" -inputvalue stoptime "$STOPTIME" -inputvalue mpgfile "$ENCODER/$FILENAME" -inputvalue quality "$QUALITY" -inputvalue domsUser "$DOMSUSER" -inputvalue domsPass "$DOMSPASS"
+
+./ingestVHSFile.sh -inputvalue vhslabel "$VHSLABEL" -inputvalue starttime "$STARTTIME" -inputvalue stoptime "$STOPTIME" -inputvalue mpgfile "$ENCODER/$FILENAME" -inputvalue quality "$QUALITY" -inputvalue domsUser "$DOMSUSER" -inputvalue domsPass "$DOMSPASS" 
