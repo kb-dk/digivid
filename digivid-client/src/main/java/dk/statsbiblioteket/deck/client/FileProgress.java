@@ -15,7 +15,7 @@ import java.io.File;
 public class FileProgress implements Task {
 
     /** constants used in computation */
-    static Logger log = Logger.getLogger(ComputePi.class.getName());
+    static Logger log = Logger.getLogger(FileProgress.class.getName());
 
     private String fileName;
     private String captureStorage;

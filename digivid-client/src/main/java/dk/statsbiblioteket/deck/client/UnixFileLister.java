@@ -18,7 +18,7 @@ import java.util.List;
 public class UnixFileLister implements Task {
 
     /** constants used in pi computation */
-    static Logger log = Logger.getLogger(ComputePi.class.getName());
+    static Logger log = Logger.getLogger(UnixFileLister.class.getName());
 
     private static String prop;
     private static int propInt;

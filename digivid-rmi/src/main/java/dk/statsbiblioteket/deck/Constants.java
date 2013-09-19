@@ -54,7 +54,6 @@ public interface Constants {
 
     public static final Integer     DEFAULT_STREAMSERVER_CARDNAME =  LoadXMLConfig.getPropertyInt(DEFAULT_CLIENTCONF,"STREAMSERVER_DEVICEID");
     public static final String      DEFAULT_STREAMSERVER_NAME  =  LoadXMLConfig.getProperty(DEFAULT_CLIENTCONF,"STREAMSERVER_NAME");
-    public static final String      DEFAULT_STREAMSERVER_IP  =  LoadXMLConfig.getProperty(DEFAULT_CLIENTCONF,"STREAMSERVER_IP");
     public static final Integer     DEFAULT_STREAMSERVER_HTTP_PORT  =  LoadXMLConfig.getPropertyInt(DEFAULT_CLIENTCONF,"STREAMSERVER_HTTP_PORT");
     public static final String      DEFAULT_STREAMSERVER_MEDIA  =  LoadXMLConfig.getProperty(DEFAULT_CLIENTCONF,"STREAMSERVER_MEDIA");
 

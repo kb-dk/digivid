@@ -48,14 +48,14 @@
                     if (paramValue.length() == 0) {
                         System.out.print("<I>No Value</I>");
                     } else {
-                        if (paramName.equalsIgnoreCase("encoderIP")) {
-                            String encoderIP = paramValue;
+                        if (paramName.equalsIgnoreCase("encoderName")) {
+                            String encoderName = paramValue;
         %>
-        <INPUT TYPE="HIDDEN" name="encoderIP" value="<%= encoderIP %>"><BR/>
+        <INPUT TYPE="HIDDEN" name="encoderName" value="<%= encoderName %>"><BR/>
         <SELECT size="5" name="fileName">
         <%
-                          System.out.println("EncoderIP: " + encoderIP);
-                          FSCtrl ctrl = new FSCtrl(encoderIP);
+                          System.out.println("EncoderName: " + encoderName);
+                          FSCtrl ctrl = new FSCtrl(encoderName);
 
                           //List records = ctrl.getFileListUnix();
                           List records = ctrl.getFileInfo();

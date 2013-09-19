@@ -7,25 +7,4 @@
     </comment>
     <entry key="RMI_CLASSSERVER_NAME">localhost</entry>
     <entry key="RMI_PORT">9009</entry>
-
-    <!--
-        The directory where your configuration reside
-    -->
-    <!-- to serve to Admin client 1 -->
-
-    <!--
-    <entry key="RMI_CLIENT_NAME">localhost</entry>
-    <entry key="RMI_CLIENT_IP">127.0.0.1</entry>
-
-    <entry key="RMI_CLIENT_CONFIGURATION">http://127.0.0.1:${tomcatPort}/digivid/rmi</entry>
-    <entry key="RMI_CLIENT_CLASSES">http://127.0.0.1:${tomcatPort}/digivid/rmi/client.jar</entry>
-
-    <entry key="RMI_CLASSSERVER_IP">0.0.0.0</entry>
-    <entry key="RMI_CLASSSERVER_CONFIGURATION">/home/${digividUser}/Deck/rmi</entry>
-    <entry key="RMI_CLASSSERVER_CLASSES">/home/${digividUser}/Deck/rmi/compute.jar</entry>
-
-     <entry key="RECORDSDIR">/home/${digividUser}/records</entry>
-     <entry key="EXTENSION">.mpeg</entry>
-     <entry key="FILENAME">testfile</entry>
-     -->
 </properties>

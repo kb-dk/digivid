@@ -105,16 +105,16 @@ case $# in
 	;;
 
 	3) if [ -z "${3}" ] ; then
-			echo "What is your IP (if recording remote otherwise use 127.0.0.1)"
+			echo "What is your hostname (if recording remote otherwise use 127.0.0.1)"
 			read choice
 			if [ -n "${choice}"]; then
-			 	media=${1}; user=${2}; cip=${choice}
+			 	media=${1}; user=${2}; hostname=${choice}
 			else
-				echo "User IP missing, exiting" >> $RECERROR
+				echo "User hostname missing, exiting" >> $RECERROR
 	   			sorry
 	   		fi
 	   	elif [ -n "${3}" ]; then
-	   		media=${1}; user=${2}; cip=${3}
+	   		media=${1}; user=${2}; hostname=${3}
 		fi
 	;;
 
@@ -133,7 +133,7 @@ case $# in
 				cn=`echo "${choice}" grep -v grep | cat -c 11`
            		nb=${NUMBDEV}
 	   			if test "${cn}" -le "${nb}" ; then
-	   				media=${1}; user=${2}; cip=${3}; d=${choice}
+	   				media=${1}; user=${2}; hostname=${3}; d=${choice}
 	   			else
 	   				echo "Device not available" >> $RECERROR
 	   				sorry
@@ -146,7 +146,7 @@ case $# in
 	   		cn=`echo "${4}" grep -v grep | cat -c 11`
            	nb=${NUMBDEV}
            	if test "${cn}" -le "${nb}" ; then
-	   					media=${1}; user=${2}; cip=${3}; d=${4}
+	   					media=${1}; user=${2}; hostname=${3}; d=${4}
 	   		else
 	   			echo "Device not available" >> $RECERROR
 	   			sorry
@@ -167,7 +167,7 @@ case $# in
 	   		echo "Select a channel?"
 	   		read choice
 	   		if [ -n "${choice}" ]; then
-	   			media=${1}; user=${2}; cip=${3}; d=${4}; ch=${choice}
+	   			media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${choice}
 	   		else
 	   		#elif f [ -z ${f} ]; then
 			#	echo "Incorrect Channel ID supplied"
@@ -175,7 +175,7 @@ case $# in
 	   			sorry
 	   		fi
 	    elif [ -n ${5} ] ;then
-	   		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}
+	   		media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}
 	   	else
 	   		echo "Set ChannelID fails" >> $RECERROR
 	   		sorry
@@ -186,13 +186,13 @@ case $# in
 	   		echo "Which frame width should be used (Pal-Standard MPEG-1 352, MPEG-2 720 )"
 	   		read choice
         	if [  -n "${choice}" ]; then
-           		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${choice}
+           		media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${choice}
   	    	else
   	    		echo "Frame width missing, exiting" >> $RECERROR
   				sorry
   			fi
   	   elif [ -n ${6} ] ;then
-	   		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}
+	   		media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}
   	   else
   	   		echo "Set width fails" >> $RECERROR
   	   		sorry
@@ -203,13 +203,13 @@ case $# in
 	   		echo "Which frame height should be used (Pal-Standard MPEG-1 288, MPEG-2 576)"
 	   		read choice
         	if [ -n "${choice}" ]; then
-           		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${choice}
+           		media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${choice}
   			else
   				echo "Frame height missing, exiting" >> $RECERROR
   				sorry
   			fi
   	   elif [ -n ${7} ] ;then
-	   		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}
+	   		media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}
   	   else
   	   		echo "Set Frame height fails" >> $RECERROR
   	   		sorry
@@ -220,18 +220,18 @@ case $# in
 	   		echo "Which compression format type mpeg1 | mpeg2 ?"
 	   		read choice
 	   		if [ "${choice}" = "mpeg1" ]; then
-	   			media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=mpeg1;
+	   			media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=mpeg1;
 	   		elif [ "${choice}" = "mpeg2" ]; then
-	   			media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=mpeg2;
+	   			media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=mpeg2;
 	   		elif [ -z "${choice}" ]; then
 	   			echo "Since you could not make up you mind using default MPEG-1"
-	   			media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=mpeg1;
+	   			media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=mpeg1;
 	   		fi
 	   elif [ -n "${8}"] ; then
 	    	if [ "${8}" = "1" ]; then
-	   			media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=mpeg1;
+	   			media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=mpeg1;
 	   		elif [ "${8}" = "2" ]; then
-	   			media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=mpeg2;
+	   			media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=mpeg2;
 	   		else
 	   			echo "Format not supported" >> $RECERROR
 	   			sorry
@@ -246,13 +246,13 @@ case $# in
 	   		echo "Which bitrate should be used (Pal MPEG-1 1.150.000, MPEG-2 3.000.000)"
 	   		read choice
         	if [ -n "${choice}" ]; then
-				media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${choice}
+				media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${choice}
 			else
 				echo "Bitrate missing" >> $RECERROR
   				sorry
   			fi
   	   	elif [ -n ${9} ] ;then
-	   		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}
+	   		media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}
   	   	else
   	   		echo "Bitrate fails" >> $RECERROR
   	   		sorry
@@ -263,13 +263,13 @@ case $# in
 	   		echo "Which peak bitrate should be used (Pal MPEG-1 1.150.000, MPEG-2 6.000.000)"
 	   		read choice
         	if [ -n "${choice}" ]; then
-				media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${choice}
+				media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${choice}
 			else
 				echo "Peak Bitrate missing" >> $RECERROR
   				sorry
   			fi
   	  	elif [ -n ${10} ] ;then
-  	   			media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}
+  	   			media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}
   	  	else
   	  		echo "Set bitrate fails" >> $RECERROR
   	   		sorry
@@ -280,13 +280,13 @@ case $# in
 	   		echo "Whhere to store recordings (e.g. records)"
 	   		read choice
         	if [ -n "${choice}" ]; then
-				media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${choice}
+				media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${choice}
 			else
 				echo "Records dir missing" >> $RECERROR
   				sorry
   			fi
   	  	elif [ -n ${11} ] ;then
-  	  		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}
+  	  		media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}
 		else
 			echo "Set storage directory fails" >> $RECERROR
   	   		sorry
@@ -297,13 +297,13 @@ case $# in
 	   		echo "Which file name should be used (you can use a free string)"
 	   		read choice
         	if [ -n "${choice}" ]; then
-           		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${choice}
+           		media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${choice}
   			else
   				echo "Missing file name, exiting"
   				sorry
   			fi
   	  	elif [ -n ${12} ] ;then
-  	  		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}
+  	  		media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}
   	  	else
   	  		echo "Set file name fails" >> $RECERROR
   	   		sorry
@@ -314,12 +314,12 @@ case $# in
 	   		echo "What is the serial create (date ""+20%y_%m_%d_%H_%M_%S_%s"")"
 	   		read choice
         	if [ -n "${choice}" ]; then
-        		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${choice}
+        		media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${choice}
   			else
-  				media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=`date +20%y_%m_%d_%H_%M_%S_%s`
+  				media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=`date +20%y_%m_%d_%H_%M_%S_%s`
   			fi
   		elif [ -n ${13} ] ;then
-  	  		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}
+  	  		media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}
   	  	else
   	  		echo "Set date fails" >> $RECERROR
   	   		sorry
@@ -330,14 +330,14 @@ case $# in
 	   		echo "What will be the duration of your recording (format HH:MM:SS)"
 	   		read choice
         	if [ -n "${choice}" ]; then
-        		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=${choice}
+        		media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=${choice}
   			else
   				echo "Recording without time limit"
-  				media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=0
+  				media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=0
   			fi
 
 		elif [ -n ${14} ] ;then
-  	  		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=${14}
+  	  		media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=${14}
   	  	else
   	  		echo "Set Maximal recordings file length fails" >> $RECERROR
   	   		sorry
@@ -348,14 +348,14 @@ case $# in
 	   		echo "What will be the file size of your recording (in KB)"
 	   		read choice
         	if [ -n "${choice}" ]; then
-        		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=${14}; maxsize=${choice}
+        		media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=${14}; maxsize=${choice}
   			else
   				echo "Recording without time limit"
-  				media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=${14}; maxsize=0
+  				media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=${14}; maxsize=0
   			fi
 
 		elif [ -n ${15} ] ;then
-  	  		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=${14}; maxsize=${15}
+  	  		media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=${14}; maxsize=${15}
   	  	else
   	  		echo "Set Maximal recordings file size fails" >> $RECERROR
   	   		sorry
@@ -366,14 +366,14 @@ case $# in
 	   		echo "What was the original beginning of the recorded program item (date time)"
 	   		read choice
         	if [ -n "${choice}" ]; then
-        		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=${14}; maxsize=${choice}; ostart=${choice}
+        		media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=${14}; maxsize=${choice}; ostart=${choice}
   			else
   				echo "Recording original beginning"
-  				media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=${14}; maxsize=0; ostart=o
+  				media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=${14}; maxsize=0; ostart=o
   			fi
 
 		elif [ -n ${16} ] ;then
-  	  		media=${1}; user=${2}; cip=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=${14}; maxsize=${15}; ostart=${16}
+  	  		media=${1}; user=${2}; hostname=${3}; d=${4}; ch=${5}; width=${6}; height=${7}; fo=${8}; bitrate=${9}; peakbitrate=${10}; store=${11}; fn=${12}; fcreate=${13}; flength=${14}; maxsize=${15}; ostart=${16}
   	  	else
   	  		echo "Set original program beginning fails" >> $RECERROR
   	   		sorry
@@ -407,24 +407,24 @@ debug () {
 	#fi
 	echo "...done "
 	echo "Commandline Params: "
-	echo " option 1 CAPTURETYPE (-t) ${1}] "  >> $RECDEBUG # TV or TAPE
-	echo " option 2 USER_NAME (-u) ${2}] "    >> $RECDEBUG
-	echo " option 3 CLIENTIP (-c) ${3}] "     >> $RECDEBUG
-	echo " option 4 DEVICEID (-d) ${4}] "     >> $RECDEBUG
-	echo " option 5 CHANNELID (-i) ${5}] "    >> $RECDEBUG
-	echo " option 6 WIDTH (-w) ${6}] "        >> $RECDEBUG
-	echo " option 7 HEIGHT (-g) ${7}] "       >> $RECDEBUG
-	echo " option 8 FORMAT (-a) ${8}] "       >> $RECDEBUG
-	echo " option 9 BITRATE (-b) ${9}] "      >> $RECDEBUG
-	echo " option 10 MAXBITRATE (-m) ${10}] " >> $RECDEBUG
-	echo " option 11 DIRECTORY (-s) ${11}] "  >> $RECDEBUG
-	echo " option 12 FILENAME (-f) ${12}] "   >> $RECDEBUG
-	echo " option 13 FILESERIAL (-z) ${13}] " >> $RECDEBUG
-	echo " option 14 LENGTH (-l) ${14}] "     >> $RECDEBUG
-	echo " option 15 MAXSIZE (-k) ${15}] "    >> $RECDEBUG
-	echo " option 16 OSTART (-o) ${16}] "     >> $RECDEBUG
+	echo " option 1 CAPTURETYPE (-t) ${1}] "    >> $RECDEBUG # TV or TAPE
+	echo " option 2 USER_NAME (-u) ${2}] "      >> $RECDEBUG
+	echo " option 3 CLIENTHOSTNAME (-c) ${3}] " >> $RECDEBUG
+	echo " option 4 DEVICEID (-d) ${4}] "       >> $RECDEBUG
+	echo " option 5 CHANNELID (-i) ${5}] "      >> $RECDEBUG
+	echo " option 6 WIDTH (-w) ${6}] "          >> $RECDEBUG
+	echo " option 7 HEIGHT (-g) ${7}] "         >> $RECDEBUG
+	echo " option 8 FORMAT (-a) ${8}] "         >> $RECDEBUG
+	echo " option 9 BITRATE (-b) ${9}] "        >> $RECDEBUG
+	echo " option 10 MAXBITRATE (-m) ${10}] "   >> $RECDEBUG
+	echo " option 11 DIRECTORY (-s) ${11}] "    >> $RECDEBUG
+	echo " option 12 FILENAME (-f) ${12}] "     >> $RECDEBUG
+	echo " option 13 FILESERIAL (-z) ${13}] "   >> $RECDEBUG
+	echo " option 14 LENGTH (-l) ${14}] "       >> $RECDEBUG
+	echo " option 15 MAXSIZE (-k) ${15}] "      >> $RECDEBUG
+	echo " option 16 OSTART (-o) ${16}] "       >> $RECDEBUG
 	 
-	echo "(1) media: $media | (2) user name: $user | (3) user ip: $cip | (4) device: $d | (5) channelID: $ch | (6) frame width: $width " \
+	echo "(1) media: $media | (2) user name: $user | (3) user hostname: $hostname | (4) device: $d | (5) channelID: $ch | (6) frame width: $width " \
 		 " | (7) frame height: $height | (8) compression: ${fo}| (9) bitrate: $bitrate | (10) peak bitrate: $peakbitrate | (11) storage dir: $store " \
 		 " | (12) free name: ${fn} | (13) fileserial: $fcreate | (14) limit Length: $flength | (15) limit Size: $maxsize | (16) orig beginning: $ostart" 
 	echo "Startup record name: ${RECNAME}" > $RECORDLOG

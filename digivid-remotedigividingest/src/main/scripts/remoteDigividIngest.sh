@@ -3,7 +3,7 @@
 source $HOME/services/conf/vhs-ingest/remoteDigividIngest.conf
 
 # Get parameters
-ARGS=$(getopt -l "fileDir:,filename:,comments:,quality:,encoderIP:,startDate:,endDate:,channelLabel:,channelID:,captureFormat:,username:" -n "remoteDigividIngest.sh" -- "$@");
+ARGS=$(getopt -l "fileDir:,filename:,comments:,quality:,encoderName:,startDate:,endDate:,channelLabel:,channelID:,captureFormat:,username:" -n "remoteDigividIngest.sh" -- "$@");
 
 #Bad arguments
 if [ $? -ne 0 ];
@@ -34,7 +34,7 @@ while true; do
       QUALITY="$1"
       shift;
       ;;
-    --encoderIP)
+    --encoderName)
       shift;
       ENCODER="$1"
       shift;

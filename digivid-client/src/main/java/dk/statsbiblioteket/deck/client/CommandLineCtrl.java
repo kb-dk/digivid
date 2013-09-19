@@ -43,19 +43,19 @@ import java.util.List;
 
 public class CommandLineCtrl {
     static Logger log = Logger.getLogger(CommandLineCtrl.class.getName());
-    private String encoderIP;
+    private String encoderName;
     private String unix_command;
     final int encoderRMIport = Constants.DEFAULT_RMI_CLIENT_PORT ;
     private boolean is_daemon = false;
     private Integer[] returncodes;
     private String[] arguments;
 
-    public CommandLineCtrl(String encoderIP, String unix_command, boolean is_daemon, Integer... returncodes) {
+    public CommandLineCtrl(String encoderName, String unix_command, boolean is_daemon, Integer... returncodes) {
         this.returncodes = returncodes;
-        if (encoderIP == null) {
-            throw new RuntimeException("Attempt to create GenericCtrl with null encoderIP");
+        if (encoderName == null) {
+            throw new RuntimeException("Attempt to create GenericCtrl with null encoderName");
         }
-       this.encoderIP = encoderIP;
+       this.encoderName = encoderName;
        this.unix_command = unix_command;
        this.is_daemon = is_daemon;
         if (returncodes == null || returncodes.length == 0){
@@ -65,12 +65,12 @@ public class CommandLineCtrl {
     }
 
 
-    public CommandLineCtrl(String encoderIP, String unix_command, Integer... returncodes) {
-       this(encoderIP, unix_command, false, returncodes);
+    public CommandLineCtrl(String encoderName, String unix_command, Integer... returncodes) {
+       this(encoderName, unix_command, false, returncodes);
     }
 
-    public CommandLineCtrl(String encoder_ip, String unix_command, boolean b, String[] arguments, Integer[] returnCodes) {
-        this(encoder_ip, unix_command, b, returnCodes);
+    public CommandLineCtrl(String encoderName, String unix_command, boolean b, String[] arguments, Integer[] returnCodes) {
+        this(encoderName, unix_command, b, returnCodes);
         this.arguments = arguments;
     }
 
@@ -85,7 +85,7 @@ public class CommandLineCtrl {
 
         LocateRegistry.getRegistry (encoderRMIport);
 
-        String name = "//" + encoderIP + ":" +encoderRMIport+ "/Compute";
+        String name = "//" + encoderName + ":" +encoderRMIport+ "/Compute";
         System.out.println("Client looks up name address: " + name);
         log.debug("Client looks up name address: " + name);
         
@@ -126,7 +126,7 @@ public class CommandLineCtrl {
     @Override
     public String toString() {
         return "GenericCtrl{" +
-                "encoderIP='" + encoderIP + '\'' +
+                "encoderName='" + encoderName + '\'' +
                 ", unix_command='" + unix_command + '\'' +
                 ", encoderRMIport=" + encoderRMIport +
                 ", is_daemon=" + is_daemon +

@@ -112,7 +112,7 @@ public class ControlServlet extends HttpServlet {
         stopPreview(request, response, params);
         String unix_command = Constants.STREAMER_BINDIR + "/" + Constants.STREAMER_STARTCOMMAND +
                 " -d " + params.getCard_name() + " -p " + params.getStream_port();
-        startUnixDaemon(params.getEncoder_IP(), unix_command);
+        startUnixDaemon(params.getEncoderName(), unix_command);
         request.setAttribute(STREAM_URL_ATTR, getStreamUrl(params));
         request.setAttribute(CARDS_ATTR, params.getCard_name());
         request.setAttribute(PAGE_ATTR, PLAY_JSP);
@@ -152,7 +152,7 @@ public class ControlServlet extends HttpServlet {
 
 
         unix_command = Constants.RECORDER_BINDIR + "/start_recording.sh " + unixParams;
-        startUnixDaemon(params.getEncoder_IP(), unix_command);
+        startUnixDaemon(params.getEncoderName(), unix_command);
 
         //Create comments file
         Comments commentsStructure = WebParams.createCommentsFromParams(params,new File(recordFile));
@@ -184,7 +184,7 @@ public class ControlServlet extends HttpServlet {
         File file = new File(dir, params.getFile_name());
         String unix_command = Constants.STREAMER_BINDIR + "/" + Constants.STREAMER_STARTCOMMAND +
                 " -f " + file.getAbsolutePath() + " -p " + params.getStream_port();
-        startUnixDaemon(params.getEncoder_IP(), unix_command);
+        startUnixDaemon(params.getEncoderName(), unix_command);
         unix_command = Constants.RECORDER_BINDIR + "/get_mpeg_file_length " + file.getAbsolutePath();
         List<String> result = runUnixCommand(params,unix_command);
 
@@ -197,7 +197,7 @@ public class ControlServlet extends HttpServlet {
 
 
     private String getStreamUrl(WebParams params) {
-        return "http://" + params.getEncoder_IP() + ":" + params.getStream_port();
+        return "http://" + params.getEncoderName() + ":" + params.getStream_port();
     }
 
     private void stopPlayback(HttpServletRequest request, HttpServletResponse response, WebParams params) {
@@ -244,8 +244,8 @@ public class ControlServlet extends HttpServlet {
 
     }
 
-    public static List<String> runUnixCommand(String encoderIP, String unix_command, Integer... returnCodes) {
-        CommandLineCtrl ctrl = new CommandLineCtrl(encoderIP, unix_command, false,returnCodes);
+    public static List<String> runUnixCommand(String encoderName, String unix_command, Integer... returnCodes) {
+        CommandLineCtrl ctrl = new CommandLineCtrl(encoderName, unix_command, false,returnCodes);
         try {
             return ctrl.execute();
         } catch (RemoteException e) {
@@ -253,8 +253,8 @@ public class ControlServlet extends HttpServlet {
         }
     }
 
-    public static void startUnixDaemon(String encoderIP, String unix_command) {
-        CommandLineCtrl ctrl = new CommandLineCtrl(encoderIP, unix_command, true);
+    public static void startUnixDaemon(String encoderName, String unix_command) {
+        CommandLineCtrl ctrl = new CommandLineCtrl(encoderName, unix_command, true);
         try {
             ctrl.execute();
         } catch (RemoteException e) {
@@ -264,7 +264,7 @@ public class ControlServlet extends HttpServlet {
 
     public static List<String> runUnixCommandWithArgs(WebParams params, String unix_command,
                                                       String[] arguments, Integer... returnCodes) {
-        CommandLineCtrl ctrl = new CommandLineCtrl(params.getEncoder_IP(), unix_command, false,arguments, returnCodes);
+        CommandLineCtrl ctrl = new CommandLineCtrl(params.getEncoderName(), unix_command, false,arguments, returnCodes);
         try {
             return ctrl.execute();
         } catch (RemoteException e) {
@@ -275,13 +275,13 @@ public class ControlServlet extends HttpServlet {
 
 
     public static List<String> runUnixCommand(WebParams params, String unix_command, Integer... returnCodes) {
-        return runUnixCommand(params.getEncoder_IP(),unix_command,returnCodes);
+        return runUnixCommand(params.getEncoderName(),unix_command,returnCodes);
     }
 
     private static void createCommentsFile(WebParams params, File file, Comments commentsStructure) {
         FileCreator task = new FileCreator(file.getName(), commentsStructure.toJSon());
         try {
-            Object result = new GenericCtrl(params.getEncoder_IP(), task).execute();
+            Object result = new GenericCtrl(params.getEncoderName(), task).execute();
         } catch (RemoteException e1) {
             throw new RuntimeException(e1);
         }
@@ -290,30 +290,15 @@ public class ControlServlet extends HttpServlet {
     private static String filenameFromParams(WebParams params) {
         String startTimeBart = getFilenameDateFormat().format((new Date(params.getStart_time_ms())));
         String endTimeBart = getFilenameDateFormat().format(new Date(params.getStop_time_ms()));
-        String host = getHostname(params.getEncoder_IP());
+        String host = params.getEncoderName();
         return lognames.get(params.getChannel_label()) + "_digivid_" + params.getChannel_label() +
                 "_" + params.getCapture_format() + "_" + startTimeBart + "_" + endTimeBart +
                 "_" + host + ".mpeg";
     }
 
-    private static String getHostname(String encoder_ip) {
-
-        String host;
-        try {
-            InetAddress addr = InetAddress.getByName(encoder_ip);
-            host = addr.getHostName();
-        } catch (UnknownHostException e) {
-            return encoder_ip;
-        }
-        if (host == null){
-            return encoder_ip;
-        }
-        return host;
-    }
-
     private static void renameFile(WebParams params, String file, String new_file) {
         CommandLineCtrl ctrl;//rename the log file
-        ctrl = new CommandLineCtrl(params.getEncoder_IP(), "mv " + file + " " + new_file,0,1);
+        ctrl = new CommandLineCtrl(params.getEncoderName(), "mv " + file + " " + new_file,0,1);
         try {
             ctrl.execute();
         } catch (RemoteException e) {

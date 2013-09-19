@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class FSCtrl {
 
-    //"start","record",userName,clientHostIP,encoderIP,cardName,captureFormat,captureLength,captureSize,fileName
+    //"start","record",userName,clientHostName,encoderName,cardName,captureFormat,captureLength,captureSize,fileName
 
     static Logger log = Logger.getLogger(FSCtrl.class.getName());
 
@@ -37,8 +37,8 @@ public class FSCtrl {
     private String command;
     private String recordType;
     private String userName;
-    private String clientHostIP;
-    private String encoderIP;
+    private String clientHostName;
+    private String encoderName;
     private int cardName;
     private String channelID;
     private int frameWidth;
@@ -56,10 +56,10 @@ public class FSCtrl {
 
     /**
      *
-     * @param encoderIP
+     * @param encoderName
      */
-    public FSCtrl(String encoderIP) {
-        this.encoderIP = encoderIP;
+    public FSCtrl(String encoderName) {
+        this.encoderName = encoderName;
         this.extension = Constants.DEFAULT_EXTENSION;
 
         //log.debug("File Name" + fileName);
@@ -71,8 +71,8 @@ public class FSCtrl {
      */
      public FSCtrl(String recordType,
                    String userName,
-                   String clientHostIP,
-                   String encoderIP,
+                   String clientHostName,
+                   String encoderName,
                    int cardName,
                    String channelID,
                    String fileName,
@@ -83,8 +83,8 @@ public class FSCtrl {
 
         this.recordType = recordType;
         this.userName = userName;
-        this.clientHostIP = clientHostIP;
-        this.encoderIP = encoderIP;
+        this.clientHostName = clientHostName;
+        this.encoderName = encoderName;
         this.cardName = cardName;
         this.channelID = channelID;
         this.fileName = fileName;
@@ -94,12 +94,12 @@ public class FSCtrl {
         this.captureSize= captureSize;
 
         log.debug("RMI_Port: " + encoderRMIport);
-        log.debug("RMI_IP: " + encoderIP);
+        log.debug("RMI_HOST: " + encoderName);
         log.debug("Recording started on Encoder: " + command);
         log.debug("Recording Type: " + recordType);
         log.debug("Recording Person: " + userName);
-        log.debug("Recording started from Host_IP: " + clientHostIP);
-        log.debug("Recording started on Encoder: " + encoderIP);
+        log.debug("Recording started from Hostname: " + clientHostName);
+        log.debug("Recording started on Encoder: " + encoderName);
         log.debug("Recording started on Device: " + cardName);
         log.debug("Recording File name: " + fileName);
         log.debug("Recording Serial: " + recordSerial);
@@ -116,7 +116,7 @@ public class FSCtrl {
 
         LocateRegistry.getRegistry (encoderRMIport);
 
-        String name = "//" + encoderIP + ":" +encoderRMIport+ "/Compute";
+        String name = "//" + encoderName + ":" +encoderRMIport+ "/Compute";
         System.out.println("Client looks up name address: " + name);
 
         Compute comp = null;
@@ -159,7 +159,7 @@ public class FSCtrl {
 
         LocateRegistry.getRegistry (encoderRMIport);
 
-        String name = "//" + encoderIP + ":" +encoderRMIport+ "/Compute";
+        String name = "//" + encoderName + ":" +encoderRMIport+ "/Compute";
         System.out.println("Client looks up name address: " + name);
 
         Compute comp = null;
@@ -214,7 +214,7 @@ public class FSCtrl {
 
         LocateRegistry.getRegistry (encoderRMIport);
 
-        String name = "//" + encoderIP + ":" +encoderRMIport+ "/Compute";
+        String name = "//" + encoderName + ":" +encoderRMIport+ "/Compute";
         System.out.println("Client looks up name address: " + name);
 
         Compute comp = null;

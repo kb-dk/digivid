@@ -2,17 +2,13 @@
 <%@ page import="java.net.InetAddress" %>
 
 <script type="text/javascript">
-    function loadEncoderIP() {
-        document.preview_form.<%=WebConstants.ENCODER_IP_PARAM%>.value = document.nav_form.<%=WebConstants.ENCODER_IP_PARAM%>.value;
+    function loadEncoderName() {
+        document.preview_form.<%=WebConstants.ENCODER_NAME_PARAM%>.value = document.nav_form.<%=WebConstants.ENCODER_NAME_PARAM%>.value;
         }
 </script>
 
 <%
-    String encoder_name = request.getParameter(WebConstants.ENCODER_NAME_PARAM);
-    String encoderIP = null;
-    if (encoder_name != null) {
-        encoderIP = InetAddress.getByName(encoder_name).getHostAddress();
-    }
+    String encoderName = request.getParameter(WebConstants.ENCODER_NAME_PARAM);
 %>
 
 <form name="preview_form" action="Control" method="post" >
@@ -21,8 +17,7 @@
     <input type="hidden" name="<%=WebConstants.INPUT_CHANNEL_ID_PARAM%>" value="SB-Tape1"/>
     <input type="hidden" name="<%=WebConstants.STREAM_PROTOCOL_PARAM%>" value="HTTP"/>
     <input type="hidden" name="<%=WebConstants.STREAM_PORT_HTTP_PARAM%>" value="9001"/>
-    <input type="hidden" name="<%=WebConstants.ENCODER_IP_PARAM%>" value="<%=encoderIP%>"/>
-    <input type="hidden" name="<%=WebConstants.ENCODER_NAME_PARAM%>" value="<%=encoder_name%>"/>
+    <input type="hidden" name="<%=WebConstants.ENCODER_NAME_PARAM%>" value="<%=encoderName%>"/>
     <input type="submit" name="<%=WebConstants.CONTROL_COMMAND_PARAM%>" value="<%=WebConstants.START_PREVIEW%>" />
 </form>
 

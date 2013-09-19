@@ -91,7 +91,7 @@ function handleResponse(st, doc) {
 	// get a reference to the multiple select list, which we will populate
 	// with the data from the document loaded in the IFRAME
     //var namesEl = document.forms.stateForm.zipNames
-//    var namesEl = document.forms.stateForm.encoderIP
+//    var namesEl = document.forms.stateForm.encoderName
 
 	// clear earlier records from the multiple select list
 //	namesEl.length = 0

@@ -3,6 +3,10 @@
 ## Version 1.3-SNAPSHOT
 ### Changes
 Source configuration in the remote script and package consistent with vhs-ingest-workflow deployment
+Accept empty value for local part of file name
+Use hostname instead of IP everywhere
+### News for installation/configuration
+Please run script "Deck/bin/migrate_1.2-1.3.sh" in records directory to update files from IPs to hostnames.
 
 ## Version 1.2
 ### Changes

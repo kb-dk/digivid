@@ -33,12 +33,12 @@ ARGS=$*
 if [ $# -eq "$NO_ARGS" ] # Script invoked with no arguments
 then 
         echo "Usage: `basename $0` options (rtscdfpnmh)"
-        echo "streamctrl -r <run play|stop> -t <streamtype devUDP> -c <clientIP IP> -d <device 0|1|2> -p <port 123|n> -m <media tv|tape>" >&2
-        echo "streamctrl -r <run replay|stop> -t <streamtype fileUDP> -c <IP>  -f <fileinputname filename.mpg> -p <port 123|n>" >&2
-        echo "streamctrl -r <run play|stop> -t <streamtype devHTTP> -s <serverIP> -d <device 0|1|2> -p <port 8|n> -m <media tv|tape>" >&2
-        echo "streamctrl -r <run replay|stop> -t <streamtype fileHTTP> -s <serverIP> -p <port 8|n> -f <filename.mpg>" >&2
-        echo "streamctrl -r <run play|stop> -t <streamtype devRTP> -s <serverIP> -c <clientIP> -d <device 0|1|2> -p <port 123|n> -n <streamname> -m <media tv|tape>" >&2
-        echo "streamctrl -r <run replay|stop> -t <streamtype fileRTP> -s <serverIP> -c <clientIP> -d <device 0|1|2> -p <port 8|n> -f <filename filename.mpg> -n <streamname> " >&2
+        echo "streamctrl -r <run play|stop> -t <streamtype devUDP> -c <client hostname> -d <device 0|1|2> -p <port 123|n> -m <media tv|tape>" >&2
+        echo "streamctrl -r <run replay|stop> -t <streamtype fileUDP> -c <hostname>  -f <fileinputname filename.mpg> -p <port 123|n>" >&2
+        echo "streamctrl -r <run play|stop> -t <streamtype devHTTP> -s <serverName> -d <device 0|1|2> -p <port 8|n> -m <media tv|tape>" >&2
+        echo "streamctrl -r <run replay|stop> -t <streamtype fileHTTP> -s <serverName> -p <port 8|n> -f <filename.mpg>" >&2
+        echo "streamctrl -r <run play|stop> -t <streamtype devRTP> -s <serverName> -c <clientName> -d <device 0|1|2> -p <port 123|n> -n <streamname> -m <media tv|tape>" >&2
+        echo "streamctrl -r <run replay|stop> -t <streamtype fileRTP> -s <serverName> -c <clientName> -d <device 0|1|2> -p <port 8|n> -f <filename filename.mpg> -n <streamname> " >&2
   
 fi
 
@@ -49,21 +49,21 @@ do
         case $Option in
 	r) echo " option -r [OPTIND=${OPTIND}] \"$OPTARG\""; RUN=$OPTARG;;
         t) echo " option -t [OPTIND=${OPTIND}] \"$OPTARG\""; STREAMTYPE=$OPTARG;;
-        s) echo " option -s [OPTIND=${OPTIND}] \"$OPTARG\""; HTTP_RTP_SERVERIP=$OPTARG;;
-        c) echo " option -c [OPTIND=${OPTIND}] \"$OPTARG\""; UDP_RTP_CLIENTIP=$OPTARG;;
-        d) echo " option -d [OPTIND=${OPTIND}] \"$OPTARG\""; ENCODE_DEVICEID=$OPTARG;; 
+        s) echo " option -s [OPTIND=${OPTIND}] \"$OPTARG\""; HTTP_RTP_SERVERNAME=$OPTARG;;
+        c) echo " option -c [OPTIND=${OPTIND}] \"$OPTARG\""; UDP_RTP_CLIENTNAME=$OPTARG;;
+        d) echo " option -d [OPTIND=${OPTIND}] \"$OPTARG\""; ENCODE_DEVICEID=$OPTARG;;
         p) echo " option -p [OPTIND=${OPTIND}] \"$OPTARG\""; PORT=$OPTARG;;
         f) echo " option -f [OPTIND=${OPTIND}] \"$OPTARG\""; FILEINPUTNAME=$OPTARG;;
         n) echo " option -n [OPTIND=${OPTIND}] \"$OPTARG\""; RTP_STREAMNAME=$OPTARG;;
         m) echo " option -m [OPTIND=${OPTIND}] \"$OPTARG\""; MEDIA=$OPTARG;;
         h)
 	echo "Usage: `basename $0` options (rtscdfpnmh)"
-        echo "streamctrl -r <run play|stop> -t <streamtype: devUDP> -c <clientIP: IP> -d <device: 0|1|2> -p <port: 123|n> -m <media: tv|tape>" >&2
-        echo "streamctrl -r <run replay|stop> -t <streamtype: fileUDP> -c <IP>  -f <fileinputname: eg. filename.mpg> -p <port: 123|n>" >&2
-        echo "streamctrl -r <run play|stop> -t <streamtype: devHTTP> -s <serverIP> -d <device: 0|1|2> -p <port 8|n> -m <media: tv|tape>" >&2
-        echo "streamctrl -r <run replay|stop> -t <streamtype: fileHTTP> -s <serverIP> -p <port: 8|n> -f <fileinputname: eg.filename.mpg>" >&2
-        echo "streamctrl -r <run play|stop> -t <streamtype: devRTP> -s <serverIP> -c <clientIP> -d <device 0|1|2> -p <port: 123|n> -n <streamname: eg vhs.sdp> -m <media: tv|tape>" >&2
-        echo "streamctrl -r <run replay|stop> -t <streamtype: fileRTP> -s <serverIP> -c <clientIP> -d <device 0|1|2> -p <port: 8|n> -f <filename: eg. filename.mpg> -n <streamname> " >&2
+        echo "streamctrl -r <run play|stop> -t <streamtype: devUDP> -c <client hostname> -d <device: 0|1|2> -p <port: 123|n> -m <media: tv|tape>" >&2
+        echo "streamctrl -r <run replay|stop> -t <streamtype: fileUDP> -c <hostname>  -f <fileinputname: eg. filename.mpg> -p <port: 123|n>" >&2
+        echo "streamctrl -r <run play|stop> -t <streamtype: devHTTP> -s <serverName> -d <device: 0|1|2> -p <port 8|n> -m <media: tv|tape>" >&2
+        echo "streamctrl -r <run replay|stop> -t <streamtype: fileHTTP> -s <serverName> -p <port: 8|n> -f <fileinputname: eg.filename.mpg>" >&2
+        echo "streamctrl -r <run play|stop> -t <streamtype: devRTP> -s <serverName> -c <clientName> -d <device 0|1|2> -p <port: 123|n> -n <streamname: eg vhs.sdp> -m <media: tv|tape>" >&2
+        echo "streamctrl -r <run replay|stop> -t <streamtype: fileRTP> -s <serverName> -c <clientName> -d <device 0|1|2> -p <port: 8|n> -f <filename: eg. filename.mpg> -n <streamname> " >&2
 	exit 1 ;;
         *) echo "Unimplemented option choosen. $OPTION"
         exit 1
@@ -122,24 +122,24 @@ esac
 case "$STREAMTYPE" in
         devUDP)
         ## !!!!!!!!!!!  change -1 if you have a second card  !!!!!!!!!!!!!!	
-        STREAMER_OPTIONS="$STREAMTYPE $UDP_RTP_CLIENTIP $ENCODE_DEVICEID $PORT $MEDIA"
+        STREAMER_OPTIONS="$STREAMTYPE $UDP_RTP_CLIENTNAME $ENCODE_DEVICEID $PORT $MEDIA"
     ;;
         fileUDP)
-	STREAMER_OPTIONS="$STREAMTYPE $UDP_RTP_CLIENTIP $FILEINPUTNAME $PORT"
+	STREAMER_OPTIONS="$STREAMTYPE $UDP_RTP_CLIENTNAME $FILEINPUTNAME $PORT"
     ;;
         devHTTP)
         ## !!!!!!!!!!!  change -1 if you have a second card  !!!!!!!!!!!!!!	
-        STREAMER_OPTIONS="$STREAMTYPE $HTTP_RTP_SERVERIP $ENCODE_DEVICEID $PORT $MEDIA"
+        STREAMER_OPTIONS="$STREAMTYPE $HTTP_RTP_SERVERNAME $ENCODE_DEVICEID $PORT $MEDIA"
         echo "$MEDIA"
     ;;
         fileHTTP)
-	 STREAMER_OPTIONS="$STREAMTYPE $HTTP_RTP_SERVERIP $FILEINPUTNAME $PORT"
+	 STREAMER_OPTIONS="$STREAMTYPE $HTTP_RTP_SERVERNAME $FILEINPUTNAME $PORT"
     ;;
         devRTP)
-	STREAMER_OPTIONS="$STREAMTYPE $HTTP_RTP_SERVERIP $UDP_RTP_CLIENTIP $ENCODE_DEVICEID $PORT $RTP_STREAMNAME $MEDIA"
+	STREAMER_OPTIONS="$STREAMTYPE $HTTP_RTP_SERVERNAME $UDP_RTP_CLIENTNAME $ENCODE_DEVICEID $PORT $RTP_STREAMNAME $MEDIA"
     ;;    
         fileRTP)
-        STREAMER_OPTIONS="$STREAMTYPE $HTTP_RTP_SERVERIP $UDP_RTP_CLIENTIP $FILEINPUTNAME $PORT $RTP_STREAMNAME"
+        STREAMER_OPTIONS="$STREAMTYPE $HTTP_RTP_SERVERNAME $UDP_RTP_CLIENTNAME $FILEINPUTNAME $PORT $RTP_STREAMNAME"
     ;;    
         *)
         echo "Stream type not supported, exiting: ${OPPTIND}"
@@ -262,12 +262,12 @@ case "$RUN" in
     ;;
 *)
  	echo "Usage: `basename $0` options (rtscdfpnmh)"
-        echo "streamctrl -r <run play|stop> -t <streamtype devUDP> -c <clientIP IP> -d <device 0|1|2> -p <port 123|n> -m <media tv|tape>" >&2
-        echo "streamctrl -r <run replay|stop> -t <streamtype fileUDP> -c <IP>  -f <fileinputname filename.mpg> -p <port 123|n>" >&2
-        echo "streamctrl -r <run play|stop> -t <streamtype devHTTP> -s <serverIP> -d <device 0|1|2> -p <port 8|n> -m <media tv|tape>" >&2
-        echo "streamctrl -r <run replay|stop> -t <streamtype fileHTTP> -s <serverIP> -p <port 8|n> -f <filename.mpg>" >&2
-        echo "streamctrl -r <run play|stop> -t <streamtype devRTP> -s <serverIP> -c <clientIP> -d <device 0|1|2> -p <port 123|n> -n <streamname> -m <media tv|tape>" >&2
-        echo "streamctrl -r <run replay|stop> -t <streamtype fileRTP> -s <serverIP> -c <clientIP> -d <device 0|1|2> -p <port 8|n> -f <filename filename.mpg> -n <streamname> " >&2
+        echo "streamctrl -r <run play|stop> -t <streamtype devUDP> -c <client hostname> -d <device 0|1|2> -p <port 123|n> -m <media tv|tape>" >&2
+        echo "streamctrl -r <run replay|stop> -t <streamtype fileUDP> -c <hostname>  -f <fileinputname filename.mpg> -p <port 123|n>" >&2
+        echo "streamctrl -r <run play|stop> -t <streamtype devHTTP> -s <serverName> -d <device 0|1|2> -p <port 8|n> -m <media tv|tape>" >&2
+        echo "streamctrl -r <run replay|stop> -t <streamtype fileHTTP> -s <serverName> -p <port 8|n> -f <filename.mpg>" >&2
+        echo "streamctrl -r <run play|stop> -t <streamtype devRTP> -s <serverName> -c <clientName> -d <device 0|1|2> -p <port 123|n> -n <streamname> -m <media tv|tape>" >&2
+        echo "streamctrl -r <run replay|stop> -t <streamtype fileRTP> -s <serverName> -c <clientName> -d <device 0|1|2> -p <port 8|n> -f <filename filename.mpg> -n <streamname> " >&2
 
 exit 1
 ;;

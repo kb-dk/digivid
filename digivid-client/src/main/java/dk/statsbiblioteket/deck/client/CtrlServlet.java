@@ -33,8 +33,8 @@ public class CtrlServlet extends HttpServlet {
     private static Logger log;
     private String pageTitle = "summary parameter";
     private String ctrlCommand;
-    private String clientHostIP;
-    private String encoderIP;
+    private String clientHostName;
+    private String encoderName;
     private int cardName=0;
     private int frameWidth=0;
     private int frameHeight=0;
@@ -86,8 +86,8 @@ public class CtrlServlet extends HttpServlet {
         out.println("<INPUT TYPE=\"HIDDEN\" NAME=\"pageTitle\" VALUE=\""+pageTitle+"\">\n");
         out.println("<INPUT TYPE=\"HIDDEN\" NAME=\"media\" VALUE=\""+media+"\">\n");
         out.println("<INPUT TYPE=\"HIDDEN\" NAME=\"userName\" VALUE=\""+userName+"\">\n");
-        out.println("<INPUT TYPE=\"HIDDEN\" NAME=\"clientHostIP\" VALUE=\""+clientHostIP+"\">\n");
-        out.println("<INPUT TYPE=\"HIDDEN\" NAME=\"encoderIP\" VALUE=\""+encoderIP+"\">\n");
+        out.println("<INPUT TYPE=\"HIDDEN\" NAME=\"clientHostName\" VALUE=\""+ clientHostName +"\">\n");
+        out.println("<INPUT TYPE=\"HIDDEN\" NAME=\"encoderName\" VALUE=\""+ encoderName +"\">\n");
         out.println("<INPUT TYPE=\"HIDDEN\" NAME=\"cardName\" VALUE=\""+cardName+"\">\n");
         out.println("<INPUT TYPE=\"HIDDEN\" NAME=\"inputChannelID\" VALUE=\""+inputChannelID+"\">\n");
         out.println("<INPUT TYPE=\"HIDDEN\" NAME=\"captureFormat\" VALUE=\""+captureFormat+"\">\n");
@@ -147,10 +147,10 @@ public class CtrlServlet extends HttpServlet {
                     ctrlCommand = paramValue;
                 }
                 if (request.getRemoteHost()!= null) {
-                    clientHostIP = request.getRemoteHost();
+                    clientHostName = request.getRemoteHost();
                 }
-                if (paramName.equalsIgnoreCase("encoderIP")) {
-                    encoderIP = paramValue;
+                if (paramName.equalsIgnoreCase("encoderName")) {
+                    encoderName = paramValue;
                 }
                 if (paramName.equalsIgnoreCase("userName")) {
                     userName = paramValue;
@@ -245,10 +245,10 @@ public class CtrlServlet extends HttpServlet {
         //the streamserver address and the file to stream
         if (streamProtocol.equalsIgnoreCase("UDP"))out.println("target=\"udp://@:"+streamPortUDP+ "\" />");
         log.debug("stream target=\"udp://@:"+streamPortUDP+ "\" />");
-        if (streamProtocol.equalsIgnoreCase("HTTP"))out.println("target=\"http://" + encoderIP + ":"+streamPortHTTP+"/"+streamName+"\" />");
-        log.debug("stream target=\"http://" + encoderIP + ":" +streamPortHTTP+ "/" +streamName + "\"");
-        if (streamProtocol.equalsIgnoreCase("RTP"))out.println("target=\"rtsp://" + encoderIP + ":"+streamPortRTP+"/"+streamName+"\" />");
-        log.debug("target=\"rtsp://" + encoderIP + ":"+streamPortRTP+"/"+streamName+"\"");
+        if (streamProtocol.equalsIgnoreCase("HTTP"))out.println("target=\"http://" + encoderName + ":"+streamPortHTTP+"/"+streamName+"\" />");
+        log.debug("stream target=\"http://" + encoderName + ":" +streamPortHTTP+ "/" +streamName + "\"");
+        if (streamProtocol.equalsIgnoreCase("RTP"))out.println("target=\"rtsp://" + encoderName + ":"+streamPortRTP+"/"+streamName+"\" />");
+        log.debug("target=\"rtsp://" + encoderName + ":"+streamPortRTP+"/"+streamName+"\"");
         out.println("<br/>");
         out.println("<a href=\"javascript:;\" onclick='document.video1.play()'>Play</a>");
         out.println("<a href=\"javascript:;\" onclick='document.video1.pause()'>Pause</a>");
@@ -272,10 +272,10 @@ public class CtrlServlet extends HttpServlet {
         // recording
         if (ctrlCommand.equalsIgnoreCase("start_record")) {
 
-            if ((media != null )|| (encoderIP != null) || (clientHostIP != null) || (userName != null) || (password != null) || (origStartDate !=null) || (origStartTime !=null)) {
+            if ((media != null )|| (encoderName != null) || (clientHostName != null) || (userName != null) || (password != null) || (origStartDate !=null) || (origStartTime !=null)) {
                 //todo check username/password
 
-                RecorderCtrl rctlr = new RecorderCtrl("start",media,userName,clientHostIP,encoderIP,cardName,inputChannelID,captureFormat,fileName,_origStartDate,_captureTime,captureSize);
+                RecorderCtrl rctlr = new RecorderCtrl("start",media,userName, clientHostName, encoderName,cardName,inputChannelID,captureFormat,fileName,_origStartDate,_captureTime,captureSize);
                 recordSerial = rctlr.remoteControl();
 
                 //System.out.println("StartTime: " + startTime);
@@ -293,7 +293,7 @@ public class CtrlServlet extends HttpServlet {
                 log.error("Missing parameter - start_record failed, Exiting");
             }
         } else if (ctrlCommand.equalsIgnoreCase("info_progress")) {
-                FSCtrl fsctlr = new FSCtrl(media,userName,clientHostIP,encoderIP,cardName,inputChannelID,fileName,recordSerial,_origStartDate,_captureTime,captureSize);
+                FSCtrl fsctlr = new FSCtrl(media,userName, clientHostName, encoderName,cardName,inputChannelID,fileName,recordSerial,_origStartDate,_captureTime,captureSize);
                 Integer percentage = fsctlr.getProgress();
                 System.out.println("Percentage: " + percentage);
 
@@ -311,8 +311,8 @@ public class CtrlServlet extends HttpServlet {
         } else if (ctrlCommand.equalsIgnoreCase("stop_record")) {
 
             //todo check username/password
-            if ((media != null) || (encoderIP != null) || (clientHostIP != null) || (userName != null) || (password != null)) {
-                RecorderCtrl rctlr = new RecorderCtrl("stop",media,userName,clientHostIP,encoderIP,cardName,inputChannelID,captureFormat,fileName,_origStartDate,_captureTime,captureSize);
+            if ((media != null) || (encoderName != null) || (clientHostName != null) || (userName != null) || (password != null)) {
+                RecorderCtrl rctlr = new RecorderCtrl("stop",media,userName, clientHostName, encoderName,cardName,inputChannelID,captureFormat,fileName,_origStartDate,_captureTime,captureSize);
                 rctlr.remoteControl();
                 out.println("</TD></TR>\n");
                 out.println("</TABLE>\n");
@@ -328,8 +328,8 @@ public class CtrlServlet extends HttpServlet {
         if (ctrlCommand.equalsIgnoreCase("play")) {
             if (streamProtocol.equalsIgnoreCase("UDP")) {
 
-                if ((streamPortUDP != 0) || (clientHostIP != null) || (media != null)) {
-                    StreamServerCtrl ssctlr = new StreamServerCtrl("play","devUDP",null,clientHostIP,encoderIP,cardName,null,streamPortUDP,null,media);
+                if ((streamPortUDP != 0) || (clientHostName != null) || (media != null)) {
+                    StreamServerCtrl ssctlr = new StreamServerCtrl("play","devUDP",null, clientHostName, encoderName,cardName,null,streamPortUDP,null,media);
                     ssctlr.remoteControl();
 
                     out.println("<TR><TD COLSPAN=\"2\" ALIGN=\"RIGHT\" BGCOLOR=\"RED\">\n");
@@ -359,10 +359,10 @@ public class CtrlServlet extends HttpServlet {
 
             } else if (streamProtocol.equalsIgnoreCase("HTTP")) {
 
-                if ((encoderIP != null) || (media != null) || (streamPortHTTP != 0)) {
-                    StreamServerCtrl ssctlr = new StreamServerCtrl("play","devHTTP",encoderIP,null,encoderIP,cardName,null,streamPortHTTP,null,media);
+                if ((encoderName != null) || (media != null) || (streamPortHTTP != 0)) {
+                    StreamServerCtrl ssctlr = new StreamServerCtrl("play","devHTTP", encoderName,null, encoderName,cardName,null,streamPortHTTP,null,media);
                     ssctlr.remoteControl();
-                    request.setAttribute("stream_url", "http://"+encoderIP+":"+streamPortHTTP);
+                    request.setAttribute("stream_url", "http://"+ encoderName +":"+streamPortHTTP);
                     getServletContext().getRequestDispatcher("/play.jsp").forward(request, response);
                     if (1==1) return;
                     //todo: make mplayer and vlc-player compatible
@@ -375,7 +375,7 @@ public class CtrlServlet extends HttpServlet {
                             " cache=\"true\""+
                             " controller=\"true\""+
                             " autoplay=\"true\"" +
-                            " src=\"http://" + encoderIP + ":" + streamPortHTTP + "\"" +
+                            " src=\"http://" + encoderName + ":" + streamPortHTTP + "\"" +
                             " type=\"application/x-google-vlc-plugin\"/>\n");
                     //out.println("</object>");
                     out.println("<TR><TD COLSPAN=\"2\" ALIGN=\"RIGHT\" BGCOLOR=\"RED\">\n");
@@ -392,8 +392,9 @@ public class CtrlServlet extends HttpServlet {
 
             } else if (streamProtocol.equalsIgnoreCase("RTP")) {
 
-                if ((encoderIP != null) || (clientHostIP != null) || (media != null) || (streamPortRTP!=0) || (streamName!=null)) {
-                    StreamServerCtrl ssctlr = new StreamServerCtrl("play","devRTP",encoderIP,clientHostIP,encoderIP,cardName,null,streamPortRTP,streamName,media);
+                if ((encoderName != null) || (clientHostName != null) || (media != null) || (streamPortRTP!=0) || (streamName!=null)) {
+                    StreamServerCtrl ssctlr = new StreamServerCtrl("play","devRTP", encoderName, clientHostName,
+                                                                   encoderName,cardName,null,streamPortRTP,streamName,media);
                     ssctlr.remoteControl();
 
                     out.println("<TR><TD COLSPAN=\"2\" ALIGN=\"RIGHT\" BGCOLOR=\"RED\">\n");
@@ -405,7 +406,7 @@ public class CtrlServlet extends HttpServlet {
                             " cache=\"true\""+
                             " controller=\"true\""+
                             " autoplay=\"true\"" +
-                            " src=\"rtsp://" + encoderIP + ":" + streamPortRTP + "/"+ streamName+"\"" +
+                            " src=\"rtsp://" + encoderName + ":" + streamPortRTP + "/"+ streamName+"\"" +
                             " type=\"application/x-mplayer2\"/>\n");
                     out.println("</object>");
                     out.println("</TD></TR>\n");
@@ -420,8 +421,8 @@ public class CtrlServlet extends HttpServlet {
             }
         } else if (ctrlCommand.equalsIgnoreCase("stop_preview")) {
             if (streamProtocol.equalsIgnoreCase("UDP")) {
-                if ((streamPortUDP != 0) || (clientHostIP != null) || (streamPortUDP!=0)) {
-                    StreamServerCtrl ssctlr = new StreamServerCtrl("stop", "devUDP", null, clientHostIP, encoderIP, cardName,null,streamPortUDP,null,null);
+                if ((streamPortUDP != 0) || (clientHostName != null) || (streamPortUDP!=0)) {
+                    StreamServerCtrl ssctlr = new StreamServerCtrl("stop", "devUDP", null, clientHostName, encoderName, cardName,null,streamPortUDP,null,null);
                     ssctlr.remoteControl();
 
                     out.println("</TD></TR>\n");
@@ -429,12 +430,12 @@ public class CtrlServlet extends HttpServlet {
                     out.println("</FORM>\n");
 
                 } else {
-                    System.out.println("Encoder, card device number or client's IP not specified");
-                    log.error("Encoder, card device number or client's IP not specified");
+                    System.out.println("Encoder, card device number or client's hostname not specified");
+                    log.error("Encoder, card device number or client's hostname not specified");
                 }
             } else if (streamProtocol.equalsIgnoreCase("HTTP")) {
-                if ((cardName != 0) || (encoderIP != null)) {
-                    StreamServerCtrl ssctlr = new StreamServerCtrl("stop", "devHTTP", encoderIP, null, encoderIP, cardName,null,streamPortHTTP,null,null);
+                if ((cardName != 0) || (encoderName != null)) {
+                    StreamServerCtrl ssctlr = new StreamServerCtrl("stop", "devHTTP", encoderName, null, encoderName, cardName,null,streamPortHTTP,null,null);
                     ssctlr.remoteControl();
                     out.println("</TD></TR>\n");
                     out.println("</TABLE>\n");
@@ -448,8 +449,9 @@ public class CtrlServlet extends HttpServlet {
                 }
 
             } else if (streamProtocol.equalsIgnoreCase("RTP")) {
-                if ((encoderIP != null) || (clientHostIP != null) || (streamPortRTP!=0) || (streamName!=null)) {
-                    StreamServerCtrl ssctlr = new StreamServerCtrl("stop", "devRTP", encoderIP, clientHostIP, encoderIP,cardName,null,streamPortRTP,streamName,null);
+                if ((encoderName != null) || (clientHostName != null) || (streamPortRTP!=0) || (streamName!=null)) {
+                    StreamServerCtrl ssctlr = new StreamServerCtrl("stop", "devRTP", encoderName, clientHostName,
+                                                                   encoderName,cardName,null,streamPortRTP,streamName,null);
                     ssctlr.remoteControl();
 
                     out.println("</TD></TR>\n");
@@ -464,8 +466,9 @@ public class CtrlServlet extends HttpServlet {
 
         } else if (ctrlCommand.equalsIgnoreCase("replay")) {
             if (streamProtocol.equalsIgnoreCase("UDP")) {
-                if (((new File(fileName)).exists()) || (encoderIP != null) || (clientHostIP != null) || (streamPortUDP!=0)) {
-                    StreamServerCtrl ssctlr = new StreamServerCtrl("replay", "fileUDP", null, clientHostIP, encoderIP,0,fileName,streamPortUDP, null,null);
+                if (((new File(fileName)).exists()) || (encoderName != null) || (clientHostName != null) || (streamPortUDP!=0)) {
+                    StreamServerCtrl ssctlr = new StreamServerCtrl("replay", "fileUDP", null, clientHostName,
+                                                                   encoderName,0,fileName,streamPortUDP, null,null);
                     ssctlr.remoteControl();
 
                     out.println("<TR><TD COLSPAN=\"2\" ALIGN=\"RIGHT\" BGCOLOR=\"RED\">\n");
@@ -492,8 +495,8 @@ public class CtrlServlet extends HttpServlet {
                     log.error("Missing parameter - replay via udp stream failed, Exiting");
                 }
             } else if (streamProtocol.equalsIgnoreCase("HTTP")) {
-                if ((new File(fileName)).exists() || (encoderIP != null) || (streamPortHTTP!=0) || (fileName!=null)) {
-                    StreamServerCtrl ssctlr = new StreamServerCtrl("replay", "fileHTTP", encoderIP, null, encoderIP,0,fileName,streamPortHTTP,null,null);
+                if ((new File(fileName)).exists() || (encoderName != null) || (streamPortHTTP!=0) || (fileName!=null)) {
+                    StreamServerCtrl ssctlr = new StreamServerCtrl("replay", "fileHTTP", encoderName, null, encoderName,0,fileName,streamPortHTTP,null,null);
                     ssctlr.remoteControl();
 
                     out.println("<TR><TD COLSPAN=\"2\" ALIGN=\"RIGHT\" BGCOLOR=\"RED\">\n");
@@ -505,7 +508,7 @@ public class CtrlServlet extends HttpServlet {
                             " cache=\"true\""+
                             " controller=\"true\""+
                             " autoplay=\"true\"" +
-                            " src=\"http://" + encoderIP + ":" + streamPortHTTP + "\"" +
+                            " src=\"http://" + encoderName + ":" + streamPortHTTP + "\"" +
                            // " type=\"application/x-mplayer2\"/>\n");
                            " type=\"application/x-google-vlc-plugin\"/>\n"); 
                     //out.println("</object>");
@@ -524,8 +527,9 @@ public class CtrlServlet extends HttpServlet {
 
             } else if (streamProtocol.equalsIgnoreCase("RTP")) {
 
-                if (((new File(fileName)).exists()) || (encoderIP!=null) || (clientHostIP!=null) || (streamPortRTP!=0) || (streamName!=null)) {
-                    StreamServerCtrl ssctlr = new StreamServerCtrl("replay", "fileRTP", encoderIP, clientHostIP,encoderIP,0,fileName,streamPortRTP,streamName,null);
+                if (((new File(fileName)).exists()) || (encoderName !=null) || (clientHostName !=null) || (streamPortRTP!=0) || (streamName!=null)) {
+                    StreamServerCtrl ssctlr = new StreamServerCtrl("replay", "fileRTP", encoderName, clientHostName,
+                                                                   encoderName,0,fileName,streamPortRTP,streamName,null);
                     ssctlr.remoteControl();
 
                     out.println("<TR><TD COLSPAN=\"2\" ALIGN=\"RIGHT\" BGCOLOR=\"RED\">\n");
@@ -536,7 +540,7 @@ public class CtrlServlet extends HttpServlet {
                             " cache=\"true\""+
                             " controller=\"true\""+
                             " autoplay=\"true\"" +
-                            " src=\"rtsp://" + encoderIP + ":" + streamPortRTP + "/"+ streamName+"\"" +
+                            " src=\"rtsp://" + encoderName + ":" + streamPortRTP + "/"+ streamName+"\"" +
                             " type=\"application/x-mplayer2\"/>\n");
                     out.println("</object>");
                     out.println("</TD></TR>\n");
@@ -553,8 +557,8 @@ public class CtrlServlet extends HttpServlet {
             }
         } else if (ctrlCommand.equalsIgnoreCase("stop_replay")) {
             if (streamProtocol.equalsIgnoreCase("UDP")) {
-                if (((new File(fileName)).exists()) || (encoderIP!=null) || (clientHostIP!=null) || (streamPortUDP!=0)) {
-                    StreamServerCtrl ssctlr = new StreamServerCtrl("stop", "fileUDP", null, clientHostIP, encoderIP,0,fileName,streamPortUDP,null,null);
+                if (((new File(fileName)).exists()) || (encoderName !=null) || (clientHostName !=null) || (streamPortUDP!=0)) {
+                    StreamServerCtrl ssctlr = new StreamServerCtrl("stop", "fileUDP", null, clientHostName, encoderName,0,fileName,streamPortUDP,null,null);
                     ssctlr.remoteControl();
 
                     out.println("</TD></TR>\n");
@@ -566,8 +570,8 @@ public class CtrlServlet extends HttpServlet {
                     log.error("Missing parameter - stop_replay of udp stream failed, Exiting");
                 }
             } else if (streamProtocol.equalsIgnoreCase("HTTP")) {
-                if ((new File(fileName)).exists() || (encoderIP!=null) || (streamPortHTTP!=0)) {
-                    StreamServerCtrl ssctlr = new StreamServerCtrl("stop", "fileHTTP", encoderIP, null, encoderIP,0,fileName,streamPortHTTP,null,null);
+                if ((new File(fileName)).exists() || (encoderName !=null) || (streamPortHTTP!=0)) {
+                    StreamServerCtrl ssctlr = new StreamServerCtrl("stop", "fileHTTP", encoderName, null, encoderName,0,fileName,streamPortHTTP,null,null);
                     ssctlr.remoteControl();
 
                     out.println("</TD></TR>\n");
@@ -579,8 +583,9 @@ public class CtrlServlet extends HttpServlet {
                     log.error("Missing parameter - stop_replay of http stream failed, Exiting");
                 }
             } else if (streamProtocol.equalsIgnoreCase("RTP")) {
-                if (((new File(fileName)).exists()) || (encoderIP != null) || (clientHostIP != null) || (streamPortRTP != 0) || (streamName != null)) {
-                    StreamServerCtrl ssctlr = new StreamServerCtrl("stop", "fileRTP", encoderIP, clientHostIP, encoderIP,0,fileName, streamPortRTP,streamName,null);
+                if (((new File(fileName)).exists()) || (encoderName != null) || (clientHostName != null) || (streamPortRTP != 0) || (streamName != null)) {
+                    StreamServerCtrl ssctlr = new StreamServerCtrl("stop", "fileRTP", encoderName, clientHostName,
+                                                                   encoderName,0,fileName, streamPortRTP,streamName,null);
                     ssctlr.remoteControl();
 
                     out.println("</TD></TR>\n");
@@ -594,9 +599,9 @@ public class CtrlServlet extends HttpServlet {
                 /*
                 } else {
                 System.out.println("cmd: " + ctrlCommand +
-                                   " serverIP: " + encoderIP +
-                                   " clientIP: " + clientHostIP +
-                                   " encoderIP: " + encoderIP +
+                                   " serverName: " + encoderName +
+                                   " clientName: " + clientHostName +
+                                   " encoderName: " + encoderName +
                                    " cardName: " +  cardName +
                                    " fileName: " + fileName +
                                    " streamPort: " + streamPortRTP +

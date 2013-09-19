@@ -12,16 +12,12 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 <%
     request.setCharacterEncoding("UTF-8");
     response.setContentType("text/html; charset=UTF-8");
-    String encoder_name = request.getParameter(WebConstants.ENCODER_NAME_PARAM);
-    String encoderIP = null;
-    if (encoder_name != null) {
-        encoderIP = InetAddress.getByName(encoder_name).getHostAddress();
-    }
+    String encoderName = request.getParameter(WebConstants.ENCODER_NAME_PARAM);
 
     //This is where we process the filename and length
     String filename = request.getParameter(WebConstants.FILE_NAME_PARAM);
 
-    Comments comments = WebParams.getComments(filename, encoderIP);
+    Comments comments = WebParams.getComments(filename, encoderName);
 
 
 
@@ -195,8 +191,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 
         <input type="hidden" name="<%=WebConstants.CAPTURE_FORMAT_PARAM%>" value="<%=format%>"/>
         <input type="hidden" name="<%=WebConstants.CONTROL_COMMAND_PARAM%>" value="<%=WebConstants.POSTPROCESS%>"/>
-        <input type="hidden" name="<%=WebConstants.ENCODER_IP_PARAM%>" value="<%=encoderIP%>"/>
-        <input type="hidden" name="<%=WebConstants.ENCODER_NAME_PARAM%>" value="<%=encoder_name%>"/>
+        <input type="hidden" name="<%=WebConstants.ENCODER_NAME_PARAM%>" value="<%=encoderName%>"/>
         <input type="hidden" name="<%=WebConstants.IS_PROCESSED_PARAM%>" value="<%=postProcessed%>"/>
     </fieldset>
     <input type="button" name="Reject" value="Reject" onclick="gotopage('<%=WebConstants.PLAYBACK_JSP%>')"/>

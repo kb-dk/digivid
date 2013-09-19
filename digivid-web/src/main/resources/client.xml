@@ -15,7 +15,6 @@
 
     <!--Stream Server 1-->
     <entry key="STREAMSERVER_NAME">localhost</entry>
-    <entry key="STREAMSERVER_IP">0.0.0.0</entry>
     <entry key="STREAMSERVER_HTTP_PORT">9000</entry>
     <entry key="STREAMSERVER_DEVICEID">1</entry>
     <entry key="STREAMSERVER_MEDIA">tape</entry>

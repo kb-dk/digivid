@@ -32,17 +32,17 @@ import java.rmi.registry.LocateRegistry;
 
 public class GenericCtrl {
     static Logger log = Logger.getLogger(GenericCtrl.class.getName());
-    private String encoderIP;
+    private String encoderName;
 
     final int encoderRMIport = Constants.DEFAULT_RMI_CLIENT_PORT ;
     private Task task;
 
-    public GenericCtrl(String encoderIP, Task task) {
+    public GenericCtrl(String encoderName, Task task) {
         this.task = task;
-        if (encoderIP == null) {
-            throw new RuntimeException("Attempt to create MoreGenericCtrl with null encoderIP");
+        if (encoderName == null) {
+            throw new RuntimeException("Attempt to create MoreGenericCtrl with null encoderName");
         }
-       this.encoderIP = encoderIP;
+       this.encoderName = encoderName;
     }
 
 
@@ -57,7 +57,7 @@ public class GenericCtrl {
 
         LocateRegistry.getRegistry (encoderRMIport);
 
-        String name = "//" + encoderIP + ":" +encoderRMIport+ "/Compute";
+        String name = "//" + encoderName + ":" +encoderRMIport+ "/Compute";
         System.out.println("Client looks up name address: " + name);
         log.debug("Client looks up name address: " + name);
         

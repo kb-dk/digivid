@@ -20,7 +20,7 @@ import java.rmi.registry.LocateRegistry;
  */
 public class RecorderCtrl {
 
-    //"start","record",userName,clientHostIP,encoderIP,cardName,captureFormat,captureLength,captureSize,fileName
+    //"start","record",userName,clientHostName,encoderName,cardName,captureFormat,captureLength,captureSize,fileName
 
     static Logger log = Logger.getLogger(RecorderCtrl.class.getName());
 
@@ -34,8 +34,8 @@ public class RecorderCtrl {
     private String command;
     private String recordType;
     private String userName;
-    private String clientHostIP;
-    private String encoderIP;
+    private String clientHostName;
+    private String encoderName;
     private int cardName;
     private String channelID;
     private int frameWidth;
@@ -54,10 +54,10 @@ public class RecorderCtrl {
 
     /**
      *
-     * @param encoderIP
+     * @param encoderName
      */
-    public RecorderCtrl(String encoderIP) {
-        this.encoderIP = encoderIP;
+    public RecorderCtrl(String encoderName) {
+        this.encoderName = encoderName;
         this.extension = Constants.DEFAULT_EXTENSION;
 
         //log.debug("File Name" + fileName);
@@ -70,8 +70,8 @@ public class RecorderCtrl {
      public RecorderCtrl(String command,
                         String recordType,
                         String userName,
-                        String clientHostIP,
-                        String encoderIP,
+                        String clientHostName,
+                        String encoderName,
                         int cardName,
                         String channelID,
                         String captureFormat,
@@ -83,8 +83,8 @@ public class RecorderCtrl {
         this.command = command;
         this.recordType = recordType;
         this.userName = userName;
-        this.clientHostIP = clientHostIP;
-        this.encoderIP = encoderIP;
+        this.clientHostName = clientHostName;
+        this.encoderName = encoderName;
         this.cardName = cardName;
         this.channelID = channelID;
         this.captureFormat = captureFormat;
@@ -94,12 +94,12 @@ public class RecorderCtrl {
         this.captureSize= captureSize;
 
         log.debug("RMI_Port: " + encoderRMIport);
-        log.debug("RMI_IP: " + encoderIP);
+        log.debug("RMI_HOST: " + encoderName);
         log.debug("on Encoder: " + command);
         log.debug("Type: " + recordType);
         log.debug("Person: " + userName);
-        log.debug("from Host_IP: " + clientHostIP);
-        log.debug("on Encoder: " + encoderIP);
+        log.debug("from Hostname: " + clientHostName);
+        log.debug("on Encoder: " + encoderName);
         log.debug("on Device: " + cardName);
 
         log.debug("Format: " + captureFormat);
@@ -112,7 +112,7 @@ public class RecorderCtrl {
 
 
     /** This is ignorant towards the available streamer application
-     * Streamserver and encoder share the same IP address
+     * Streamserver and encoder share the same host
      *
      * @throws java.rmi.RemoteException
      */
@@ -125,7 +125,7 @@ public class RecorderCtrl {
 
         LocateRegistry.getRegistry (encoderRMIport);
 
-        String name = "//" + encoderIP + ":" +encoderRMIport+ "/Compute";
+        String name = "//" + encoderName + ":" +encoderRMIport+ "/Compute";
         System.out.println("Client looks up name address: " + name);
 
         Compute comp = null;
@@ -149,8 +149,8 @@ public class RecorderCtrl {
         Recorder task = new Recorder(command,
                         recordType,
                         userName,
-                        clientHostIP,
-                        encoderIP,
+                        clientHostName,
+                        encoderName,
                         cardName,
                         channelID,
                         captureFormat,

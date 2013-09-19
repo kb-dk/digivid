@@ -91,7 +91,7 @@ if [ $# -eq "$NO_ARGS" ] # Script invoked with no arguments
 then 
         echo "Usage: `basename $0` options (rtucdiwhabmsflkh)" >> $CAPERROR &
         echo "capturectrl.sh -r <run start|stop> -t <capturetype eg. record> -u <user name> "\
-        "-c <clientIP YourIP> -d <device 0|1|2> -i <channelID> -w <width> -h <height> -a <captureFormat> "\
+        "-c <client hostname> -d <device 0|1|2> -i <channelID> -w <width> -h <height> -a <captureFormat> "\
         "-b <bitrate> -m <maxbitrate> -s <storage directory> -f <file name> -l <capture length (Min)> -k <capture size (MB)> -o <original start> -h <help>" 1>&2
         
 fi
@@ -121,7 +121,7 @@ do
         h)
             echo "Usage: `basename $0` options (rtucdiwgabmsfnlkoh)"	>> $CAPERROR &
             echo "capturectrl.sh -r <run start|stop> -t <capturetype eg. record> -u <user name> "\
-            "-c <clientIP YourIP> -d <device 0|1|2> -i <channelID> -w <width> -h <height> -a <captureFormat> " \
+            "-c <client hostname> -d <device 0|1|2> -i <channelID> -w <width> -h <height> -a <captureFormat> " \
             "-b <bitrate> -m <maxbitrate> -s <storage directory> -f <file name> -l <capture length (Min)> -k <capture size (MB)> -o <original start> -h <help>" >> $CAPDEBUG
             exit 1 ;;
         *) echo "Unimplemented option choosen. $OPTIND $OPTARG" >> $CAPERROR &
@@ -386,7 +386,7 @@ case "${RUN}" in
 *)
  	echo "Usage: `basename $0` options (rtucdiwhabmsfnlkoh)" >> $CAPERROR
 	echo "capturectrl.sh -r <run start|stop> -t <capturetype eg. record> -u <user name> "\
-	"-c <clientIP YourIP> -d <device 0|1|2> -i <channelID> -w <width> -h <height> -a <captureFormat> "\
+	"-c <client hostname> -d <device 0|1|2> -i <channelID> -w <width> -h <height> -a <captureFormat> "\
 	"-b <bitrate> -m <maxbitrate> -s <storage directory> -f <file name> -l <capture length (Min)> -k <capture size (MB)> -o <original start> -h <help>" 1>&2
                        
 exit 1

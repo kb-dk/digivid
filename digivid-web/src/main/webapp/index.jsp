@@ -41,7 +41,6 @@ adding a calendar a matter of 1 or 2 lines of code. -->
     <%
         //String server_name = DEFAULT_STREAMSERVER_NAME;
         String server_name = InetAddress.getLocalHost().getHostName();
-        String IP_ADDRESS = java.net.InetAddress.getByName(server_name).getHostAddress();
     %>
     <div id="navigation">
         <form action="simple_dispatcher.jsp" name="nav_form" method="get">
@@ -50,7 +49,6 @@ adding a calendar a matter of 1 or 2 lines of code. -->
             <a href="#" class="main_nav" onclick="gotopage('<%=RECORD_JSP%>');">Record</a>
             <a href="#" class="main_nav" onclick="gotopage('<%=PLAYBACK_JSP%>');">Post Process</a>
             <input id="page_name" type="hidden" name="<%=PAGE_PARAM%>"/>
-            <input type="hidden" name="<%=ENCODER_IP_PARAM%>" value="<%=IP_ADDRESS%>" />
             <input type="hidden" name="<%=ENCODER_NAME_PARAM%>" value="<%=server_name%>" />
         </form >
     </div>

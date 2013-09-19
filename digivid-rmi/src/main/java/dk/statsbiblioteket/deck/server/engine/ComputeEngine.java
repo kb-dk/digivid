@@ -46,20 +46,11 @@ public class ComputeEngine extends UnicastRemoteObject
         final String hostName = ServerConstants.DEFAULT_RMI_CLASSSERVER_NAME;
         System.out.println("Configuration Host" + hostName);
         log.debug("Configuration Host: " + hostName);
-        //final String hostIP = ServerConstants.DEFAULT_RMI_CLASSSERVER_IP;
-        final String hostIP;
-        try {
-            hostIP = InetAddress.getByName(hostName).getHostAddress();
-        } catch (java.net.UnknownHostException e) {
-            throw new RuntimeException("Could not find IP address for '"+hostName+"'");
-        }
-        System.out.println("Configuration IP" + hostIP);
-        log.debug("Configuration IP: " + hostIP);
 
 
 
 
-        String rmiUrl = "//" + hostIP +":" +port+ "/Compute";
+        String rmiUrl = "//" + hostName +":" +port+ "/Compute";
 
         try {
             System.out.println("Find ComputeEngine");

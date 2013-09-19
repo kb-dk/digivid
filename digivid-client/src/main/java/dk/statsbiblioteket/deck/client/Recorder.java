@@ -19,12 +19,12 @@ public class Recorder implements Task {
 
     /** constants used in pi computation */
 
-    static Logger log = Logger.getLogger(ComputePi.class.getName());
+    static Logger log = Logger.getLogger(Recorder.class.getName());
     private String recordType;
     private String userName;
     private String fileSerial;
-    private String clientHostIP;
-    private String encoderIP;
+    private String clientHostName;
+    private String encoderName;
     private int cardName           =  Constants.DEFAULT_RECORDER_CARDNAME;
     private String channelID          =  Constants.DEFAULT_CHANNELID;
     private String captureFormat   =  Constants.DEFAULT_FORMAT;
@@ -67,8 +67,8 @@ public class Recorder implements Task {
      public Recorder(String command,
                         String recordType,
                         String userName,
-                        String clientHostIP,
-                        String encoderIP,
+                        String clientHostName,
+                        String encoderName,
                         int cardName,
                         String channelID,
                         String captureFormat,
@@ -81,8 +81,8 @@ public class Recorder implements Task {
         this.command = command;
         this.recordType = recordType;
         this.userName = userName;
-        this.clientHostIP = clientHostIP;
-        this.encoderIP = encoderIP;
+        this.clientHostName = clientHostName;
+        this.encoderName = encoderName;
         this.cardName = cardName;
         if (channelID != null) this.channelID = channelID;
 
@@ -111,8 +111,8 @@ public class Recorder implements Task {
         log.debug("Command: " + command);
         log.debug("Type: " + recordType);
         log.debug("Person: " + userName);
-        log.debug("From Host_IP: " + clientHostIP);
-        log.debug("On Encoder: " + encoderIP);
+        log.debug("From Hostname: " + clientHostName);
+        log.debug("On Encoder: " + encoderName);
         log.debug("On Device: " + cardName);
         log.debug("On Channel: " + channelID);
         log.debug("Frame Width: " + frameWidth);
@@ -148,7 +148,7 @@ public class Recorder implements Task {
      *
      * @return execCommand
      */
-    //echo "capturectrl.sh -r <run start|stop> -t <capturetype eg. record> -u <user name> -c <clientIP YourIP> -d <device 0|1|2> -w <width> -h <height> -a <captureFormat> -
+    //echo "capturectrl.sh -r <run start|stop> -t <capturetype eg. record> -u <user name> -c <client hostname> -d <device 0|1|2> -w <width> -h <height> -a <captureFormat> -
 
     public String unixCommandLine () {
         String execCommand;
@@ -157,7 +157,7 @@ public class Recorder implements Task {
         if (command!=null) sb.append(" -r " + command);
         if (recordType!=null) sb.append(" -t " + recordType);
         if (userName!=null) sb.append(" -u " + userName);
-        if (clientHostIP!=null) sb.append(" -c " + clientHostIP);
+        if (clientHostName!=null) sb.append(" -c " + clientHostName);
         sb.append(" -d " + cardName);
         if (channelID!=null)  sb.append(" -i " + channelID);
         if (frameWidth!=0)  sb.append(" -w " + frameWidth);
@@ -279,8 +279,8 @@ public class Recorder implements Task {
                 "recordType='" + recordType + '\'' +
                 ", userName='" + userName + '\'' +
                 ", fileSerial='" + fileSerial + '\'' +
-                ", clientHostIP='" + clientHostIP + '\'' +
-                ", encoderIP='" + encoderIP + '\'' +
+                ", clientHostName='" + clientHostName + '\'' +
+                ", encoderName='" + encoderName + '\'' +
                 ", cardName=" + cardName +
                 ", channelID='" + channelID + '\'' +
                 ", captureFormat='" + captureFormat + '\'' +

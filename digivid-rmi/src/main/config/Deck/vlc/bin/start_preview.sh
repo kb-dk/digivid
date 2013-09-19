@@ -20,7 +20,7 @@ done
 DEVICE=${DEV}${DEVICE_NUMBER}
 
 ## Start vlc
-ip=`hostname -i`
+host=`hostname -f`
 
 if [ -n "$DEVICE_NUMBER" ]; then
   ## Configure mpeg1 streaming
@@ -29,8 +29,8 @@ if [ -n "$DEVICE_NUMBER" ]; then
   if [ -n "$vpid" ] ; then
      exit 0
   fi
-  vlc -vvv --intf dummy pvr://${DEVICE} --sout '#standard{access=http,mux=ps,dst='$ip':'$PORT'}' &
+  vlc -vvv --intf dummy pvr://${DEVICE} --sout '#standard{access=http,mux=ps,dst='$host':'$PORT'}' &
 elif [ -n "$FILE" ]; then
   $BINDIR/stop_preview.sh -p ${PORT}
-  vlc -vvv --intf dummy ${FILE} --sout '#standard{access=http,mux=ps,dst='$ip':'$PORT'}' &
+  vlc -vvv --intf dummy ${FILE} --sout '#standard{access=http,mux=ps,dst='$host':'$PORT'}' &
 fi

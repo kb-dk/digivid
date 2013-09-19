@@ -17,13 +17,13 @@ import java.io.InputStreamReader;
 public class Streamer implements Task {
 
 
-    static Logger log = Logger.getLogger(ComputePi.class.getName());
+    static Logger log = Logger.getLogger(Streamer.class.getName());
 
 
     private String unixExecutable = Constants.UNIX_STREAMSERVER_EXECUTABLE;
-    private String streamToClientIP;  //getDefaultProperty("Client.HOST.IP");
+    private String streamToClientName;
     private int streamServerPort   =  Constants.DEFAULT_STREAMSERVER_HTTP_PORT;
-    private String streamFromServerIP = Constants.DEFAULT_STREAMSERVER_IP;
+    private String streamFromServerName = Constants.DEFAULT_STREAMSERVER_NAME;
     private String streamType;
     private String streamName;
     private String filePath;
@@ -43,8 +43,8 @@ public class Streamer implements Task {
      */
     public Streamer(String ctrlCommand,
                 String streamType,
-                String streamFromServerIP,
-                String streamToClientIP,
+                String streamFromServerName,
+                String streamToClientName,
                 int cardName,
                 String fileName,
                 int streamServerPort,
@@ -53,8 +53,8 @@ public class Streamer implements Task {
 
         this.ctrlCommand = ctrlCommand;
         this.streamType=streamType;
-        this.streamFromServerIP = streamFromServerIP;
-        this.streamToClientIP = streamToClientIP;
+        this.streamFromServerName = streamFromServerName;
+        this.streamToClientName = streamToClientName;
         this.cardName = cardName;
         if (fileName!=null) filePath =
                 new StringBuilder().append(captureStorage).append("/").append(fileName).toString();
@@ -66,8 +66,8 @@ public class Streamer implements Task {
         log.debug("Config Unix Exec: " + unixExecutable);
         log.debug("Config Control Command: " + ctrlCommand);
         log.debug("Config streamType: " + streamType);
-        log.debug("Config IP (stream server): " + streamFromServerIP);
-        log.debug("Config IP (stream client): " + streamToClientIP);
+        log.debug("Config hostname (stream server): " + streamFromServerName);
+        log.debug("Config hostname (stream client): " + streamToClientName);
         log.debug("Config Port (stream server/client): " + streamServerPort);
         log.debug("Config FilePath: " + filePath);
         log.debug("Config Stream Server Port: " + streamServerPort);
@@ -87,8 +87,8 @@ public class Streamer implements Task {
         if (unixExecutable!=null) sb.append(unixExecutable);
         if (ctrlCommand!=null) sb.append(" -r " + ctrlCommand);
         if (streamType!=null) sb.append(" -t " + streamType);
-        if (streamFromServerIP!=null) sb.append(" -s " + streamFromServerIP);
-        if (streamToClientIP!=null) sb.append(" -c " + streamToClientIP);
+        if (streamFromServerName !=null) sb.append(" -s " + streamFromServerName);
+        if (streamToClientName !=null) sb.append(" -c " + streamToClientName);
         sb.append(" -d " + cardName);
         if (filePath!=null)  sb.append(" -f " + filePath);
         if (streamServerPort!=0) sb.append(" -p " + streamServerPort);
@@ -153,9 +153,9 @@ public class Streamer implements Task {
     public String toString() {
         return "Streamer{" +
                 "unixExecutable='" + unixExecutable + '\'' +
-                ", streamToClientIP='" + streamToClientIP + '\'' +
+                ", streamToClientName='" + streamToClientName + '\'' +
                 ", streamServerPort=" + streamServerPort +
-                ", streamFromServerIP='" + streamFromServerIP + '\'' +
+                ", streamFromServerName='" + streamFromServerName + '\'' +
                 ", streamType='" + streamType + '\'' +
                 ", streamName='" + streamName + '\'' +
                 ", filePath='" + filePath + '\'' +

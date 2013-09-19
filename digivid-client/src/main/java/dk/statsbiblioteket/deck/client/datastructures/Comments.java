@@ -16,7 +16,7 @@ public class Comments {
     private String filename;
     private String comments;
     private Integer quality;
-    private String encoderIP;
+    private String encoderName;
     private Long startDate;
     private Long endDate;
     private String channelLabel;
@@ -111,12 +111,12 @@ public class Comments {
         this.username = username;
     }
 
-    public String getEncoderIP() {
-        return encoderIP;
+    public String getEncoderName() {
+        return encoderName;
     }
 
-    public void setEncoderIP(String encoderIP) {
-        this.encoderIP = encoderIP;
+    public void setEncoderName(String encoderName) {
+        this.encoderName = encoderName;
     }
 
 
@@ -126,7 +126,7 @@ public class Comments {
                 "filename='" + filename + '\'' +
                 ", comments='" + comments + '\'' +
                 ", quality=" + quality +
-                ", encoderIP='" + encoderIP + '\'' +
+                ", encoderName='" + encoderName + '\'' +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
                 ", channelLabel='" + channelLabel + '\'' +
@@ -141,7 +141,7 @@ public class Comments {
         "--filename='" + filename + '\'' +
         " --comments='" + comments.replaceAll(Pattern.quote("'"), Matcher.quoteReplacement("'\\''")) + '\'' +
         " --quality=" + quality +
-        " --encoderIP='" + encoderIP + '\'' +
+        " --encoderName='" + encoderName + '\'' +
         " --startDate=" + startDate +
         " --endDate=" + endDate +
         " --channelLabel='" + channelLabel + '\'' +

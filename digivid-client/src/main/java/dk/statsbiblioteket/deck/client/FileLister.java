@@ -21,7 +21,7 @@ import java.util.List;
 public class FileLister implements Task {
 
     /** constants used in computation */
-    static Logger log = Logger.getLogger(ComputePi.class.getName());
+    static Logger log = Logger.getLogger(FileLister.class.getName());
 
     private static String prop;
     private static int propInt;

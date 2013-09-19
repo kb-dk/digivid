@@ -15,17 +15,13 @@
 </script>
 <%
     request.setCharacterEncoding("UTF-8");
-    String encoder_name = request.getParameter(WebConstants.ENCODER_NAME_PARAM);
-    String encoderIP = null;
-    if (encoder_name != null) {
-        encoderIP = InetAddress.getByName(encoder_name).getHostAddress();
-    }
-    FSCtrl ctrl = new FSCtrl(encoderIP);
+    String encoderName = request.getParameter(WebConstants.ENCODER_NAME_PARAM);
+    FSCtrl ctrl = new FSCtrl(encoderName);
     List<String[]> all_records = ctrl.getFileInfo();
     List<String[]> records = new ArrayList<String[]>();
     //
     //Now get the current files
-    List<String> current = ControlServlet.runUnixCommand(encoderIP, Constants.RECORDER_BINDIR + "/get_current_recordings.sh", 0, 1);
+    List<String> current = ControlServlet.runUnixCommand(encoderName, Constants.RECORDER_BINDIR + "/get_current_recordings.sh", 0, 1);
     for (String[] record : all_records) {
         if (!current.contains(record[0].trim())) records.add(record);
     }
@@ -58,8 +54,7 @@ No files found
 <form action="Control" method="post" name="playback_form">
     <input type="hidden" name="<%=WebConstants.FILE_NAME_PARAM%>"/>
     <input type="hidden" name="<%=WebConstants.FILE_LENGTH_PARAM%>"/>
-    <input type="hidden" name="<%=WebConstants.ENCODER_IP_PARAM%>" value="<%=encoderIP%>"/>
-    <input type="hidden" name="<%=WebConstants.ENCODER_NAME_PARAM%>" value="<%=encoder_name%>"/>
+    <input type="hidden" name="<%=WebConstants.ENCODER_NAME_PARAM%>" value="<%=encoderName%>"/>
     <input type="hidden" name="<%=WebConstants.STREAM_PROTOCOL_PARAM%>" value="HTTP" />
     <input type="hidden" name="<%=WebConstants.STREAM_PORT_HTTP_PARAM%>" value="9004"/>
     <input type="hidden" name="<%=WebConstants.IS_PROCESSED_PARAM%>" />

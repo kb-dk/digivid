@@ -5,15 +5,7 @@ SCRIPT_PATH=$(dirname $(readlink -f $0))
 SERVER_RMI_HOME=${SCRIPT_PATH}/..
 #CLASSERVER_DEFAULTS="/etc/default/deck.default"
 TIMESTAMP=`date "+%y-%m-%d_%H-%M-%S-%s"`
-IP=`/sbin/ifconfig ${NETINTERFACE} | awk '/inet addr/{print $2}' | cut -d: -f2`
-for IP in $IP ; do 
-    if [ $IP == "127.0.0.1" ] ; then
-        LOCALIP=$IP
-    else
-        ENCODERIP=$IP
-        #echo "---${IP}---"
-    fi
-done
+HOSTNAME=`hostname -f`
 
 echo "-----Starting Class Server------"
 
@@ -52,8 +44,7 @@ debug () {
     echo "PROJECTROOT $PROJECTROOT"
 
     ## server params
-    echo "LOCAL IP: ${LOCALIP}"
-    echo "ENCODER IP: $ENCODERIP"
+    echo "HOSTNAME: ${HOSTNAME}"
     echo "NETINTERFACE: $NETINTERFACE"
     echo "JAVA_HOME: $JAVA_HOME"
     echo "POLICY_PATH: $POLICY_PATH"
@@ -99,7 +90,7 @@ startengine() {
     -Djava.security.policy=$POLICY_PATH -Djava.rmi.server.useCodebaseOnly=true \
     -classpath $CLASSPATH \
     -Djava.rmi.server.codebase=http://${ADMINIP}:${ADMINPORT}/${PROJECTROOT}/rmi/client.jar \
-    -Djava.rmi.server.hostname=${ENCODERIP} dk.statsbiblioteket.deck.server.engine.ComputeEngine > $CLASSLOG &
+    -Djava.rmi.server.hostname=${HOSTNAME} dk.statsbiblioteket.deck.server.engine.ComputeEngine > $CLASSLOG &
 
     sleep 1
        

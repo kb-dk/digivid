@@ -6,8 +6,6 @@ import dk.statsbiblioteket.deck.client.GenericCtrl;
 import dk.statsbiblioteket.deck.client.datastructures.Comments;
 
 import java.io.File;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.rmi.RemoteException;
 import java.text.ParseException;
 import java.util.Map;
@@ -29,7 +27,6 @@ public class WebParams {
     private String input_channel_id;
     private String stream_protocol;
     private Integer stream_port;
-    private String encoder_IP;
     private String control_command;
     private String file_name;
     private String channel_label;
@@ -40,7 +37,7 @@ public class WebParams {
     private Long stop_time_ms;
     private String vhs_label;
     private Integer quality;
-    private String encoder_name;
+    private String encoderName;
     private Boolean isPostProcessed;
 
 
@@ -80,13 +77,7 @@ public class WebParams {
                     throw new RuntimeException(e);
                 }
             } else if (name.equals(WebConstants.ENCODER_NAME_PARAM)) {
-                encoder_name = value;
-                try {
-                    encoder_IP = InetAddress.getByName(encoder_name).getHostAddress();
-                    addParam(WebConstants.ENCODER_NAME_PARAM, encoder_IP);
-                } catch (UnknownHostException e) {
-                    throw new RuntimeException("Could not find host '" + encoder_name + "'");
-                }
+                encoderName = value;
             } else if (name.equals(WebConstants.CONTROL_COMMAND_PARAM)) {
                 control_command = value;
                 addParam(WebConstants.CONTROL_COMMAND_PARAM, control_command);
@@ -152,7 +143,7 @@ public class WebParams {
         commentsStructure.setCaptureFormat(params.getCapture_format());
         commentsStructure.setStartDate(params.getStart_time_ms());
         commentsStructure.setEndDate(params.getStop_time_ms());
-        commentsStructure.setEncoderIP(params.getEncoder_IP());
+        commentsStructure.setEncoderName(params.getEncoderName());
         commentsStructure.setComments(params.getVhs_label());
         commentsStructure.setQuality(params.getQuality());
         commentsStructure.setUsername(params.getUser_name());
@@ -160,7 +151,7 @@ public class WebParams {
     }
 
 
-    public static Comments getComments(String file_name, String encoder_IP) {
+    public static Comments getComments(String file_name, String encoderName) {
         //Create comments file
         if (file_name == null){
             return null;
@@ -168,7 +159,7 @@ public class WebParams {
         FileReader task = new FileReader(file_name);
 
         try {
-            Object result = new GenericCtrl(encoder_IP, task).execute();
+            Object result = new GenericCtrl(encoderName, task).execute();
             if (result != null && ! result.toString().isEmpty()) {
                 return Comments.fromJson(result.toString());
             } else {
@@ -177,7 +168,7 @@ public class WebParams {
                 comments.setFilename(file_name);
                 comments.setComments("");
                 comments.setQuality(5);
-                comments.setEncoderIP(encoder_IP);
+                comments.setEncoderName(encoderName);
 
                 if (matcher.matches()){
                     comments.setStartDate(Long.parseLong(matcher.group("startTimestamp")));
@@ -224,8 +215,8 @@ public class WebParams {
         return stream_port;
     }
 
-    public String getEncoder_IP() {
-        return encoder_IP;
+    public String getEncoderName() {
+        return encoderName;
     }
 
     public String getControl_command() {
@@ -266,10 +257,6 @@ public class WebParams {
 
     public Integer getQuality() {
         return quality;
-    }
-
-    public String getEncoder_name() {
-        return encoder_name;
     }
 
     public String getParameterString() {

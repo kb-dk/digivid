@@ -9,16 +9,11 @@
 <%@ page import="java.util.regex.Pattern" %>
 <%
     request.setCharacterEncoding("UTF-8");
-    String encoderIP = request.getParameter(WebConstants.ENCODER_IP_PARAM);
-    String encoder_name = encoderIP;
-    if (request.getParameter(WebConstants.ENCODER_NAME_PARAM) != null) {
-        encoder_name = request.getParameter(WebConstants.ENCODER_NAME_PARAM);
-        encoderIP = InetAddress.getByName(encoder_name).getHostAddress();
-    }
+    String encoderName = request.getParameter(WebConstants.ENCODER_NAME_PARAM);
     //The cards actually available as determined
     //by querying the encoder
     Pattern pattern = Pattern.compile(".*/dev/video([0-9]).*");
-    List<String> jobs = ControlServlet.runUnixCommand(encoderIP, "ps -C cat -o args", 0, 1);
+    List<String> jobs = ControlServlet.runUnixCommand(encoderName, "ps -C cat -o args", 0, 1);
     Set<Integer> used_cards = new HashSet<Integer>();
     for (String job : jobs) {
         Matcher m = pattern.matcher(job);
@@ -43,7 +38,7 @@
         if (card == 2) source_names[i] = "Source B";
     }
 %>
-Recording on <%=encoder_name%>
+Recording on <%=encoderName%>
 <form action="Control" method="post">
     <%
         if (available_cards.length == 0) {
@@ -120,8 +115,7 @@ Recording on <%=encoder_name%>
     <input type="hidden" name="<%=WebConstants.CONTROL_COMMAND_PARAM%>" value="<%=WebConstants.START_RECORDING%>"/>
     <input type="hidden" name="<%=WebConstants.USER_NAME_PARAM%>" value="digivid"/>
     <input type="hidden" name="<%=WebConstants.INPUT_CHANNEL_ID_PARAM%>" value="SB-Tape1"/>
-    <input type="hidden" name="<%=WebConstants.ENCODER_IP_PARAM%>" value="<%=encoderIP%>"/>
-    <input type="hidden" name="<%=WebConstants.ENCODER_NAME_PARAM%>" value="<%=encoder_name%>"/>
+    <input type="hidden" name="<%=WebConstants.ENCODER_NAME_PARAM%>" value="<%=encoderName%>"/>
 
     <input type="submit" name="start" value="start"/>
 </form>

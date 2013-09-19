@@ -41,8 +41,8 @@ function loadPage(id,url) {
         //alert(window.location.href.indexOf('http'))
         //alert(window.location.href)
         //alert(document.getElementById('contentFRM').src = eval('contentFRM' + "_on.src");)
-        //alert("ie5 nn6 " + url+'?encoderIP='+ document.getElementById('encoderIP').valueOf());
-        //alert("ie5 nn6 " + url+'?encoderIP='+ nestref);
+        //alert("ie5 nn6 " + url+'?encoderName='+ document.getElementById('encoderName').valueOf());
+        //alert("ie5 nn6 " + url+'?encoderName='+ nestref);
     } else alert("Browser not supported");
 }
 

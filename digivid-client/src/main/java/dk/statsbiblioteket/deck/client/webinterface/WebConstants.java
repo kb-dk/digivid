@@ -79,7 +79,7 @@ public class WebConstants {
      * Names of request parameters
      */
     public static final String PAGE_PARAM = "page";
-    public static final String ENCODER_IP_PARAM = "encoderIP";
+    public static final String ENCODER_NAME_PARAM = "encoderName";
     public static final String CARD_NAME_PARAM = "cardName";
     public static final String INPUT_CHANNEL_ID_PARAM = "inputChannelID";
     public static final String STREAM_PROTOCOL_PARAM = "streamProtocol";
@@ -96,7 +96,6 @@ public class WebConstants {
     public static final String USER_NAME_PARAM = "digivid";
     public static final String FILE_LENGTH_PARAM = "filelength";
     public static final String IS_PROCESSED_PARAM = "is_processed";
-    public static final String ENCODER_NAME_PARAM = "encoder_name";
 
     /**
      * Names of Commands
