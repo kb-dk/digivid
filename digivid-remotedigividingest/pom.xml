@@ -5,12 +5,12 @@
     <parent>
         <groupId>digivid</groupId>
         <artifactId>digivid</artifactId>
-        <version>1.4</version>
+        <version>1.5-SNAPSHOT</version>
     </parent>
 
     <groupId>digivid</groupId>
     <artifactId>digivid-remotedigividingest</artifactId>
-    <version>1.4</version>
+    <version>1.5-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <build>
