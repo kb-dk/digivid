@@ -41,7 +41,7 @@ while true; do
       ;;
     --startDate)
       shift;
-      STARTTIME=$(date -d "@$(($1/1000))" +"%Y-%M-%dT%H:%m:%S")
+      STARTTIME=$(date -d "@$(($1/1000))" +"%Y-%m-%dT%H:%M:%S")
       shift;
       if [ $? -ne 0 ];
       then
@@ -50,7 +50,7 @@ while true; do
       ;;
     --endDate)
       shift;
-      STOPTIME=$(date -d "@$(($1/1000))" +"%Y-%M-%dT%H:%m:%S")
+      STOPTIME=$(date -d "@$(($1/1000))" +"%Y-%m-%dT%H:%M:%S")
       shift;
       if [ $? -ne 0 ];
       then
